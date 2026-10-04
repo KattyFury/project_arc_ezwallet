@@ -11,7 +11,7 @@
 
 </div>
 
-> **Live on Arc Mainnet** at **[ezwallet.cash](https://ezwallet.cash)** – real USDC and EURC.
+> **Live on Arc Mainnet** at **[ezwallet.cash](https://ezwallet.cash)** – real USDC, EURC and cirBTC.
 
 ---
 
@@ -69,7 +69,9 @@ ezwallet removes the crypto vocabulary from the surface:
 | 🔑 **Email + PIN login** | No seed phrase to write down or lose. Keys are held in Circle's MPC infrastructure; the PIN authorises every signature. |
 | 💸 **Send with a note** | Attach a short message to a transfer, so the receiver knows what the money is for. |
 | ⇅ **Deposit & withdraw** | Menu → Deposit shows your Arc address to top up from an exchange or another wallet; Withdraw sends to any Arc address. |
-| 📷 **Receive by QR** | Show a QR to get paid. Optionally set an exact amount, name it, and keep it in a QR library for reuse. |
+| 📷 **Receive by QR** | Show a QR to get paid. Standard EVM format (EIP-681, with Arc's chain ID), so other wallets such as MetaMask can scan it. Optionally set an exact amount, name it, and keep it in a QR library for reuse. |
+| ⇄ **Exchange** | Swap between USDC, EURC and cirBTC. What you receive is never more than 0.5% below the amount shown (the minimum is enforced on chain, otherwise nothing is swapped); the network fee shown is Circle's estimate for that exact swap. No app fee. |
+| ❔ **Unverified tokens** | Tokens the app does not list (airdrops, meme coins) are shown separately, view only, with a yellow notice when one arrives – never counted in your balance. |
 | 👥 **Contacts** | Save addresses under a name (with an avatar) so you never paste a raw `0x…` twice. |
 | 🧾 **History + receipts** | Full transaction history with per-transaction detail and a saveable receipt image. |
 | 🌐 **USD or EUR display** | Show balances in US dollars or euros. The underlying token (USDC or EURC) is always labelled honestly. |
@@ -84,8 +86,8 @@ ezwallet removes the crypto vocabulary from the surface:
 | **Frontend** | React 18 + Vite 5, `viem` for on-chain reads, `qrcode.react` / `jsqr` for QR |
 | **Backend** | Cloudflare Pages + Pages Functions (`functions/api/*`) – keeps the Circle API key server-side |
 
-Tokens: **USDC** and **EURC**. Transfer notes are written on-chain through Arc's
-Memo precompile.
+Tokens: **USDC**, **EURC** and **cirBTC**. Transfer notes are written on-chain through Arc's
+predeployed Memo contract.
 
 ## Try it
 
@@ -105,7 +107,7 @@ Memo precompile.
 
 ```bash
 git clone https://github.com/KattyFury/project_arc_ezwallet.git
-cd ezwallet
+cd project_arc_ezwallet
 npm install
 ```
 
@@ -117,10 +119,9 @@ cp .env.example .env.txt      # .env.txt is gitignored
 
 | Variable | Needed for |
 |---|---|
-| `API_KEY` | Circle User-Controlled Wallets (login, PIN, send). `CIRCLE_API_KEY` also accepted. |
+| `API_KEY` | Circle LIVE API key: User-Controlled Wallets (login, PIN, send) and swap (Stablecoin Kit). `CIRCLE_API_KEY` also accepted. |
 | `AUTH_SECRET` | Signs the email-code sign-in tokens (any long random string). |
 | `RESEND_API_KEY` | Sends the 6-digit sign-in code and security emails ([Resend](https://resend.com)). |
-| `KIT_KEY` | Circle Stablecoin Kit – only for Swap, which is switched off. |
 
 Sign-in codes and the contact backup also need a Cloudflare KV namespace bound as `EZ_SYNC`.
 
@@ -162,11 +163,11 @@ Being upfront about what this is not:
   the known limitations, and how to report a vulnerability privately.
 - **You cannot export your private key yet.** The wallet is a Circle user-controlled
   (MPC) wallet opened with your email + PIN; there is no seed phrase or key export.
-- **Arc only.** Send and receive USDC/EURC on the Arc network. Money someone sends to
-  your address on another chain does not arrive in ezwallet.
+- **Arc only.** Send and receive on the Arc network. Money someone sends to your address on
+  another chain does not arrive in ezwallet. The receive QR carries Arc's chain ID, but some
+  wallets ignore it – the sender must still pick Arc.
 - **No card or bank purchases.** There is no fiat on/off-ramp: money comes in from an
   exchange or another wallet on Arc, and goes out the same way.
-- **No swap for now.** Swapping is switched off while it gets a proper safety review.
 - **English only**, email + PIN sign-in only (no Google sign-in).
 - **QR scanning is limited to wallet QR codes** (not bank QRs or product barcodes).
 

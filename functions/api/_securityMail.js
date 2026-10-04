@@ -1,4 +1,4 @@
-// SECURITY EMAILS (MAINNET-V1-PLAN item 3): the owner of a wallet hears about it at once when someone touches the
+// SECURITY EMAILS (mainnet v1 plan item 3 (2026-09-27, deleted doc - git history)): the owner of a wallet hears about it at once when someone touches the
 // account - account created, PIN change requested, PIN reset (forgot PIN) started. Informational only: nothing is
 // locked after a reset (owner decision). Sent in the background (ctx.waitUntil) - a mail problem never blocks
 // sign-in or the PIN flow. At most one mail per kind per email every 10 minutes (KV EZ_SYNC `secmail:`).

@@ -1,4 +1,4 @@
-# Security headers for the app (MAINNET-V1-PLAN item 7). Every external host below is one the app or the Circle SDK
+# Security headers for the app (mainnet v1 plan item 7 (2026-09-27, deleted doc - git history)). Every external host below is one the app or the Circle SDK
 # really uses (checked 2026-09-29): Arc RPC + explorer (mainnet only since 2026-10-02), CoinGecko rates, Circle's PIN iframe.
 # Adding a new external call? Add its host here or the browser will block it.
 /*

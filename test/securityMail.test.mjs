@@ -1,4 +1,4 @@
-// Security mails (MAINNET-V1-PLAN item 3): right wording per kind, input escaped.
+// Security mails (mainnet v1 plan item 3 (2026-09-27, deleted doc - git history)): right wording per kind, input escaped.
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { securityMail } from '../functions/api/_securityMail.js'

@@ -284,7 +284,7 @@ export function isTokenExpiredError(e) {
   return /155103|155104|155105|token had expired|usertoken is invalid/.test(msg)
 }
 
-// KIT_KEY moved server-side (a Cloudflare Worker env var)
+// Swap runs server-side (/api/swap) with the Circle API key - no key in the browser
 // The browser only calls /api/swap, and the Worker talks to the Circle Stablecoin Kit API
 
 // MOCK: estimate the conversion from MOCK_RATES (USD per unit): amountOut = amountIn·rateIn/rateOut

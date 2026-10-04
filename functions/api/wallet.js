@@ -85,7 +85,7 @@ export async function onRequestPost(ctx) {
     //   which is reasonable security: bypassing the PIN demands more trust than a 60' token. Do NOT use it for Change PIN.
     const { status, data } = await circleReq('PUT', '/user/pin', { idempotencyKey: crypto.randomUUID() }, apiKey, userToken);
     const challengeId = data?.data?.challengeId;
-    if (challengeId) notifyPin(ctx, 'pinChange', apiKey, userToken, net);   // security mail #2 (MAINNET-V1-PLAN item 3)
+    if (challengeId) notifyPin(ctx, 'pinChange', apiKey, userToken, net);   // security mail #2 (mainnet v1 plan item 3 (2026-09-27, deleted doc - git history))
     if (!challengeId) {
       // Surface Circle's error VERBATIM (HTTP status + code + message) - a bare "Forbidden" already cost
       // 3 debugging sessions. A screenshot of an error now has to explain itself.

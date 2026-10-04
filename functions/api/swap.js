@@ -12,7 +12,7 @@ import { amountProblem } from '../../src/money.js'
 
 const W3S_API = 'https://api.circle.com/v1/w3s'
 const JSON_HEADERS = { 'Content-Type': 'application/json' }
-// The raw upstream payload (`detail`) goes to the server log only - never back to the browser (MAINNET-V1-PLAN item 7).
+// The raw upstream payload (`detail`) goes to the server log only - never back to the browser (mainnet v1 plan item 7 (2026-09-27, deleted doc - git history)).
 const err = (msg, detail, status = 500) => {
   if (detail) console.error('[swap]', msg, JSON.stringify(detail))
   return new Response(JSON.stringify({ error: msg }), { status, headers: JSON_HEADERS })
@@ -24,7 +24,6 @@ export async function onRequestPost(ctx) {
   if (!net.swap) return err('Swap is not available on this network yet', null, 503)   // mainnet v1: send/receive only
   try {
     const apiKey = ctx.env.API_KEY || ctx.env.CIRCLE_API_KEY
-    const kitKey = ctx.env.KIT_KEY
     const body = await ctx.request.json()
     const { action, userToken, walletId, walletAddress, tokenIn, tokenOut, amountIn, refId } = body
 
@@ -37,7 +36,7 @@ export async function onRequestPost(ctx) {
     }
 
     if (action === 'estimate') {
-      if (!kitKey) return err('KIT_KEY not configured')
+      if (!apiKey) return err('API_KEY not configured')
       if (!fromAddr || !toAddr) return err('unknown token', null, 400)
       const params = new URLSearchParams({
         tokenInAddress: fromAddr, tokenInChain: net.kitChain,
@@ -46,7 +45,7 @@ export async function onRequestPost(ctx) {
         amount: toBase(net, amountIn, tokenIn).toString(), slippageBps: String(SLIPPAGE_BPS),
       })
       const res = await fetch(`${CIRCLE_API}/v1/stablecoinKits/quote?${params}`, {
-        headers: { 'Authorization': `Bearer ${kitKey}` },
+        headers: { 'Authorization': `Bearer ${apiKey}` },
       })
       const data = await res.json()
       if (!res.ok) return err(data?.message || `Circle API ${res.status}`, data)
@@ -63,10 +62,10 @@ export async function onRequestPost(ctx) {
     // USDC for Circle to accept the tx, so it is also the USDC reserve. Measured 2026-10-04 on the owner's wallet:
     // 0.5 USDC→EURC gasLimit 961922, networkFee 0.0399, networkFeeRaw 0.0207; real swaps paid 0.0155-0.0160.
     if (action === 'fee') {
-      if (!kitKey) return err('KIT_KEY not configured')
+      if (!apiKey) return err('API_KEY not configured')
       if (!userToken || !walletId || !walletAddress) return err('missing params', null, 400)
       const amountBase = toBase(net, amountIn, tokenIn)
-      const intent = await fetchSwapIntent(net, kitKey, fromAddr, toAddr, walletAddress, amountBase)
+      const intent = await fetchSwapIntent(net, apiKey, fromAddr, toAddr, walletAddress, amountBase)
       if (!intent.ok) return err(`Stablecoin Kit ${intent.status}: ${intent.data?.message || 'swap failed'}`, intent.data)
       const bad = validateIntent(net, intent.data, { fromAddr, toAddr, walletAddress, amountBase })
       if (bad) return err('This swap could not be verified.', { bad }, 502)
@@ -85,8 +84,8 @@ export async function onRequestPost(ctx) {
 
     // The verify gate: only allow a swap when the wallet's tokenOut balance RISES (HANDOFF: never trust tx status=1).
     if (action === 'simulate') {
-      if (!kitKey) return err('KIT_KEY not configured')
-      const out = await simulateSwap({ net, kitKey, tokenIn, tokenOut, walletAddress, amountIn })
+      if (!apiKey) return err('API_KEY not configured')
+      const out = await simulateSwap({ net, apiKey, tokenIn, tokenOut, walletAddress, amountIn })
       if (out.error) return err(out.error, out.detail, 400)
       return new Response(JSON.stringify(out), { headers: JSON_HEADERS })
     }
@@ -101,7 +100,7 @@ export async function onRequestPost(ctx) {
       if (!minOut || amountProblem(String(minOut), net.tokens[tokenOut].decimals)) return err('minOut required', null, 400)
       const amountBase = toBase(net, amountIn, tokenIn)
       const minOutBase = toBase(net, String(minOut), tokenOut)
-      const intent = await fetchSwapIntent(net, kitKey, fromAddr, toAddr, walletAddress, amountBase, minOutBase)
+      const intent = await fetchSwapIntent(net, apiKey, fromAddr, toAddr, walletAddress, amountBase, minOutBase)
       if (!intent.ok) {
         if (/stop limit/i.test(intent.data?.message || '')) return err('The price moved. Check the new amount and try again.', intent.data, 409)
         return err(`Stablecoin Kit ${intent.status}: ${intent.data?.message || 'swap failed'}`, intent.data)

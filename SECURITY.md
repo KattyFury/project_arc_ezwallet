@@ -3,7 +3,7 @@
 ## Scope and current status
 
 ezwallet runs on **Arc Mainnet** at [ezwallet.cash](https://ezwallet.cash) and moves
-**real money** (USDC, EURC). The app is **not audited** – start with small amounts.
+**real money** (USDC, EURC, cirBTC). The app is **not audited** – start with small amounts.
 
 **Key custody:** ezwallet does not hold or store private keys. Keys are managed by
 [Circle User-Controlled Wallets](https://developers.circle.com/wallets/user-controlled)
@@ -12,9 +12,20 @@ Circle's own cross-origin iframe. This project never sees the PIN. This is
 *user-controlled* custody, not seed-phrase self-custody – an intentional trade-off
 to remove the seed phrase from the onboarding path.
 
-**Secrets:** the Circle API keys (`API_KEY`, `KIT_KEY`), `AUTH_SECRET` and `RESEND_API_KEY` live only in Cloudflare Pages
+**Secrets:** the Circle API key (`API_KEY`, used for wallets and swap), `AUTH_SECRET` and `RESEND_API_KEY` live only in Cloudflare Pages
 environment variables and are used exclusively from server-side Pages Functions
 (`functions/api/*`). They are never shipped to the browser.
+
+**Past incident (disclosed):** a legacy Circle Stablecoin Kit key was committed to this public repository on
+2026-06-25 (commits `6442d42`, `33ea69e`). A Kit key can request swap quotes/intents but cannot move anyone's
+funds (every transaction still needs the wallet owner's PIN). Since 2026-10-04 the app no longer uses it - swap
+calls Circle with the regular API key - and the old key is being revoked with Circle.
+
+**Swap safety:** before a swap is offered for signing, the server checks Circle's signed intent against the
+request (the output goes to the user's own wallet, right tokens, right amount, not expired), sets the minimum
+output to the screen's estimate minus at most 0.5% (enforced on chain), and simulates the exact transaction
+(`eth_simulateV1`); if the check or the simulation fails, nothing is sent for signing. The network fee shown is
+Circle's own estimate for that transaction.
 
 ## Reporting a vulnerability
 

@@ -86,3 +86,7 @@ has a measurement or a doc line behind it; keep it that way.
   `simulate` 6/6 ok from Cloudflare → dRPC (delta ≈ 0.4445 EURC = the estimate). Cloudflare → dRPC is NOT rate-limited
   at this volume.
 - Next: the owner's first real swap ≤ $1; check its receipt (wallet received tokenOut, adapter kept nothing).
+
+## 4d. Key change (2026-10-04)
+- Swap now authenticates with `API_KEY` (the Circle LIVE key); the legacy Kit key leaked in the public history
+  (MAINNET-AUDIT K1) and is no longer used. The `KIT_KEY` Pages secret is removed. Dry run: `node tools/verify-swap.mjs`.

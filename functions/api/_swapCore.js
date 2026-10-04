@@ -14,6 +14,9 @@ import { encodeFunctionData } from 'viem'
 import { toBaseUnits } from '../../src/money.js'
 
 export const CIRCLE_API = 'https://api.circle.com'
+// KEY: the Circle API key (API_KEY, the same LIVE key as the wallets), NOT the legacy Kit key - measured 2026-10-04:
+// /v1/stablecoinKits/quote and /swap accept it, and docs.arc.io's App Kit examples pass CIRCLE_API_KEY. The old Kit
+// key was committed to this public repo on 2026-06-25 (commits 6442d42, 33ea69e), so it is no longer used anywhere.
 
 // Every chain-specific value (RPC, adapter, Multicall3From, token addresses/decimals, the Kit chain name) comes
 // from the `net` object of src/network.js, passed in by the caller - nothing is hard-coded here any more
@@ -67,10 +70,10 @@ const BALANCE_OF_ABI = [{ type: 'function', name: 'balanceOf', stateMutability: 
 
 // Call the Stablecoin Kit /swap → { ok, status, data }. data.transaction holds executionParams + signature.
 // minOutBase (optional, base units of tokenOut) → `stopLimit`.
-export async function fetchSwapIntent(net, kitKey, fromAddr, toAddr, walletAddress, amountBase, minOutBase = null) {
+export async function fetchSwapIntent(net, apiKey, fromAddr, toAddr, walletAddress, amountBase, minOutBase = null) {
   const res = await fetch(`${CIRCLE_API}/v1/stablecoinKits/swap`, {
     method: 'POST',
-    headers: { 'Authorization': `Bearer ${kitKey}`, 'Content-Type': 'application/json' },
+    headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
       tokenInAddress: fromAddr, tokenInChain: net.kitChain,
       tokenOutAddress: toAddr,  tokenOutChain: net.kitChain,
@@ -178,13 +181,13 @@ export async function simulateBatch(net, walletAddress, toAddr, batchData) {
     swapStatus: calls[1].status, swapError: calls[1].error || null, gasUsed: calls[1].gasUsed || null }
 }
 
-// Quote → validate → build → simulate, without signing (the 'simulate' action and verify-swap.mjs).
-export async function simulateSwap({ net, kitKey, tokenIn, tokenOut, walletAddress, amountIn }) {
+// Quote → validate → build → simulate, without signing (the 'simulate' action and tools/verify-swap.mjs).
+export async function simulateSwap({ net, apiKey, tokenIn, tokenOut, walletAddress, amountIn }) {
   const fromAddr = tokenOf(net, tokenIn)?.address
   const toAddr   = tokenOf(net, tokenOut)?.address
   if (!fromAddr || !toAddr || !walletAddress) return { error: 'missing params' }
   const amountBase = toBase(net, amountIn, tokenIn)
-  const intent = await fetchSwapIntent(net, kitKey, fromAddr, toAddr, walletAddress, amountBase)
+  const intent = await fetchSwapIntent(net, apiKey, fromAddr, toAddr, walletAddress, amountBase)
   if (!intent.ok) return { error: `Stablecoin Kit ${intent.status}: ${intent.data?.message || 'swap failed'}`, detail: intent.data }
   const bad = validateIntent(net, intent.data, { fromAddr, toAddr, walletAddress, amountBase })
   if (bad) return { error: `intent rejected: ${bad}` }

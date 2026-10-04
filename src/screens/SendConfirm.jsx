@@ -57,7 +57,7 @@ export default function SendConfirm() {
     : currency === 'VND' ? <>{amount.toLocaleString('vi-VN')} <Cur>₫</Cur></>
     : <>{sendAmountStr} <Cur>{currency}</Cur></>
 
-  // QR SAFETY (MAINNET-V1-PLAN item 2): an amount a QR put there (untouched - SendAmount's qrActive) worth more than
+  // QR SAFETY (mainnet v1 plan item 2 (2026-09-27, deleted doc - git history)): an amount a QR put there (untouched - SendAmount's qrActive) worth more than
   // $100 needs one more explicit "yes" before the PIN. A forged or swapped QR is the easiest way to trick someone
   // into a big payment.
   const QR_CHECK_OVER_USD = 100

@@ -13,11 +13,11 @@ import { NET } from '../clientNet'
 // true: the user settled it directly, twice ("Exchange giờ sẽ là app duy nhất..." then "Figma là nguồn
 // sự thật, Figma k có luckypot").
 // Swap OFF on this network (mainnet v1 = send/receive only) → the card KEEPS ITS PLACE, dimmed,
-// "Coming soon", not tappable (MAINNET-V1-PLAN item 1 - the button layout the owner approved stays as it is).
+// "Coming soon", not tappable (mainnet v1 plan item 1 (2026-09-27, deleted doc - git history) - the button layout the owner approved stays as it is).
 // `screen: null` is what the existing `soon` state below keys on. v1.1 only has to flip NET.swap.
 const SERVICES = [
   NET.swap
-    ? { id: 'swap', icon: 'exchange', label: 'Exchange', desc: `Swap between ${Object.keys(NET.tokens).join(' & ')}`, screen: 'Swap' }
+    ? { id: 'swap', icon: 'exchange', label: 'Exchange', desc: `Swap between ${Object.keys(NET.tokens).join(', ').replace(/, ([^,]+)$/, ' & $1')}`, screen: 'Swap' }
     : { id: 'swap', icon: 'exchange', label: 'Exchange', desc: 'Coming soon', screen: null },
 ]
 

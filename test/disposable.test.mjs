@@ -1,4 +1,4 @@
-// Temporary-inbox block (MAINNET-V1-PLAN item 6).
+// Temporary-inbox block (mainnet v1 plan item 6 (2026-09-27, deleted doc - git history)).
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { isDisposable } from '../functions/api/_disposable.js'

@@ -39,7 +39,7 @@ export default function SendAmount() {
   // WHAT YOU SCAN IS WHAT YOU GET: if the QR carries a valid currency → open in that currency (2 USDC shows as "2 USDC",
   // NOT converted to USD). An old/unclear QR (e.g. 'VND') → default to USD.
   const qrCurrency = CURRENCIES.includes(params.currency) ? params.currency : null
-  // QR SAFETY (MAINNET-V1-PLAN item 2): a currency this build does not have (an old 'VND' QR, a testnet 'cirBTC' QR)
+  // QR SAFETY (mainnet v1 plan item 2 (2026-09-27, deleted doc - git history)): a currency this build does not have (an old 'VND' QR, a testnet 'cirBTC' QR)
   // keeps NO amount - the number meant something else, and "500000" VND must never turn into $500,000.
   const badCurrency = !!params.currency && !qrCurrency
   const [cur, setCur] = useState(qrCurrency || 'USD')

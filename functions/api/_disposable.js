@@ -1,4 +1,4 @@
-// TEMPORARY-INBOX BLOCK (MAINNET-V1-PLAN item 6, owner decision 2026-09-29: free bundled list, both networks).
+// TEMPORARY-INBOX BLOCK (mainnet v1 plan item 6 (2026-09-27, deleted doc - git history), owner decision 2026-09-29: free bundled list, both networks).
 // The wallet is tied to the email: a temp inbox dies within hours, and with it the only way back into the wallet
 // (sign-in codes go to that inbox). So a NEW account may not use one.
 // An email that is ALREADY a Circle user keeps signing in - blocking it would lock someone out of their money.
