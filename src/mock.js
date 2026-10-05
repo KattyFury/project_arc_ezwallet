@@ -17,7 +17,7 @@ const ADAPTER = '0xBBD70b01a1CAbc96d5b7b129Ae1AAabdf50dd40b'   // Swap Adapter (
 // Fake balances by symbol (in real token units). USD conversion uses MOCK_RATES.
 export const MOCK_AMOUNTS = { USDC: 127.66, EURC: 84.20, cirBTC: 0.01542 }
 // Fake UNVERIFIED tokens (meme/unknown) for the collapsible "Unverified tokens" row on Home.
-export const MOCK_UNVERIFIED = [{ address: '0xcb92a075db3d4e965f37936da2100902344650e3', symbol: 'ARCADE', name: 'ARCADE', amount: 1000000 }, { address: '0x1111111111111111111111111111111111111111', symbol: 'FREE-AIRDROP-CLAIM-NOW', name: 'spam', amount: 42.5 }]
+export const MOCK_UNVERIFIED = [{ address: '0xcb92a075db3d4e965f37936da2100902344650e3', symbol: 'ARCADE', name: 'ARCADE', decimals: 18, amount: 1000000 }, { address: '0x1111111111111111111111111111111111111111', symbol: 'FREE-AIRDROP-CLAIM-NOW', name: 'spam', decimals: 18, amount: 42.5 }]
 export const MOCK_RATES = { USDC: 1, EURC: 1.08, cirBTC: 65000 }
 // Fake 24h % change (for the token-list arrow, user request 08-25) - stablecoins barely move, cirBTC does.
 export const MOCK_CHANGE_24H = { USDC: 0.01, EURC: -0.02, cirBTC: 2.35 }

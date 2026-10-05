@@ -18,7 +18,9 @@
 
 ## Current state (2026-10-04)
 - **Tokens:** verified = USDC, EURC, cirBTC (`src/network.js`). Anything else the wallet holds = "Unverified tokens"
-  (Home: one row with a ⌄ arrow, view only, never in the total; source = Circle balances `includeAll=true`; a
+  (Home: one row with a ⌄ arrow, never in the total; tapping one opens Exchange to SELL it - owner 2026-10-05, sell only,
+  a yellow warning, never blocked; the server reads its decimals on chain (`resolveTokenIn`); dry run: 50,000 BANKARC →
+  +0.926622 USDC = the Kit estimate; source = Circle balances `includeAll=true`; a
   YELLOW notification when one arrives; kept out of History). Whether Circle lists every Arc token is NOT measured.
 - **Swap: ON** (2026-10-04, `docs/SWAP-PLAN.md` Phase 1 done). No app fee (provider 2 bps only). 50 bps slippage +
   the screen's minimum as `stopLimit`; server validates the intent (`validateIntent`) and simulates the exact batch

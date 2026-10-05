@@ -168,7 +168,7 @@ export async function getUnverifiedTokens() {
   const all = await fetchAllBalances(walletId)
   return all
     .filter(t => !t.isNative && t.address && !listed.has(t.address.toLowerCase()) && Number(t.amount) > 0)
-    .map(t => ({ address: t.address, symbol: t.symbol || '?', name: t.name || '', amount: Number(t.amount) }))
+    .map(t => ({ address: t.address, symbol: t.symbol || '?', name: t.name || '', decimals: t.decimals, amount: Number(t.amount) }))
 }
 
 // The USD total of a token list, or null when a token the wallet HOLDS has no live price (adding null would count it as

@@ -37,6 +37,23 @@ export const tokenOf = (net, sym) => net.tokens[sym] || null
 export const toBase = (net, decStr, sym) => toBaseUnits(decStr, net.tokens[sym].decimals)
 export const fromBase = (net, baseStr, sym) => (Number(baseStr) / 10 ** net.tokens[sym].decimals).toString()
 
+// The token being SOLD: a listed symbol (USDC/EURC/cirBTC), or - owner 2026-10-05 - the address of an UNVERIFIED token
+// the wallet holds (sell only: it is never accepted as tokenOut). Its decimals are read ON CHAIN (net.simRpc, reachable
+// from Cloudflare), never taken from the request. → { address, decimals, unverified } or null.
+export async function resolveTokenIn(net, tokenIn) {
+  if (net.tokens[tokenIn]) return { ...net.tokens[tokenIn], unverified: false }
+  if (!/^0x[0-9a-fA-F]{40}$/.test(String(tokenIn || ''))) return null
+  if (Object.values(net.tokens).some(t => t.address.toLowerCase() === tokenIn.toLowerCase())) return null   // use the symbol
+  try {
+    const r = await fetch(net.simRpc, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'eth_call', params: [{ to: tokenIn, data: '0x313ce567' }, 'latest'] }) })   // decimals()
+    const j = await r.json()
+    const decimals = j?.result && j.result !== '0x' ? Number(BigInt(j.result)) : NaN
+    if (!Number.isInteger(decimals) || decimals < 0 || decimals > 36) return null
+    return { address: tokenIn, decimals, unverified: true }
+  } catch { return null }
+}
+
 // IAdapter.execute - the ABI copied verbatim from @circle-fin/adapter-viem-v2 (adapterContractAbi).
 const ADAPTER_ABI = [{
   type: 'function', name: 'execute', stateMutability: 'payable', outputs: [],
@@ -190,10 +207,11 @@ export async function simulateBatch(net, walletAddress, toAddr, batchData) {
 
 // Quote → validate → build → simulate, without signing (the 'simulate' action and tools/verify-swap.mjs).
 export async function simulateSwap({ net, apiKey, tokenIn, tokenOut, walletAddress, amountIn }) {
-  const fromAddr = tokenOf(net, tokenIn)?.address
+  const tIn = await resolveTokenIn(net, tokenIn)
+  const fromAddr = tIn?.address
   const toAddr   = tokenOf(net, tokenOut)?.address
   if (!fromAddr || !toAddr || !walletAddress) return { error: 'missing params' }
-  const amountBase = toBase(net, amountIn, tokenIn)
+  const amountBase = toBaseUnits(amountIn, tIn.decimals)
   const intent = await fetchSwapIntent(net, apiKey, fromAddr, toAddr, walletAddress, amountBase)
   if (!intent.ok) return { error: `Stablecoin Kit ${intent.status}: ${intent.data?.message || 'swap failed'}`, detail: intent.data }
   const bad = validateIntent(net, intent.data, { fromAddr, toAddr, walletAddress, amountBase })

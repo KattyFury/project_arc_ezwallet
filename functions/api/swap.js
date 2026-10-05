@@ -4,11 +4,11 @@
 // Actions: estimate (a quote), simulate (verify with eth_simulateV1, no PIN and no cost),
 // execute (create a contractExecution challenge → the user signs with one PIN).
 import {
-  CIRCLE_API, tokenOf, toBase, fromBase, SLIPPAGE_BPS,
+  CIRCLE_API, tokenOf, toBase, fromBase, SLIPPAGE_BPS, resolveTokenIn,
   fetchSwapIntent, validateIntent, buildSwapBatch, simulateBatch, simulateSwap,
 } from './_swapCore.js'
 import { netFrom, netError } from './_net.js'
-import { amountProblem } from '../../src/money.js'
+import { amountProblem, toBaseUnits } from '../../src/money.js'
 
 const W3S_API = 'https://api.circle.com/v1/w3s'
 const JSON_HEADERS = { 'Content-Type': 'application/json' }
@@ -27,11 +27,14 @@ export async function onRequestPost(ctx) {
     const body = await ctx.request.json()
     const { action, userToken, walletId, walletAddress, tokenIn, tokenOut, amountIn, refId } = body
 
-    const fromAddr = tokenOf(net, tokenIn)?.address
+    // tokenIn = a listed symbol or an unverified token's address (sell only); tokenOut = a listed symbol only.
+    const tIn = await resolveTokenIn(net, tokenIn)
+    const fromAddr = tIn?.address
     const toAddr   = tokenOf(net, tokenOut)?.address
+    const inBase = (dec) => toBaseUnits(dec, tIn.decimals)
     if (action === 'estimate' || action === 'simulate' || action === 'execute' || action === 'fee') {
       if (!fromAddr || !toAddr) return err('unknown token', null, 400)
-      const problem = amountProblem(amountIn, net.tokens[tokenIn].decimals)
+      const problem = amountProblem(amountIn, tIn.decimals)
       if (problem) return err(problem, null, 400)
     }
 
@@ -42,7 +45,7 @@ export async function onRequestPost(ctx) {
         tokenInAddress: fromAddr, tokenInChain: net.kitChain,
         tokenOutAddress: toAddr,  tokenOutChain: net.kitChain,
         fromAddress: walletAddress || '0x0000000000000000000000000000000000000001',
-        amount: toBase(net, amountIn, tokenIn).toString(), slippageBps: String(SLIPPAGE_BPS),
+        amount: inBase(amountIn).toString(), slippageBps: String(SLIPPAGE_BPS),
       })
       const res = await fetch(`${CIRCLE_API}/v1/stablecoinKits/quote?${params}`, {
         headers: { 'Authorization': `Bearer ${apiKey}` },
@@ -64,7 +67,7 @@ export async function onRequestPost(ctx) {
     if (action === 'fee') {
       if (!apiKey) return err('API_KEY not configured')
       if (!userToken || !walletId || !walletAddress) return err('missing params', null, 400)
-      const amountBase = toBase(net, amountIn, tokenIn)
+      const amountBase = inBase(amountIn)
       const intent = await fetchSwapIntent(net, apiKey, fromAddr, toAddr, walletAddress, amountBase)
       if (!intent.ok) return err(`Stablecoin Kit ${intent.status}: ${intent.data?.message || 'swap failed'}`, intent.data)
       const bad = validateIntent(net, intent.data, { fromAddr, toAddr, walletAddress, amountBase })
@@ -98,7 +101,7 @@ export async function onRequestPost(ctx) {
       // H2: the minimum the screen showed (from 'estimate') becomes the intent's stopLimit - never less than displayed.
       const { minOut } = body
       if (!minOut || amountProblem(String(minOut), net.tokens[tokenOut].decimals)) return err('minOut required', null, 400)
-      const amountBase = toBase(net, amountIn, tokenIn)
+      const amountBase = inBase(amountIn)
       const minOutBase = toBase(net, String(minOut), tokenOut)
       const intent = await fetchSwapIntent(net, apiKey, fromAddr, toAddr, walletAddress, amountBase, minOutBase)
       if (!intent.ok) {
