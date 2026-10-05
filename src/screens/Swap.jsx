@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useLayoutEffect, useRef } from 'react'
 import { useNav } from '../nav'
 import Icon from '../components/Icon'
 import PctSlider from '../components/PctSlider'
@@ -66,6 +66,24 @@ function TokenPicker({ current, onSelect, onClose }) {
         ))}
       </div>
     </div>
+  )
+}
+
+// The CTA text: at most 2 centred lines. Text that needs more steps the font DOWN (owner 2026-10-05) through `sizes`
+// (--fs-* tokens: 20/18/16/14); only past the smallest size does the 3rd line become "…". Keyed by the text by
+// the caller, so every new message starts again from the biggest size.
+function TwoLineFit({ sizes, children }) {
+  const ref = useRef(null)
+  const [i, setI] = useState(0)
+  const fitSize = `var(--fs-${sizes[i]})`
+  useLayoutEffect(() => {
+    const el = ref.current
+    if (el && el.scrollHeight > el.clientHeight + 1 && i < sizes.length - 1) setI(i + 1)
+  }, [i, sizes.length])
+  return (
+    <span ref={ref} style={{ display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2, overflow: 'hidden', lineHeight: 1.2, textAlign: 'center', minWidth: 0, fontSize: fitSize }}>
+      {children}
+    </span>
   )
 }
 
@@ -568,9 +586,8 @@ export default function Swap() {
               design px fits the 58px button; only a 3rd line gets "…". */}
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 'calc(6 * var(--u))', maxWidth: '100%', minWidth: 0, ...(needAmount ? { fontSize: 'var(--fs-content-2)' } : null) }}>
             {success && <Icon name="check" size="var(--ib-content-1)" color="var(--color-white)" />}
-            <span style={{ display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2, overflow: 'hidden', lineHeight: 1.2, textAlign: 'center', minWidth: 0 }}>
-              {error || status || (needAmount ? 'Slide or tap here to enter' : 'Swap')}
-            </span>
+            {(() => { const text = error || status || (needAmount ? 'Slide or tap here to enter' : 'Swap')
+              return <TwoLineFit key={text} sizes={needAmount ? ['content-2', 'caption', 'small'] : ['content-1', 'content-2', 'caption', 'small']}>{text}</TwoLineFit> })()}
           </span>
         </button>
           )
