@@ -21,6 +21,7 @@ const Swap        = lazy(() => import('./screens/Swap'))
 const ServiceHub  = lazy(() => import('./screens/ServiceHub'))
 const Lending     = lazy(() => import('./screens/Lending'))      // LABS (src/labs.js)
 const LendAction  = lazy(() => import('./screens/LendAction'))
+const LendPositions = lazy(() => import('./screens/LendPositions'))
 const MenuScreen  = lazy(() => import('./screens/MenuScreen'))
 const PasteAddress = lazy(() => import('./screens/PasteAddress'))
 const SendAmount  = lazy(() => import('./screens/SendAmount'))
@@ -42,7 +43,7 @@ const SCREENS = {
   Splash,
   Login,
   HomeSend, HomeReceive, Swap, ServiceHub, MenuScreen,
-  Lending, LendAction,
+  Lending, LendAction, LendPositions,
   PasteAddress, SendAmount, SendConfirm, SendReceipt,
   CreateQR, ShowQR, SavedQRList,
   Contacts, QRScanner,
@@ -128,7 +129,7 @@ export default function App() {
 
   // Swap is off on this network → no way into the screen at all (not even the ?screen= QA override); /api/swap
   // refuses too (503). See ServiceHub's "Coming soon" card.
-  const labsOff = ['Lending', 'LendAction'].includes(nav.screen) && !isLabsHost(window.location.hostname)   // not even via ?screen=
+  const labsOff = ['Lending', 'LendAction', 'LendPositions'].includes(nav.screen) && !isLabsHost(window.location.hostname)   // not even via ?screen=
   const Screen = labsOff ? SCREENS.ServiceHub : nav.screen === 'Swap' && !NET.swap ? SCREENS.ServiceHub : (SCREENS[nav.screen] || SCREENS['Login'])
 
   return (

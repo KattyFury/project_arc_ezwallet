@@ -12,13 +12,13 @@ import { addNotif } from '../notif'
 import { assertNetworkReady, NET } from '../clientNet'
 import { toAmountString } from '../money'
 import { newAttempt, getPending, clearPending, lookup, classify, waitFinal } from '../txTracker'
-import { usdRateOf } from './Lending'
+import { usdRateOf, Tabs } from './Lending'
 
 // DEPOSIT / WITHDRAW one Earn vault (params: kind 'deposit'|'withdraw', vault, position). Same money path as Swap:
 // /api/earn 'fee' (Circle's estimate for the exact batch) → 'execute' (intent checked + simulated on the server) → ONE PIN
 // → txTracker (MAINNET-AUDIT C3: no second attempt while one is unresolved; Send/Swap/Earn share the slot).
-// Row map: 1 title left · 2-3 the vault · 4-5 the amount (tap → numpad) + [50%] [Max] hints · 6 fee · 7-8 notes ·
-// 9 the button · 10 Exit (back to Lending).
+// Row map (owner 2026-10-05): 1 tabs Deposit | Withdraw · 2-3 the vault · 4-5 the amount (tap → numpad) + [50%] [Max]
+// hints · 6 fee + the note right under it · 9 the button · 10 Exit (back to Lending).
 const MAX_USD = 200   // also enforced by the server (functions/api/_earnCore.js EARN_MAX_USD)
 const BOX = { border: 'none', borderRadius: 16, background: 'var(--color-card)' }
 const at = (top, height) => ({ position: 'absolute', left: '6.41%', right: '6.41%', top, height })
@@ -27,7 +27,8 @@ const trim = (s) => s.includes('.') ? s.replace(/0+$/, '').replace(/\.$/, '') : 
 
 export default function LendAction() {
   const { navigate, params } = useNav()
-  const { kind = 'deposit', vault = {}, position = null } = params || {}
+  const { vault = {}, position = null } = params || {}
+  const [kind, setKind] = useState(params?.kind === 'withdraw' ? 'withdraw' : 'deposit')
   const asset = vault.asset || 'USDC'
   const dec = NET.tokens[asset]?.decimals ?? 6
   const deposit = kind === 'deposit'
@@ -52,9 +53,17 @@ export default function LendAction() {
   useEffect(() => {
     if (walletAddress) getTokenBalances(walletAddress).then(ts => setBalances(Object.fromEntries(ts.map(t => [t.symbol, t.amount])))).catch(() => {})
     getDisplayRates().then(setRates).catch(() => {})
-    if (!deposit && position) earnApi('quote', { kind, vault: vault.address, amount: toAmountString(Math.min(position.balance, 0.01), dec), walletAddress })
-      .then(q => setMaxOut(q.maxWithdrawable)).catch(e => setError(e.message))
   }, [])
+  // Withdraw tab: what the vault can pay me right now (Circle quote). Nothing deposited → nothing to withdraw.
+  useEffect(() => {
+    if (deposit || maxOut !== null) return
+    if (!position) { setMaxOut(0); return }
+    earnApi('quote', { kind: 'withdraw', vault: vault.address, amount: toAmountString(Math.min(position.balance, 0.01), dec), walletAddress })
+      .then(q => setMaxOut(q.maxWithdrawable)).catch(e => setError(e.message))
+  }, [kind])
+  function switchKind(k) { if (loading || done || k === kind) return; setKind(k); setTyped(''); setFeeUsd(null); setError(''); setStatus('') }
+  // Swapping EURC still pays the fee in USDC → say so on the button (as Swap).
+  const usdcShortMsg = (f) => `Not enough USDC for the network fee (up to $${f.toFixed(3)})`
 
   // The most this action can move. Deposit: wallet balance (USDC keeps the fee back) ∧ what the vault can pay out now
   // (owner rule) ∧ $200. Withdraw: my position ∧ what the vault can pay now. Unknown → null (button stays off).
@@ -66,7 +75,8 @@ export default function LendAction() {
       const spendable = asset === 'USDC' ? bal - Math.max(GAS_RESERVE_USDC, feeUsd ?? 0) : bal
       return Math.max(0, floorTo(Math.min(spendable, vault.withdrawable ?? 0, MAX_USD / rate), dec))
     }
-    if (!position || maxOut === null) return null
+    if (maxOut === null) return null
+    if (!position) return 0
     return Math.max(0, floorTo(Math.min(position.balance, maxOut), dec))
   })()
   const amount = parseFloat(typed) || 0
@@ -84,7 +94,7 @@ export default function LendAction() {
         .catch(e => setError(e.message))
     }, 600)
     return () => clearTimeout(debounce.current)
-  }, [amount, over])
+  }, [amount, over, kind])
 
   function setAmount(n) { setTyped(n > 0 ? trim(toAmountString(n, dec)) : ''); setError('') }
   function onPadKey(k) {
@@ -148,14 +158,12 @@ export default function LendAction() {
       color: n > 0 ? 'var(--color-brand)' : 'var(--color-muted)', borderColor: n > 0 ? 'var(--color-brand)' : 'var(--color-muted)',
     }}>{label}</button>
   )
-  const label = error || status || (amount > 0 ? (deposit ? 'Deposit' : 'Withdraw') : 'Tap the amount to enter')
+  const label = error || (usdcShort ? usdcShortMsg(feeUsd) : '') || status || (amount > 0 ? (deposit ? 'Deposit' : 'Withdraw') : 'Tap the amount to enter')
 
   return (
     <div className="screen" style={{ background: GRADIENT }}>
       <ScreenSheet />
-      <div style={{ ...at(0, 'calc(70 * var(--u))'), display: 'flex', alignItems: 'flex-end', fontSize: 'var(--fs-title)', fontWeight: 'var(--fw-semibold)' }}>
-        {deposit ? 'Deposit' : 'Withdraw'}
-      </div>
+      <Tabs tabs={[['deposit', 'Deposit'], ['withdraw', 'Withdraw']]} tab={kind} setTab={switchKind} />
 
       {/* Rows 2-3: the vault. */}
       <div style={{ ...at('10.19dvh', '18.48dvh'), ...BOX, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 'calc(6 * var(--u))', padding: 'calc(16 * var(--u))' }}>
@@ -174,7 +182,8 @@ export default function LendAction() {
         </span>
         <button onClick={() => !loading && !done && setPad(true)} style={{ border: 'none', background: 'none', padding: 0, cursor: 'pointer', fontFamily: 'inherit', textAlign: 'left' }}>
           <span className="num" style={{ fontSize: 'var(--fs-hero)', fontWeight: 'var(--fw-light)', color: over ? 'var(--color-error)' : typed ? 'var(--color-black)' : 'var(--color-muted)' }}>
-            {typed || '0'}<span className="caret">_</span> <span style={{ fontSize: 'var(--fs-content-1)' }}>{asset}</span>
+            {/* Empty → only the blinking caret (owner: "0_ USDC" made no sense). */}
+            {typed}<span className="caret">_</span>{typed ? <span style={{ fontSize: 'var(--fs-content-1)' }}> {asset}</span> : null}
           </span>
         </button>
         <div style={{ display: 'flex', gap: 'calc(8 * var(--u))' }}>
@@ -183,19 +192,16 @@ export default function LendAction() {
         </div>
       </div>
 
-      {/* Row 6: fee + the cap. */}
-      <div style={{ ...at('51.4dvh', 'auto'), transform: 'translateY(-50%)', display: 'flex', justifyContent: 'space-between', padding: '0 calc(11 * var(--u))', fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)' }}>
-        <span>Fee: <span className="num" style={{ color: 'var(--color-black)', fontWeight: 'var(--fw-semibold)' }}>{amount > 0 && !over ? (feeUsd === null ? '…' : feeUsd < 0.01 ? '<$0.01' : `up to $${feeUsd.toFixed(3)}`) : '-'}</span></span>
-        {deposit && <span>Max ${MAX_USD} per deposit</span>}
-      </div>
-
-      {/* Rows 7-8: notes. */}
-      <div style={{ ...at('61.14dvh', '18.48dvh'), display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 'calc(8 * var(--u))' }}>
-        {usdcShort && <div className="warning-badge" style={{ background: 'var(--color-error-soft)' }}>Not enough USDC for the network fee (up to ${feeUsd.toFixed(3)}).</div>}
-        <div className="warning-badge" style={{ fontSize: 'var(--fs-small)' }}>
+      {/* Row 6: fee + the cap, the note RIGHT UNDER them (owner: an orphan note in row 7 looked odd). */}
+      <div style={{ ...at('50.95dvh', 'auto'), display: 'flex', flexDirection: 'column', gap: 'calc(8 * var(--u))', padding: '0 calc(11 * var(--u))', fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', gap: 'calc(8 * var(--u))' }}>
+          <span>Fee: <span className="num" style={{ color: 'var(--color-black)', fontWeight: 'var(--fw-semibold)' }}>{amount > 0 && !over ? (feeUsd === null ? '…' : feeUsd < 0.01 ? '<$0.01' : `up to $${feeUsd.toFixed(3)}`) : '-'}</span></span>
+          {deposit && <span>Max ${MAX_USD} per deposit</span>}
+        </div>
+        <span style={{ fontSize: 'var(--fs-small)', lineHeight: 1.4 }}>
           {deposit ? 'Vault funds are lent out. Withdrawals can be delayed. Value can fall in extreme markets. No app fee.'
             : 'You can withdraw up to what the vault has free right now. The rest stays in the vault and keeps earning.'}
-        </div>
+        </span>
       </div>
 
       {/* Row 9: the button - the only place status/errors show (as Swap). */}

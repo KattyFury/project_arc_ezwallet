@@ -18,11 +18,11 @@ import { getDisplayCurrency, fmtDisplay } from '../data'
 
 const ROW1 = { position: 'absolute', left: '6.41%', right: '6.41%', top: 0, height: 'calc(70 * var(--u))' }
 const BOX = { border: 'none', borderRadius: 16, background: 'var(--color-card)' }
-const fmtAmt = (n) => Number(n || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-const fmtApy = (a) => typeof a === 'number' ? `${(a * 100).toFixed(2)}%` : '…'
+export const fmtAmt = (n) => Number(n || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+export const fmtApy = (a) => typeof a === 'number' ? `${(a * 100).toFixed(2)}%` : '…'
 export const usdRateOf = (asset, rates) => asset === 'USDC' ? 1 : (rates?.[asset] || null)
 
-function Tabs({ tab, setTab, onMenu }) {
+export function Tabs({ tabs, tab, setTab, onMenu }) {
   const t = (id, label) => (
     <button key={id} onClick={() => setTab(id)} style={{
       border: 'none', background: 'none', padding: 0, cursor: 'pointer', fontFamily: 'inherit', lineHeight: 1.2,
@@ -32,17 +32,20 @@ function Tabs({ tab, setTab, onMenu }) {
   )
   return (
     <div style={{ ...ROW1, display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
-      <div style={{ display: 'flex', gap: 'calc(24 * var(--u))' }}>{t('lend', 'Lending')}{t('borrow', 'Borrow')}</div>
-      <button onClick={onMenu} aria-label="Menu" style={{ border: 'none', background: 'none', padding: 0, cursor: 'pointer', display: 'flex' }}>
-        <Icon name="menu" size="calc(28 * var(--u))" color="var(--color-black)" />
-      </button>
+      <div style={{ display: 'flex', gap: 'calc(24 * var(--u))' }}>{tabs.map(([id, label]) => t(id, label))}</div>
+      {onMenu && (
+        <button onClick={onMenu} aria-label="Menu" style={{ border: 'none', background: 'none', padding: 0, cursor: 'pointer', display: 'flex' }}>
+          <Icon name="menu" size="calc(28 * var(--u))" color="var(--color-black)" />
+        </button>
+      )}
     </div>
   )
 }
 
-function Card({ title, lines, action }) {
+// One vault = a WHITE card inside the grey box (owner 2026-10-05).
+export function Card({ title, lines, action }) {
   return (
-    <div style={{ ...BOX, display: 'flex', alignItems: 'center', gap: 'calc(12 * var(--u))', padding: 'calc(16 * var(--u))', minWidth: 0, flexShrink: 0 }}>
+    <div style={{ border: 'none', borderRadius: 16, background: 'var(--color-white)', display: 'flex', alignItems: 'center', gap: 'calc(12 * var(--u))', padding: 'calc(16 * var(--u))', minWidth: 0, flexShrink: 0 }}>
       <div className="col" style={{ flex: 1, minWidth: 0, gap: 'calc(4 * var(--u))' }}>
         <span style={{ fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', color: title.color || 'var(--color-black)', lineHeight: 1.2, display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2, overflow: 'hidden' }}>{title.text}</span>
         {lines.map((l, i) => (
@@ -54,7 +57,7 @@ function Card({ title, lines, action }) {
   )
 }
 
-const smallBtn = (cls) => ({ className: `btn ${cls}`, style: { height: 'calc(40 * var(--u))', minHeight: 0, flexShrink: 0, fontSize: 'var(--fs-content-2)', padding: '0 calc(16 * var(--u))', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.48)' } })
+export const smallBtn = (cls) => ({ className: `btn ${cls}`, style: { height: 'calc(40 * var(--u))', minHeight: 0, flexShrink: 0, fontSize: 'var(--fs-content-2)', padding: '0 calc(16 * var(--u))', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.48)' } })
 
 export default function Lending() {
   const { navigate, params } = useNav()
@@ -83,12 +86,13 @@ export default function Lending() {
   const earned = positions?.length && positions.every(p => p.earned !== null)
     ? positions.reduce((a, p) => { const r = usdRateOf(p.asset, rates); return a === null || r === null ? null : a + p.earned * r }, 0) : null
 
-  const open = (kind, vault, position) => navigate('LendAction', { kind, vault, position })
+  const posOf = (v) => (positions || []).find(p => p.vault === v.address) || null
+  const open = (vault, position) => navigate('LendAction', { kind: 'deposit', vault, position })
 
   return (
     <div className="screen" style={{ background: GRADIENT }}>
       <ScreenSheet />
-      <Tabs tab={tab} setTab={setTab} onMenu={() => setMenu(true)} />
+      <Tabs tabs={[['lend', 'Lending'], ['borrow', 'Borrow']]} tab={tab} setTab={setTab} onMenu={() => setMenu(true)} />
 
       {menu && (
         <div className="popup-overlay" onClick={() => setMenu(false)}>
@@ -112,7 +116,9 @@ export default function Lending() {
         </div>
       ) : (<>
         {/* MY DEPOSITS - rows 2-3, always first (owner). */}
-        <div style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '10.19dvh', height: '18.48dvh', ...BOX, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 'calc(6 * var(--u))', padding: 'calc(16 * var(--u))' }}>
+        {/* Open (owner 2026-10-05) → every position as its own card (LendPositions). Hidden while there is nothing. */}
+        <div style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '10.19dvh', height: '18.48dvh', ...BOX, display: 'flex', alignItems: 'center', gap: 'calc(12 * var(--u))', padding: 'calc(16 * var(--u))' }}>
+          <div className="col" style={{ flex: 1, minWidth: 0, gap: 'calc(6 * var(--u))' }}>
           <span style={{ fontSize: 'var(--fs-content-2)', color: 'var(--color-muted-2)' }}>My deposits</span>
           <span className="num" style={{ fontSize: 'var(--fs-hero)', fontWeight: 'var(--fw-light)', lineHeight: 1.1, color: 'var(--color-black)' }}>
             {positions === null ? '…' : positions.length === 0 ? fmtDisplay(0, cur, rates) : total === null ? '…' : fmtDisplay(total, cur, rates)}
@@ -120,25 +126,29 @@ export default function Lending() {
           <span style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)' }}>
             {positions?.length === 0 ? 'No deposit yet' : earned !== null ? <>Earned so far: <span className="num" style={{ color: 'var(--color-primary)', fontWeight: 'var(--fw-semibold)' }}>+{fmtDisplay(earned, cur, rates)}</span></> : ' '}
           </span>
+          </div>
+          {positions?.length > 0 && (
+            <button {...smallBtn('btn-primary')} onClick={() => navigate('LendPositions', { positions, vaults })}>Open</button>
+          )}
         </div>
 
-        {/* Rows 4-8: ONE scroll area - my vaults first, the open vaults right under them (owner, round 2). */}
-        <div className="scroll-hidden" style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '30.57dvh', height: '49.05dvh', display: 'flex', flexDirection: 'column', gap: 'calc(16 * var(--u))' }}>
+        {/* Rows 4-8: ONE grey box, scrolling inside (owner 2026-10-05). One white card per vault, each with the same
+            neutral "Open" button - inside, row 1 switches between Deposit and Withdraw. The vaults I hold come first and
+            show my balance on the card. */}
+        <div className="scroll-hidden" style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '30.57dvh', height: '49.05dvh', ...BOX, padding: 'calc(16 * var(--u))', display: 'flex', flexDirection: 'column', gap: 'calc(16 * var(--u))' }}>
           {error && <div className="warning-badge" style={{ background: 'var(--color-error-soft)', flexShrink: 0 }}>{error}</div>}
-          {(positions || []).map(p => (
-            <Card key={p.vault} title={{ text: p.name }}
-              lines={[<span key="a" className="num" style={{ color: 'var(--color-black)', fontWeight: 'var(--fw-semibold)' }}>{fmtAmt(p.balance)} {p.asset}</span>, `APY ${fmtApy(p.apy)}`]}
-              action={<button {...smallBtn('btn-secondary')} onClick={() => open('withdraw', vaults?.find(v => v.address === p.vault) || { address: p.vault, name: p.name, asset: p.asset, apy: p.apy }, p)}>Withdraw</button>} />
-          ))}
-          <span style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)', flexShrink: 0 }}>{vaults === null ? 'Loading vaults…' : 'Vaults you can deposit into'}</span>
-          {(vaults || []).map(v => {
-            // Nothing free to pay out → greyed (paler colour, never opacity - owner) and no Deposit button.
+          {vaults === null && <span style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)' }}>Loading vaults…</span>}
+          {[...(vaults || [])].sort((a, b) => (posOf(b) ? 1 : 0) - (posOf(a) ? 1 : 0)).map(v => {
+            const p = posOf(v)
+            // Nothing free to pay out → name in the paler grey (never opacity - owner) + the honest line.
             const locked = !(v.withdrawable >= 0.01)
             return (
-              <Card key={v.address} title={{ text: v.name, color: locked ? 'var(--color-muted)' : undefined }}
-                lines={[`APY ${fmtApy(v.apy)} · ${v.curator}`,
+              <Card key={v.address} title={{ text: v.name, color: locked && !p ? 'var(--color-muted)' : undefined }}
+                lines={[
+                  ...(p ? [<span key="m" className="num" style={{ color: 'var(--color-black)', fontWeight: 'var(--fw-semibold)' }}>My deposit: {fmtAmt(p.balance)} {p.asset}</span>] : []),
+                  `APY ${fmtApy(v.apy)} · ${v.curator}`,
                   locked ? 'Temporarily cannot withdraw' : <>Withdrawable now: <span className="num">{fmtAmt(v.withdrawable)} {v.asset}</span></>]}
-                action={locked ? null : <button {...smallBtn('btn-primary')} onClick={() => open('deposit', v)}>Deposit</button>} />
+                action={<button {...smallBtn('btn-primary')} onClick={() => open(v, p)}>Open</button>} />
             )
           })}
         </div>
