@@ -563,9 +563,14 @@ export default function Swap() {
               ⚠️ "enter", NOT "input": the Figma text reads "Slide or tap here to input", but the user
               explicitly decided (2026-09-08) to keep "enter" regardless of what Figma draws -
               this is a deliberate standing override, not an oversight, so it is NOT changed to match. */}
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 'calc(6 * var(--u))', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%', ...(needAmount ? { fontSize: 'var(--fs-content-2)' } : null) }}>
+          {/* Long text (errors) WRAPS to at most 2 centred lines (owner 2026-10-05) - it used to be one nowrap line
+              cut short, and line-height 1 + overflow:hidden clipped g/y/p even on a single line. 2 × 20 × 1.2 = 48
+              design px fits the 58px button; only a 3rd line gets "…". */}
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 'calc(6 * var(--u))', maxWidth: '100%', minWidth: 0, ...(needAmount ? { fontSize: 'var(--fs-content-2)' } : null) }}>
             {success && <Icon name="check" size="var(--ib-content-1)" color="var(--color-white)" />}
-            {error || status || (needAmount ? 'Slide or tap here to enter' : 'Swap')}
+            <span style={{ display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2, overflow: 'hidden', lineHeight: 1.2, textAlign: 'center', minWidth: 0 }}>
+              {error || status || (needAmount ? 'Slide or tap here to enter' : 'Swap')}
+            </span>
           </span>
         </button>
           )
