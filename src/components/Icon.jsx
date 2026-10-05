@@ -22,7 +22,8 @@ import {
   ChevronDown,      // down2     - WAS a solid triangle; it is a dropdown caret, so a chevron is the honest shape
   Download,         // download  - arrow into a tray
   Delete,           // erase     - backspace key with an x (the numpad)
-  ArrowUpDown,      // exchange  - a pair of vertical arrows
+  RefreshCcwDot,    // exchange  - a circular arrow around a dot (Service hub Exchange card, owner 2026-10-05; was ArrowUpDown)
+  HandCoins,        // lending   - a hand holding coins (Service hub Lending / Borrow card, owner 2026-10-05)
   Globe,            // globe
   LayoutGrid,       // hub       - 2x2 rounded squares (the Services tab)
   User,             // human     - a person (Contacts)
@@ -37,7 +38,7 @@ import {
   Scan,             // scan      - viewfinder corners
   Share2,           // share     - three connected nodes
   Shield,           // shield
-  ArrowUpDown as TradeArrows, // trade - the same up/down pair as `exchange`, drawn heavier
+  ArrowUpDown as TradeArrows, // trade - an up/down arrow pair, drawn heavier (Swap's reverse button)
   ArrowUp,          // up        - a plain up arrow (money sent)
   Send,             // send      - a paper plane (the Send button on each Contacts row, 2026-10-03)
   ArrowUpFromLine,  // withdraw  - arrow leaving a line (Menu Withdraw; owner picked option B 2026-10-03 - plain ↑ clashed with Send)
@@ -63,7 +64,8 @@ const ICONS = {
   down2: ChevronDown,
   download: Download,
   erase: Delete,
-  exchange: ArrowUpDown,
+  exchange: RefreshCcwDot,
+  lending: HandCoins,
   globe: Globe,
   hub: LayoutGrid,
   human: User,

@@ -22,7 +22,7 @@ const SERVICES = [
     : { id: 'swap', icon: 'exchange', label: 'Exchange', desc: 'Coming soon', screen: null },
   // LABS (owner 2026-10-05): ONE card for Lending + Borrow (tabs inside); only where src/labs.js allows it.
   ...(isLabsHost(window.location.hostname)
-    ? [{ id: 'lend', icon: 'deposit', label: 'Lending / Borrow', desc: 'Earn interest on USDC & EURC in Morpho vaults', screen: 'Lending' }]
+    ? [{ id: 'lend', icon: 'lending', label: 'Lending / Borrow', desc: 'Earn interest on USDC & EURC in Morpho vaults', screen: 'Lending' }]
     : []),
 ]
 
@@ -46,7 +46,7 @@ export default function ServiceHub() {
           // BLACK SQUARE for the icon (node 58:159) - a placeholder, per the rule the user set on the Add
           // screen ("tìm cái tương tự rồi add vào"). Unlike the token squares on Send/Receive (no real
           // brand mark exists for USDC/EURC/cirBTC yet), Exchange already HAS an established icon in this
-          // app (Icon name="exchange" - the ArrowUpDown pair, used for this exact feature before the
+          // app (Icon name="exchange" - RefreshCcwDot since 2026-10-05, owner's pick; used for this exact feature before the
           // redesign), so that real icon is used here rather than a literal square.
           // HEIGHT = THE CONTENT (owner 2026-10-05: the fixed 2-row 156px card was mostly empty). Layout: 1/4 of the
           // width = the logo, 3/4 = the text (one big name line + at most 3 description lines, "…" past that).
