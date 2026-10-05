@@ -41,17 +41,21 @@ export default function ServiceHub() {
           // brand mark exists for USDC/EURC/cirBTC yet), Exchange already HAS an established icon in this
           // app (Icon name="exchange" - the ArrowUpDown pair, used for this exact feature before the
           // redesign), so that real icon is used here rather than a literal square.
+          // HEIGHT = THE CONTENT (owner 2026-10-05: the fixed 2-row 156px card was mostly empty). Layout: 1/4 of the
+          // width = the logo, 3/4 = the text (one big name line + at most 3 description lines, "…" past that).
           <button key={id} disabled={soon} onClick={soon ? undefined : () => navigate(screen)}
             style={{
-              position: 'absolute', left: '6.41%', top: '10.19dvh', width: '87.18%', height: '18.48dvh',
+              position: 'absolute', left: '6.41%', top: '10.19dvh', width: '87.18%',
               border: 'none', borderRadius: 16, background: 'var(--color-white)', boxShadow: '0 0 8px rgba(0, 0, 0, 0.48)',
-              display: 'flex', alignItems: 'center', padding: '0 calc(16 * var(--u)) 0 calc(8.5 * var(--u))', gap: 'calc(9 * var(--u))', minWidth: 0,
+              display: 'flex', alignItems: 'center', padding: 'calc(16 * var(--u)) calc(16 * var(--u)) calc(16 * var(--u)) 0', minWidth: 0,
               fontFamily: 'inherit', textAlign: 'left', opacity: soon ? 0.4 : 1, cursor: soon ? 'not-allowed' : 'pointer',
             }}>
-            <Icon name={icon} size="min(19.46vw, calc(var(--screen-max) * 0.1946))" color="var(--color-brand)" style={{ flexShrink: 0 }} />
-            <span className="col" style={{ minWidth: 0, gap: 'calc(2 * var(--u))' }}>
-              <span style={{ fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)', lineHeight: 1.2 }}>{label}:</span>
-              <span style={{ fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-normal)', color: 'var(--color-black)', lineHeight: 1.3 }}>{desc}</span>
+            <span style={{ width: '25%', flexShrink: 0, display: 'flex', justifyContent: 'center' }}>
+              <Icon name={icon} size="calc(56 * var(--u))" color="var(--color-brand)" />
+            </span>
+            <span className="col" style={{ width: '75%', minWidth: 0, gap: 'calc(2 * var(--u))' }}>
+              <span style={{ fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)', lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{label}:</span>
+              <span style={{ fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-normal)', color: 'var(--color-black)', lineHeight: 1.3, display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 3, overflow: 'hidden' }}>{desc}</span>
             </span>
           </button>
         )
