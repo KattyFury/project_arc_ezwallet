@@ -16,6 +16,21 @@
 3. **Every change goes to BOTH branches** (owner, 2026-10-03): commit on `test`, then
    `git checkout main && git merge --ff-only test`, push both. Both Pages projects auto-deploy.
 
+## ▶ Session 2026-10-05 (2) - Lending (Earn) built, LABS only
+- **Plans live on the owner's Desktop, not in the repo** (owner): `ezwallet-LEND-MEMES-PLAN.md` = Lending/Borrow +
+  Memes decisions and the Phase L0 measurements (§12).
+- **LABS flag (`src/labs.js`):** new Service hub features ship to BOTH branches but are ON only on
+  test.ezwallet.cash + localhost (client hides the card/screens, the API answers 503 elsewhere). Turning on
+  ezwallet.cash = add it to `LABS_HOSTS` - owner's call.
+- **Earn built** (Service hub card "Lending / Borrow", tabs Lending | Borrow; Borrow tab = "coming next"):
+  `functions/api/earn.js` + `_earnCore.js`, `src/earn.js`, `screens/Lending.jsx` + `LendAction.jsx`, `test/earn.test.mjs`,
+  `tools/verify-earn.mjs` (read-only dry run). Circle Earn Kit REST = the swap pattern (same adapter, one PIN). Rules:
+  curators Galaxy/Steakhouse/Keyrock/Bitwise, deposit ≤ the vault's "Withdrawable now", ≤ $200 (USD via live price).
+- **Measured:** deposit dry run PASS (1 USDC → Steakhouse Prime USDC, shares = quote, gas 418,782). **Withdraw NOT
+  measured** (needs a wallet holding shares) → first real test = owner does 1 USDC deposit + withdraw on the test site.
+- Next: owner's 1 USDC round trip · Borrow (Borrow Kit, batch shape known - plan §12) · Memes M0 (Arc Studio research
+  of the launchpads, results in the Desktop plan).
+
 ## ▶ Session 2026-10-05 - where we stopped
 - **Phase now: the owner tests every feature on the phone and sends small polish notes, then announces the mainnet
   launch.** Handle each note fast: measure, offer options for anything real-money or ambiguous, push to BOTH branches.

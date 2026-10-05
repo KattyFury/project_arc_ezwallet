@@ -55,7 +55,7 @@ export async function resolveTokenIn(net, tokenIn) {
 }
 
 // IAdapter.execute - the ABI copied verbatim from @circle-fin/adapter-viem-v2 (adapterContractAbi).
-const ADAPTER_ABI = [{
+export const ADAPTER_ABI = [{
   type: 'function', name: 'execute', stateMutability: 'payable', outputs: [],
   inputs: [
     { name: 'params', type: 'tuple', components: [
@@ -76,13 +76,13 @@ const ADAPTER_ABI = [{
     { name: 'signature', type: 'bytes' },
   ],
 }]
-const ERC20_ABI = [{ type: 'function', name: 'approve', stateMutability: 'nonpayable',
+export const ERC20_ABI = [{ type: 'function', name: 'approve', stateMutability: 'nonpayable',
   inputs: [{ name: 'spender', type: 'address' }, { name: 'amount', type: 'uint256' }], outputs: [] }]
 const MULTICALL3_ABI = [{ type: 'function', name: 'aggregate3', stateMutability: 'payable',
   inputs: [{ name: 'calls', type: 'tuple[]', components: [
     { name: 'target', type: 'address' }, { name: 'allowFailure', type: 'bool' }, { name: 'callData', type: 'bytes' },
   ] }], outputs: [] }]
-const BALANCE_OF_ABI = [{ type: 'function', name: 'balanceOf', stateMutability: 'view',
+export const BALANCE_OF_ABI = [{ type: 'function', name: 'balanceOf', stateMutability: 'view',
   inputs: [{ name: 'a', type: 'address' }], outputs: [{ name: '', type: 'uint256' }] }]
 
 // Call the Stablecoin Kit /swap → { ok, status, data }. data.transaction holds executionParams + signature.

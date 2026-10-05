@@ -4,6 +4,7 @@ import Icon from '../components/Icon'
 import { useNav } from '../nav'
 import { GRADIENT } from '../brandBg'
 import { NET } from '../clientNet'
+import { isLabsHost } from '../labs'
 
 // SERVICE HUB - Figma node 58:119 ("Service"), rebuilt 2026-09-23. Same gradient/sheet/barless-NavBar
 // frame as Send/Receive; this screen shows a TITLE instead of the balance (no BalanceHeader here -
@@ -19,6 +20,10 @@ const SERVICES = [
   NET.swap
     ? { id: 'swap', icon: 'exchange', label: 'Exchange', desc: `Swap between ${Object.keys(NET.tokens).join(', ').replace(/, ([^,]+)$/, ' & $1')}`, screen: 'Swap' }
     : { id: 'swap', icon: 'exchange', label: 'Exchange', desc: 'Coming soon', screen: null },
+  // LABS (owner 2026-10-05): ONE card for Lending + Borrow (tabs inside); only where src/labs.js allows it.
+  ...(isLabsHost(window.location.hostname)
+    ? [{ id: 'lend', icon: 'deposit', label: 'Lending / Borrow', desc: 'Earn interest on USDC & EURC in Morpho vaults', screen: 'Lending' }]
+    : []),
 ]
 
 export default function ServiceHub() {
@@ -32,6 +37,8 @@ export default function ServiceHub() {
           gradient+ScreenSheet screen (promoted once Exchange/Security/About also needed it). */}
       <div className="sheet-title">Service hub</div>
 
+      {/* The cards stack one gap apart from row 2 down (a 2nd card arrived 2026-10-05 - Lending / Borrow). */}
+      <div style={{ position: 'absolute', left: '6.41%', top: '10.19dvh', width: '87.18%', display: 'flex', flexDirection: 'column', gap: 'calc(16 * var(--u))' }}>
       {SERVICES.map(({ id, icon, label, desc, screen }) => {
         const soon = !screen
         return (
@@ -45,7 +52,7 @@ export default function ServiceHub() {
           // width = the logo, 3/4 = the text (one big name line + at most 3 description lines, "…" past that).
           <button key={id} disabled={soon} onClick={soon ? undefined : () => navigate(screen)}
             style={{
-              position: 'absolute', left: '6.41%', top: '10.19dvh', width: '87.18%',
+              width: '100%',
               border: 'none', borderRadius: 16, background: 'var(--btn-grad-white)', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.48)',
               display: 'flex', alignItems: 'center', padding: 'calc(16 * var(--u)) calc(16 * var(--u)) calc(16 * var(--u)) 0', minWidth: 0,
               fontFamily: 'inherit', textAlign: 'left', opacity: soon ? 0.4 : 1, cursor: soon ? 'not-allowed' : 'pointer',
@@ -60,6 +67,7 @@ export default function ServiceHub() {
           </button>
         )
       })}
+      </div>
 
       <NavBar active="ServiceHub" />
     </div>
