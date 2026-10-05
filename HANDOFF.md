@@ -53,7 +53,7 @@
 
 **Owner answers - do NOT offer these again:** contact photos stay per-device · no `<span>` cap-height trim on
 buttons · seed/private-key import shelved (Circle has no import) · fiat on/off-ramp dropped (Onramp Kit needs a
-business KYB) · no lock after a PIN reset (a security mail instead) · send reserve stays 0.01 USDC · no app swap fee.
+business KYB) · no lock after a PIN reset (a security mail instead) · send reserve stays 0.01 USDC · no app swap fee · notifications disappear 24h after the EVENT (block time / announcement time), the board re-filters on every tick (2026-10-05).
 
 ## Map (one repo, three Cloudflare Pages projects)
 

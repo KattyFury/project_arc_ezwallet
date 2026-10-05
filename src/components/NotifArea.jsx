@@ -52,14 +52,14 @@ function pollIncoming(after) {
             // notifications were merged) - the Swap screen already fired "Swapped X to ~Y (complete)". Still markNotified so it does not repeat.
           } else if (tx.unverified) {
             // An UNVERIFIED token (meme / airdrop / spam) - YELLOW, says so in words, not tappable (it is not in History).
-            addNotif(`Received ${amt} ${symbol} (unverified token) from ${findContactName(tx.from) || shortenAddr(tx.from)}`, 'unverified', tx.hash, `recv-${tx.hash}-${tx.contractAddress}`)
+            addNotif(`Received ${amt} ${symbol} (unverified token) from ${findContactName(tx.from) || shortenAddr(tx.from)}`, 'unverified', tx.hash, `recv-${tx.hash}-${tx.contractAddress}`, null, parseInt(tx.timeStamp) * 1000)
           } else {
             // Show the CONTACT NAME if the sender's address is saved (matching the "Sent to <name>" notification)
             const fromName = findContactName(tx.from) || shortenAddr(tx.from)
             // The sender's NOTE goes into the notification, bold, full length (owner 2026-10-03). Free: the receipt was
             // already read for this row by loadHistoryRows and its memo cached, so getTxMemo does not hit the chain again.
             const memo = await getTxMemo(tx.hash).catch(() => null)
-            addNotif(`Received ${amt} ${symbol} from ${fromName}`, 'received', tx.hash, `recv-${tx.hash}`, memo)
+            addNotif(`Received ${amt} ${symbol} from ${fromName}`, 'received', tx.hash, `recv-${tx.hash}`, memo, parseInt(tx.timeStamp) * 1000)
           }
           markNotified(tx.hash)
         }
@@ -167,6 +167,7 @@ export default function NotifArea({ hints = [], warning = null, pollMs = 15000 }
   useEffect(() => {
     const tick = () => {
       if (document.visibilityState !== 'visible') return
+      setNotifs(getNotifs())                   // drops anything that passed 24h while the app stayed open (owner 2026-10-05)
       pollIncoming(() => setNotifs(getNotifs()))
       pollInbox(() => setNotifs(getNotifs()))   // announcements - throttled to 5 minutes inside
     }

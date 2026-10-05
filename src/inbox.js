@@ -23,7 +23,7 @@ export function pollInbox(after) {
       try { seen = new Set(JSON.parse(localStorage.getItem(key) || '[]')) } catch { seen = new Set() }
       const fresh = messages.filter(m => !seen.has(m.id)).sort((a, b) => a.ts - b.ts)
       if (!fresh.length) return
-      fresh.forEach(m => { addNotif(m.text, 'announce', null, `inbox-${m.id}`); seen.add(m.id) })
+      fresh.forEach(m => { addNotif(m.text, 'announce', null, `inbox-${m.id}`, null, m.ts); seen.add(m.id) })
       localStorage.setItem(key, JSON.stringify([...seen].slice(-100)))
       after()
     })
