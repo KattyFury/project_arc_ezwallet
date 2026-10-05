@@ -9,6 +9,7 @@ import * as wallet from './functions/api/wallet.js'
 import * as send from './functions/api/send.js'
 import * as swap from './functions/api/swap.js'
 import * as earn from './functions/api/earn.js'
+import * as meme from './functions/api/meme.js'
 import * as sync from './functions/api/sync.js'
 import * as health from './functions/api/health.js'
 import * as auth from './functions/api/auth.js'
@@ -61,6 +62,7 @@ const ROUTES = {
   '/api/send': send,
   '/api/swap': swap,
   '/api/earn': earn,
+  '/api/meme': meme,
   '/api/sync': sync,
   '/api/health': health,
   '/api/auth': auth,

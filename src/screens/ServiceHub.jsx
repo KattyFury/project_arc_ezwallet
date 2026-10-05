@@ -22,7 +22,8 @@ const SERVICES = [
     : { id: 'swap', icon: 'exchange', label: 'Exchange', desc: 'Coming soon', screen: null },
   // LABS (owner 2026-10-05): ONE card for Lending + Borrow (tabs inside); only where src/labs.js allows it.
   ...(isLabsHost(window.location.hostname)
-    ? [{ id: 'lend', icon: 'lending', label: 'Lending / Borrow', desc: 'Earn interest on USDC & EURC in Morpho vaults', screen: 'Lending' }]
+    ? [{ id: 'lend', icon: 'lending', label: 'Lending / Borrow', desc: 'Earn interest on USDC & EURC in Morpho vaults', screen: 'Lending' },
+       { id: 'memes', icon: 'memes', label: 'Memes', desc: 'Buy & sell tokens launched on Argus', screen: 'Memes' }]
     : []),
 ]
 

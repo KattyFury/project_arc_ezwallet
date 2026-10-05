@@ -28,8 +28,17 @@
   curators Galaxy/Steakhouse/Keyrock/Bitwise, deposit ≤ the vault's "Withdrawable now", ≤ $200 (USD via live price).
 - **Measured:** deposit dry run PASS (1 USDC → Steakhouse Prime USDC, shares = quote, gas 418,782). **Withdraw NOT
   measured** (needs a wallet holding shares) → first real test = owner does 1 USDC deposit + withdraw on the test site.
-- Next: owner's 1 USDC round trip · Borrow (Borrow Kit, batch shape known - plan §12) · Memes M0 (Arc Studio research
-  of the launchpads, results in the Desktop plan).
+- Lending UI round 2 (owner): rows 4-8 one grey box of white vault cards with a neutral **Open**; My deposits → Open →
+  `LendPositions`; the vault screen has row-1 tabs Deposit | Withdraw.
+- **Memes M1 built (LABS only):** `functions/api/meme.js` + `_memeCore.js`, `src/meme.js`, `screens/Memes.jsx` +
+  `MemeToken.jsx`, `test/meme.test.mjs`. Argus launch tokens on Arc's shared Uniswap v4 (UniversalRouter + Permit2 through
+  Multicall3From = one PIN). Honeypot guard = simulated buy 1 USDC → sell all (eth_simulateV1, USDC topped up by a
+  native-balance override). Max $20 per buy, min out = simulated - 3%, buys refused while Argus's opening snipe tax is on.
+  Hidden = not supported or cannot be sold. Measured read-only on mainnet (STABLE -3.94%, ARPEP -7.78% round trip); **no
+  real buy/sell yet** → first owner test with ~1 USDC on the test site.
+  ⚠️ Arc's UniversalRouter needs the NEW v4 `ExactInputSingleParams` (with `minHopPriceX36`).
+- Next: owner's 1 USDC round trips (Lending, Memes) · Borrow (owner picks the liquidation alert: Circle webhook = a 2nd
+  PIN, or a scheduled Worker) · more launchpads (ArcStockPad / Arcade use the same v4 path; Mercuri pre-graduation needs its curve).
 
 ## ▶ Session 2026-10-05 - where we stopped
 - **Phase now: the owner tests every feature on the phone and sends small polish notes, then announces the mainnet

@@ -23,6 +23,7 @@ import {
   Download,         // download  - arrow into a tray
   Delete,           // erase     - backspace key with an x (the numpad)
   RefreshCcwDot,    // exchange  - a circular arrow around a dot (Service hub Exchange card, owner 2026-10-05; was ArrowUpDown)
+  Rocket,           // memes     - a rocket (Service hub Memes card, 2026-10-05)
   HandCoins,        // lending   - a hand holding coins (Service hub Lending / Borrow card, owner 2026-10-05)
   Globe,            // globe
   LayoutGrid,       // hub       - 2x2 rounded squares (the Services tab)
@@ -66,6 +67,7 @@ const ICONS = {
   erase: Delete,
   exchange: RefreshCcwDot,
   lending: HandCoins,
+  memes: Rocket,
   globe: Globe,
   hub: LayoutGrid,
   human: User,
