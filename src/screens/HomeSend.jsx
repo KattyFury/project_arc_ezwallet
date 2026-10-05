@@ -72,8 +72,10 @@ export const HALF_OVAL_STYLE = {
   position: 'absolute', left: '50%', bottom: 0, transform: 'translateX(-50%)', zIndex: 10,
   display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
   width: 'min(66.15vw, calc(var(--screen-max) * 0.6615))', height: 'calc(40 * var(--u))',
-  borderRadius: '38px 38px 0 0', border: 'none', background: 'var(--btn-grad-white)',
-  boxShadow: 'none',   // owner 2026-10-05: these two tabs (Hold to show tokens, Tap to copy) carry NO shadow
+  // Owner 2026-10-05: the ONE exception to "every button has a gradient" - these two tabs are PLAIN WHITE, and they
+  // KEEP their shadow (an earlier pass misread this as "no shadow").
+  borderRadius: '38px 38px 0 0', border: 'none', background: 'var(--color-white)',
+  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.48)',   // the standard button drop shadow (Y 2, owner 2026-10-05)
   padding: '0 calc(18 * var(--u))', overflow: 'hidden', textOverflow: 'ellipsis',
   color: 'var(--color-content)', fontFamily: 'var(--font-condensed)', fontSize: 'var(--fs-content-2)',
   fontWeight: 'var(--fw-semibold)', cursor: 'pointer', whiteSpace: 'nowrap',
@@ -283,7 +285,7 @@ export default function HomeSend() {
       <button onClick={() => navigate('PasteAddress')} style={{
         position: 'absolute', left: '6.41%', top: SIDE_BTN.top, width: '25.64%', height: SIDE_BTN.height,
         background: 'var(--btn-grad-white)', border: 'none', borderRadius: 16,
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.48)',
+        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.48)',
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(2 * var(--u))',
         fontFamily: 'inherit', fontSize: 'var(--fs-caption)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)',
         cursor: 'pointer', WebkitTapHighlightColor: 'transparent',
@@ -295,7 +297,7 @@ export default function HomeSend() {
       <button onClick={() => navigate('QRScanner')} style={{
         position: 'absolute', left: '34.10%', top: BIG_BTN.top, width: '31.79%', height: BIG_BTN.height,
         background: 'var(--btn-grad-brand)', border: 'none', borderRadius: 16,
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.48)',
+        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.48)',
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(2 * var(--u))',
         fontFamily: 'inherit', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-white)',
         cursor: 'pointer', WebkitTapHighlightColor: 'transparent',
@@ -307,7 +309,7 @@ export default function HomeSend() {
       <button onClick={() => navigate('Contacts')} style={{
         position: 'absolute', left: '67.95%', top: SIDE_BTN.top, width: '25.64%', height: SIDE_BTN.height,
         background: 'var(--btn-grad-white)', border: 'none', borderRadius: 16,
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.48)',
+        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.48)',
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(2 * var(--u))',
         fontFamily: 'inherit', fontSize: 'var(--fs-caption)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)',
         cursor: 'pointer', WebkitTapHighlightColor: 'transparent',

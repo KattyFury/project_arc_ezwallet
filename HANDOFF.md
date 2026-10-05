@@ -85,7 +85,7 @@
 
 **Owner answers - do NOT offer these again:** contact photos stay per-device · no `<span>` cap-height trim on
 buttons · seed/private-key import shelved (Circle has no import) · fiat on/off-ramp dropped (Onramp Kit needs a
-business KYB) · no lock after a PIN reset (a security mail instead) · send reserve stays 0.01 USDC · no app swap fee · Send's Available line = the number only + [50%] [100%] HINT chips (outlined, flat - not buttons); 100% for USD/USDC = all USDC minus the 0.01 reserve (no auto-convert), exact strings, never a float · the two half-oval tabs (Hold to show tokens, Tap to copy) have NO shadow · notifications disappear 24h after the EVENT (block time / announcement time), the board re-filters on every tick (2026-10-05).
+business KYB) · no lock after a PIN reset (a security mail instead) · send reserve stays 0.01 USDC · no app swap fee · Send's Available line = the number only + [50%] [100%] HINT chips (outlined, flat - not buttons); 100% for USD/USDC = all USDC minus the 0.01 reserve (no auto-convert), exact strings, never a float · the two half-oval tabs (Hold to show tokens, Tap to copy) are the ONLY buttons WITHOUT a gradient: plain white, and they KEEP the standard drop shadow (an earlier pass wrongly removed it) · button drop shadow = `0 2px 8px rgba(0,0,0,.48)` (Y 2) · notifications disappear 24h after the EVENT (block time / announcement time), the board re-filters on every tick (2026-10-05).
 
 ## Map (one repo, three Cloudflare Pages projects)
 
@@ -119,11 +119,11 @@ Secrets (Pages env, `.env.txt` locally): `API_KEY` (Circle LIVE - wallets + swap
   - Blue `--btn-grad-brand`: `linear-gradient(to top, brand 88% + black, brand 88% + white)` (brand `#0B53BF`).
   - White `--btn-grad-white`: `linear-gradient(to top, --color-card 45% + white, #FFFFFF)` - the light grey is mixed
     from the card grey, so it is not a 4th grey.
-  - **Button shadow drops DOWN (owner 2026-10-05): offset X 0 / Y 4** (8 was too much, owner same day), same blur + opacity as before (`0 4px 8px
-    rgba(0,0,0,.48)`; was the centred glow `0 0 8px`). Containers/popups keep their own shadows; Home's "Hold to show
-    tokens" tab keeps its glow (its bottom edge sits on the card's edge, a drop shadow would spill out of the card).
+  - **Button shadow drops DOWN (owner 2026-10-05): offset X 0 / Y 2** (8 was too much, then 4, now 2 - owner same day), `0 2px 8px
+    rgba(0,0,0,.48)` (was the centred glow `0 0 8px`). Containers/popups keep their own shadows; The two half-oval tabs use the same
+    drop shadow on a plain white fill.
   - **EVERY button** carries one (owner: "mọi nút đều có gradient"), inline-styled ones included; green/red buttons use
-    `--btn-grad-success` / `--btn-grad-error` (same recipe). Deliberately flat: containers/popups/notification rows,
+    `--btn-grad-success` / `--btn-grad-error` (same recipe). Deliberately flat: the two half-oval tabs (plain white + shadow, owner 2026-10-05), containers/popups/notification rows,
     Home's token list rows (they match the plain token rows), the active NavBar cell (it joins the white sheet), the %
     slider thumb, Send's down-arrow circle (not tappable).
 - **Everything scales with the viewport.** `--u` (index.css) = one design pixel =

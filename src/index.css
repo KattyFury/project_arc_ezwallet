@@ -420,21 +420,21 @@ body {
 .btn-primary {
   background: var(--btn-grad-brand);
   color: var(--color-white);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.48);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.48);
 }
 
 .btn-secondary {
   background: var(--btn-grad-white);
   color: var(--color-black);
   border: 1.5px solid var(--color-gray);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.48);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.48);
 }
 
 /* STATUS buttons - use this class, stop inlining `background: var(--color-primary)` yourself
    (a flat button looks out of place among gradient ones). Colours follow the semantic system: success/received = green,
    warning = yellow, error/delete = red. The gradient formulas are in :root --grad-*. */
-.btn-success { background: var(--btn-grad-success); color: var(--color-white); border: none; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.48); }
-.btn-error   { background: var(--btn-grad-error);   color: var(--color-white); border: none; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.48); }
+.btn-success { background: var(--btn-grad-success); color: var(--color-white); border: none; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.48); }
+.btn-error   { background: var(--btn-grad-error);   color: var(--color-white); border: none; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.48); }
 /* (No screen needs the yellow warning button yet - when one does: background var(--grad-warning) + BLACK text is MANDATORY,
    white on yellow is only 2.15:1 and older users cannot read it.) */
 
@@ -588,7 +588,7 @@ body {
    fixing all three screens' numpad at once per the "one shared definition" rule. */
 .numpad-gray .numpad { gap: calc(8 * var(--u)); }
 .numpad-gray .numpad-row { gap: calc(8 * var(--u)); }
-.numpad-gray .numpad-key { background: var(--btn-grad-white); border-radius: 16px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.48); }
+.numpad-gray .numpad-key { background: var(--btn-grad-white); border-radius: 16px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.48); }
 .numpad-gray .numpad-key:active { background: rgba(0,0,0,0.06); }
 .numpad-gray .numpad-key.empty { background: transparent; box-shadow: none; }
 
@@ -704,7 +704,7 @@ body {
   font-weight: var(--fw-semibold);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.48);   /* glow, not the old straight-down shadow - matches every other button rebuilt 2026-09-10 */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.48);   /* glow, not the old straight-down shadow - matches every other button rebuilt 2026-09-10 */
 }
 
 .action-card.primary {

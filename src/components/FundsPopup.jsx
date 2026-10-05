@@ -133,7 +133,7 @@ function Withdraw() {
       <button onClick={go} disabled={!ok} className="btn"
         style={{
           height: 'var(--btn-h)', border: 'none', borderRadius: 16,
-          background: 'var(--btn-grad-brand)', color: 'var(--color-white)', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.48)',
+          background: 'var(--btn-grad-brand)', color: 'var(--color-white)', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.48)',
           fontFamily: 'inherit', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)',
           opacity: ok ? 1 : 0.5, cursor: ok ? 'pointer' : 'not-allowed',
         }}>
