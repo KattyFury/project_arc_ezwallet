@@ -84,6 +84,14 @@ Secrets (Pages env, `.env.txt` locally): `API_KEY` (Circle LIVE - wallets + swap
   secondary text `#667085` (`--color-muted-2`). Never add a fourth.
 - **Radius: 16px on every box and button**, or fully round (pills, circles, avatar). No 8px anywhere.
 - **Thin lines: 0.5px `#94A3B8`**.
+- **Button depth (owner 2026-10-05):** buttons carry a SOFT bottom→top gradient so they lift off the page - subtle,
+  never at the cost of legibility; text colours unchanged. Tokens in `src/index.css`, used by `.btn-primary` /
+  `.btn-secondary` - reuse them for any new button, never hand-write another gradient:
+  - Blue `--btn-grad-brand`: `linear-gradient(to top, brand 88% + black, brand 88% + white)` (brand `#0B53BF`).
+  - White `--btn-grad-white`: `linear-gradient(to top, --color-card 45% + white, #FFFFFF)` - the light grey is mixed
+    from the card grey, so it is not a 4th grey.
+  - Not yet applied (inline-styled, ask the owner first): numpad keys, token chips, Exchange's reverse button,
+    Service hub cards.
 - **Everything scales with the viewport.** `--u` (index.css) = one design pixel =
   `min(1px, 100dvh/844, 100vw/390)`. Write every size as `calc(N * var(--u))` - fonts, heights, icons,
   paddings, gaps. Radii, borders, shadows and hairlines stay fixed. Gaps that must stay readable:
