@@ -1,6 +1,6 @@
 # HANDOFF – ezwallet
 
-**Updated:** 2026-10-05 (auto-convert on send live) · **Repo:** `KattyFury/project_arc_ezwallet` (public; renamed from
+**Updated:** 2026-10-05 evening (auto-convert live, unverified send, button depth, owner polish round) · **Repo:** `KattyFury/project_arc_ezwallet` (public; renamed from
 `KattyFury/ezwallet` 2026-10-03 - Pages track it by repo id) · **Local:** `D:\Files\Claude\Big projects\project_arc_ezwallet`
 **Status:** ezwallet.cash serves **Arc MAINNET** (real money). Target: public launch within October 2026.
 
@@ -16,7 +16,21 @@
 3. **Every change goes to BOTH branches** (owner, 2026-10-03): commit on `test`, then
    `git checkout main && git merge --ff-only test`, push both. Both Pages projects auto-deploy.
 
-## Current state (2026-10-04)
+## ▶ Session 2026-10-05 - where we stopped
+- **Phase now: the owner tests every feature on the phone and sends small polish notes, then announces the mainnet
+  launch.** Handle each note fast: measure, offer options for anything real-money or ambiguous, push to BOTH branches.
+- Shipped today (all on `main` + `test`): auto-convert on send (`docs/SWAP-PLAN.md` §6-7, two real sends checked on
+  chain) · keep one extra feeMax as USDC after a convert · notifications vanish 24h after the EVENT · unverified tokens
+  can be SENT (not swapped - a "Memes" hub is planned) · Swap CTA text wraps to 2 lines then shrinks the font ·
+  Service hub card fits its content · every button has the soft gradient + a Y-4 drop shadow (exceptions in §2) ·
+  Send's Available = number + [50%] [100%] hint chips.
+- **Owner's wallet `0xdfe2…b0ab` holds ~0.036 USDC** (< the ~0.042 feeMax) since the first convert build: its next
+  auto-convert / EURC swap is refused until a few cents of USDC arrive. Not a bug of the current build.
+- Not done yet: real on-chain test of an unverified-token send (no tx seen); friendlier "No route available" /
+  "Not enough USDC for the network fee" wording was offered, not requested; Phase 3 (History shows a convert as one row).
+- Flaky: one `npm test` run failed once (60/61) and passed on 6 reruns - test not identified.
+
+## Current state (2026-10-04, updated 2026-10-05)
 - **Tokens:** verified = USDC, EURC, cirBTC (`src/network.js`). Anything else the wallet holds = "Unverified tokens"
   (Home: one row with a ⌄ arrow, view only, never in the total. **They can be SENT** - picked only in Send's currency
   popup (yellow section), Confirm shows a yellow 'Unverified token' line, the receipt says "(unverified)" and never a $.

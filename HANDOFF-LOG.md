@@ -5,6 +5,24 @@
 
 ---
 
+## 2026-10-05 - auto-convert, unverified tokens, button depth (commits 93deb17 … b14d998)
+
+- **Auto-convert on send** built + measured (read-only eth_simulateV1 on the owner's wallet, then two real sends
+  `0x655d…836a` $2 and `0x7b46…8625` $1 + note, both exact, adapter kept 0). Findings: the Kit quote is exact-INPUT
+  only; a 0.5% buffer = the 50 bps slippage is refused ("No route found that satisfies the requested stop limit") →
+  1%; the fee is held up front in USDC → convert `amount + 2 × feeMax − USDC` (one fee kept for next time). Memo works
+  inside Multicall3From. Tool `tools/verify-convert.mjs`.
+- **Unverified tokens:** morning = sell-only on Exchange (dry run 50,000 BANKARC → +0.926622 USDC, = Kit estimate; 4 of
+  the 8 busiest Arc tokens had a route) → owner reversed the same day: no swap at all ("Memes" hub later), but SEND is
+  allowed (Send's currency popup, yellow warning, receipt "(unverified)", never a $). `resolveTokenIn` reads decimals on
+  chain; `/api/swap` refuses unlisted tokens.
+- **Notifications:** 24h counted from the block / announcement time (was: from when the device noticed it); the board
+  re-filters on every poll tick.
+- **UI:** Swap CTA 2 lines + font steps 20/18/16/14 (`TwoLineFit`); Service hub card auto-height (logo 1/4, text 3/4,
+  desc ≤ 3 lines); `--btn-grad-*` gradients on every button; button shadow `0 4px 8px` (Y 8 was too much); the two
+  half-oval tabs have no shadow; Send's [50%] [100%] are flat outlined hints (100% USD = all USDC, no convert).
+- Owner taste note: never "disable" by lowering opacity - make it paler (colour), or hide it.
+
 ## MOVED 2026-10-04 – the whole HANDOFF.md as it was before the audit rewrite
 
 > Verbatim (headings demoted one level so they nest here). Superseded by HANDOFF.md where they disagree.
