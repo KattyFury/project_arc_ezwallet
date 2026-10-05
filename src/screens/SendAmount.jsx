@@ -3,7 +3,7 @@ import { useNav } from '../nav'
 import Numpad from '../components/Numpad'
 import Icon from '../components/Icon'
 import ErrorToast from '../components/ErrorToast'
-import { getTokenInfo, getDisplayRates, cachedRates } from '../chain'
+import { getTokenInfo, getTokenBalances, getDisplayRates, cachedRates } from '../chain'
 import { ensureWalletAddress } from '../circle'
 import { findContactName } from '../store'
 import { displaySymbol, spendableOf, floorTo, shortenAddr } from '../data'
@@ -76,6 +76,9 @@ export default function SendAmount() {
     if (!noteTouched && defaultNote && memo === defaultNote) { setMemo(''); setNoteTouched(true) }
   }
   const [availableAmt, setAvailableAmt] = useState(null) // balance of the SELECTED token (in real token units)
+  // AUTO-CONVERT (docs/SWAP-PLAN.md section 6, owner 2026-10-05): a USD/USDC send may also spend the OTHER verified
+  // tokens (swapped to USDC in the same transaction). Their live USD value; a token without a live price is not counted.
+  const [extraUsd, setExtraUsd] = useState(0)
   const [walletAddr, setWalletAddr] = useState(null)
   // Exchange rates (needed for VND). Seeded from the module-level cache → no waiting on the network before typing.
   const [rates, setRates] = useState(cachedRates)
@@ -96,8 +99,14 @@ export default function SendAmount() {
     // reports "Insufficient balance (available: 0.00)" WHILE THE WALLET HAS MONEY - bug 07-17, a 1000 USDC wallet could not
     // send. Retry after 3s so it recovers by itself once the RPC unclogs.
     let alive = true, retry
-    const load = () => getTokenInfo(walletAddr, tok)
-      .then(i => { if (alive) setAvailableAmt(spendableOf(tok, i.balance)) })
+    setExtraUsd(0)
+    const load = () => (tok === 'USDC'
+      ? getTokenBalances(walletAddr).then(list => {
+          if (!alive) return
+          setAvailableAmt(spendableOf('USDC', list.find(t => t.symbol === 'USDC')?.amount ?? 0))
+          setExtraUsd(list.filter(t => t.symbol !== 'USDC' && t.usd != null).reduce((a, t) => a + t.usd, 0))
+        })
+      : getTokenInfo(walletAddr, tok).then(i => { if (alive) setAvailableAmt(spendableOf(tok, i.balance)) }))
       .catch(() => { if (alive) retry = setTimeout(load, 3000) })
     load()
     return () => { alive = false; clearTimeout(retry) }
@@ -114,7 +123,9 @@ export default function SendAmount() {
   // The balance converted into the UNIT BEING TYPED for comparison: typing VND must compare against the balance in VND,
   // otherwise "50,000" is always > "19.5 USDC" and Continue never lights up.
   const availableInCur = availableAmt === null ? null
-    : isVnd ? (vndRate ? availableAmt / vndRate : null) : availableAmt
+    : isVnd ? (vndRate ? availableAmt / vndRate : null) : availableAmt + extraUsd
+  // More than the USDC itself → Confirm asks the server to convert the rest (it re-checks everything on chain).
+  const needsConvert = !isVnd && effectiveToken(cur) === 'USDC' && availableAmt !== null && amount > availableAmt
   const overBalance = availableInCur !== null && amount > availableInCur
   // FINAL GUARD against sending to yourself (user decision 07-31). PasteAddress/QRScanner block it at the door,
   // but Contacts is another way in (a user can save their own wallet as a contact), so it must be blocked
@@ -128,7 +139,7 @@ export default function SendAmount() {
   const decimalsFor = c => (effectiveToken(c) === 'cirBTC' ? 8 : 2)
   const availableStr = isVnd
     ? `${availableInCur !== null ? Math.floor(availableInCur).toLocaleString('vi-VN') : '…'} ₫`
-    : `${availableAmt !== null ? availableAmt.toFixed(decimalsFor(cur)) : '…'} ${cur}`
+    : `${availableInCur !== null ? floorTo(availableInCur, decimalsFor(cur)).toFixed(decimalsFor(cur)) : '…'} ${cur}`
   // AMOUNT SUGGESTIONS (user decision 08-04) - VND ONLY: typing "50" → [5,000] [50,000] [500,000].
   // Never for USD/EUR: typing "50" already means 50 dollars, and suggesting ×100 (5,000 dollars) would be a deadly trap.
   const hints = isVnd && !showCur ? amountHints(digits, availableInCur) : []
@@ -302,7 +313,7 @@ export default function SendAmount() {
       <div className="row10-dual">
         <button className="btn btn-secondary" onClick={() => navigate(back)}>Back</button>
         <button className="btn btn-primary" disabled={!canContinue}
-          onClick={() => navigate('SendConfirm', { address, name, amount, amountStr: normalizeTyped(digits), memo, currency: cur, tokenAmount, qrAmount: qrActive, back })}>
+          onClick={() => navigate('SendConfirm', { address, name, amount, amountStr: normalizeTyped(digits), memo, currency: cur, tokenAmount, qrAmount: qrActive, convert: needsConvert, back })}>
           Continue
         </button>
       </div>

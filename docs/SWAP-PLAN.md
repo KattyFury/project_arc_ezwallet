@@ -90,3 +90,40 @@ has a measurement or a doc line behind it; keep it that way.
 ## 4d. Key change (2026-10-04)
 - Swap now authenticates with `API_KEY` (the Circle LIVE key); the legacy Kit key leaked in the public history
   (MAINNET-AUDIT K1) and is no longer used. The `KIT_KEY` Pages secret is removed. Dry run: `node tools/verify-swap.mjs`.
+
+## 6. Phase 2 - measured + decided (2026-10-05)
+Read-only eth_simulateV1 (dRPC) on the owner's wallet 0xdfe2…b0ab (4.0476 USDC, 2.2318 EURC), "send 5 USDC":
+| Check | Result |
+|---|---|
+| Kit `/quote` exact-OUTPUT mode | **none** - the quote is exact-input only (`feeContext.type: "input"`); amountIn is sized from the quote rate |
+| `[approve EURC, adapter.execute(EURC→USDC), USDC.transfer(to, 5)]` via Multicall3From | ✅ status 1, recipient +5.000000, wallet EURC −0.862, one tx, 595,065 gas |
+| Same with `Memo.memo(USDC, transfer…)` as the last call | ✅ status 1, recipient +5, 2 extra logs (BeforeMemo + Memo), 611,503 gas - Memo works INSIDE Multicall3From (docs.arc.io batched-transactions: each subcall keeps the EOA as msg.sender) |
+| Transfer 2 USDC more than the batch can cover | ✅ whole tx reverts ("transfer amount exceeds balance"), nothing moves |
+| Buffer 0.5% (= the 50 bps slippage) with stopLimit = shortfall | ❌ Kit: "No route found that satisfies the requested stop limit" (min out lands just under the shortfall) |
+| Buffer 0.6% / 1% | ✅ both pass |
+
+Two rules the plan had missed:
+1. **The network fee is paid in USDC from the same balance, up front** (gasLimit × maxFee is held before execution).
+   So the shortfall to convert = `amount + feeMax − USDC held`, not `amount + 0.01 − USDC`. Whatever is not burnt
+   (feeMax − real fee) + the buffer stays in the wallet as USDC.
+2. **The wallet must already hold ≥ feeMax USDC** (Circle checks the fee against the balance before the swap runs).
+   A wallet with 0 USDC cannot auto-convert → "Not enough USDC for the network fee".
+
+Owner decisions (2026-10-05, do not re-ask):
+- **Buffer 1%** (0.5% does not work, see above).
+- **Only USD/USDC sends auto-convert.** EURC / cirBTC sends stay "send what you hold".
+- Confirm screen: **one extra row "Converted: 0.865 EURC"** in the existing confirm-row style; screenshot first.
+
+Design (built 2026-10-05, `functions/api/_convertCore.js`):
+- The server decides. `/api/send` with `allowConvert` + token USDC reads the wallet's balances ON CHAIN (dRPC) for
+  the address Circle gives for walletId (never an address from the request). Enough USDC (amount + 0.01 reserve) →
+  the old single-call send, unchanged. Otherwise the convert path.
+- Plan: sources in order EURC → cirBTC (→ ETH when listed). Per source: quote the whole balance; if its minimum
+  covers what is still missing, swap `ceil(missing × 1.01 / rate)` with stopLimit = missing; else swap it all with
+  stopLimit = its quoted minimum and move on. Not enough in total → error, nothing is built.
+- `fee`: plan with `missing = amount + 0.01 − USDC`, estimateFee, re-plan with `missing = amount + feeMax − USDC`,
+  repeat until the fee stops growing (max 3) → `{ feeMax, convert: [{ token, amountIn, minOut }] }`.
+- `execute`: takes the legs the screen showed, re-fetches each intent with those amountIn + stopLimit = minOut,
+  validates each (C5), re-estimates the fee and requires `USDC + Σ minOut ≥ amount + feeMax`, simulates the batch
+  (recipient USDC +amount exactly; wallet USDC after ≥ feeMax) - only then the Circle challenge. Any mismatch →
+  409 "The price or fee changed - check again", nothing signed.

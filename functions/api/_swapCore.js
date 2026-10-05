@@ -141,13 +141,20 @@ export function buildSwapBatch(net, swapData, fromAddr, amountBase) {
 
   const approveData = encodeFunctionData({ abi: ERC20_ABI, functionName: 'approve', args: [ADAPTER, amountBase] })
   const executeData = encodeFunctionData({ abi: ADAPTER_ABI, functionName: 'execute', args: [executeParams, tokenInputs, signature] })
-  const batchData = encodeFunctionData({ abi: MULTICALL3_ABI, functionName: 'aggregate3', args: [[
+  // `calls` = the two Multicall3From subcalls on their own - auto-convert on send (_convertCore.js) puts them in front
+  // of the payment in ONE batch.
+  const calls = [
     { target: fromAddr, allowFailure: false, callData: approveData },
     { target: ADAPTER,  allowFailure: false, callData: executeData },
-  ]] })
+  ]
+  const batchData = encodeAggregate3(calls)
   const estOut = swapData?.estimatedAmount || swapData?.data?.estimatedAmount
-  return { batchData, totalValue, estOut }
+  return { batchData, calls, totalValue, estOut }
 }
+
+// Multicall3From.aggregate3(calls) calldata. Every subcall keeps the user's wallet as msg.sender (docs.arc.io
+// batched-transactions).
+export const encodeAggregate3 = (calls) => encodeFunctionData({ abi: MULTICALL3_ABI, functionName: 'aggregate3', args: [calls] })
 
 // Run the batch in eth_simulateV1 (no PIN, no cost) and measure the wallet's tokenOut balance before/after.
 // The public Arc RPC does NOT support eth_simulateV1 (measured 2026-10-03; QuickNode no, Blockdaemon filtered) → dRPC

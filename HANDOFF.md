@@ -1,6 +1,6 @@
 # HANDOFF – ezwallet
 
-**Updated:** 2026-10-04 (audit + clean-up) · **Repo:** `KattyFury/project_arc_ezwallet` (public; renamed from
+**Updated:** 2026-10-05 (auto-convert on send, test only) · **Repo:** `KattyFury/project_arc_ezwallet` (public; renamed from
 `KattyFury/ezwallet` 2026-10-03 - Pages track it by repo id) · **Local:** `D:\Files\Claude\Big projects\project_arc_ezwallet`
 **Status:** ezwallet.cash serves **Arc MAINNET** (real money). Target: public launch within October 2026.
 
@@ -45,7 +45,7 @@
 | 3 | Bug 3b: Admin Lookup "Transfers"/balances still read the explorer/RPC from Cloudflare → fail on mainnet. | open |
 | 4 | Bug 5: Cloudflare Web Analytics beacon blocked by CSP (console noise). Turn Web Analytics off or allow it. | owner |
 | 5 | Bug 6: is ezwallet.cash needed as an allowed domain in Circle Console for the PIN window? Unchecked. | open |
-| 6 | Auto-convert on send (Phase 2 of `docs/SWAP-PLAN.md`): decided, not built. Order stablecoins → cirBTC → ETH, 0.5% buffer, one PIN. | next |
+| 6 | **Auto-convert on send: BUILT on `test` only (2026-10-05), NOT on `main`.** A USD/USDC send short of USDC swaps EURC → cirBTC into the same tx (1% buffer, one PIN). Dry-run `node tools/verify-convert.mjs <wallet> <to> <amount> [note]` passed on the owner's wallet. Next: owner sends ≤ $1 more than their USDC on test.ezwallet.cash (with and without a note), check the receipt, then merge to `main`. Details `docs/SWAP-PLAN.md` §6. | owner |
 | 7 | Confirm the EIP-681 QR with a real MetaMask scan (with and without Arc added). | owner |
 | 8 | Idea, not decided: rescue USDC sent on another chain (CCTP v2 / LI.FI) - open questions in `HANDOFF-LOG.md` (2026-10-03). | idea |
 | 9 | Cloudflare clean-up: delete old Pages projects `ezwallet`, `ezwallet-testnet`; old CF token 7d9d445c…; `TELEGRAM_*` vars. | owner |
@@ -124,7 +124,7 @@ Secrets (Pages env, `.env.txt` locally): `API_KEY` (Circle LIVE - wallets + swap
   Circle SDK does not run on localhost → PIN/login only on a deploy (test.ezwallet.cash).
 - **Mock mode:** `npm run mock`; `?screen=<Name>` opens a screen directly. Playwright (not in package.json):
   `npm i --no-save playwright && npx playwright install chromium`. Screenshots for the owner go to the Desktop.
-- **Tools:** `tools/verify-swap.mjs` (read-only swap dry run), `tools/build-og.mjs`, `tools/figma-check.mjs`,
+- **Tools:** `tools/verify-swap.mjs` (read-only swap dry run), `tools/verify-convert.mjs` (read-only auto-convert send dry run), `tools/build-og.mjs`, `tools/figma-check.mjs`,
   `tools/update-disposable-domains.mjs`.
 - **Tests / CI:** `npm test` (node:test, `test/*.test.mjs`); `.github/workflows/ci.yml` runs tests + build on `main`.
 - **KV backup of contacts + QR library:** `functions/api/sync.js` + `src/sync.js` (PIN-signature auth, avatars never

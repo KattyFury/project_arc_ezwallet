@@ -28,6 +28,12 @@ export default function SendConfirm() {
   const [error, setError] = useState('')          // a terminal error (cancel/network...) shown in place
   const [qrCheck, setQrCheck] = useState(false)    // the extra "is this right?" popup for a big QR amount is open
   const [qrChecked, setQrChecked] = useState(false) // ...and the user said yes (asked once per payment)
+  // AUTO-CONVERT (docs/SWAP-PLAN.md section 6): SendAmount found the USDC short → the server plans swaps from the other
+  // tokens into THIS payment. convertLegs = what it will swap ([{ token, amountIn, minOut }]), shown as "Converted" and
+  // sent back on Confirm exactly as shown. recheck bumps when the price/fee moved and the plan must be asked again.
+  const allowConvert = !!params.convert
+  const [convertLegs, setConvertLegs] = useState(null)
+  const [recheck, setRecheck] = useState(0)
 
   // USD = USDC (1:1, only the label differs); USDC/EURC/cirBTC send exactly the amount entered, with NO conversion.
   // VND = fiat, which does NOT exist on-chain → USDC is sent.
@@ -47,11 +53,14 @@ export default function SendConfirm() {
     getDisplayRates().then(setFeeRates).catch(() => {})
     // The fee of THIS send from Circle (estimateFee on the exact call /api/send will make). A failure says so - it used
     // to become a fee of 0 ("< $0.001"), a number nobody measured.
-    setFeeFailed(false)
-    estimateSendFee({ toAddress: address, token, amountDecimal: sendAmountStr, memo })
-      .then(f => { const v = Number(f.feeMax); if (v > 0) setFeeUsd(v); else setFeeFailed(true) })
-      .catch(() => setFeeFailed(true))
-  }, [memo, token, address, sendAmountStr])
+    setFeeFailed(false); setFeeUsd(null); setConvertLegs(null)
+    estimateSendFee({ toAddress: address, token, amountDecimal: sendAmountStr, memo, allowConvert })
+      .then(f => { const v = Number(f.feeMax); if (v > 0) setFeeUsd(v); else setFeeFailed(true); setConvertLegs(f.convert || null) })
+      // A convert send cannot go ahead without its plan - say why (not enough money / no USDC for the fee).
+      .catch(e => { setFeeFailed(true); if (allowConvert) setError(e.message) })
+  }, [memo, token, address, sendAmountStr, allowConvert, recheck])
+  // The plan arrives with the fee. A fee without a plan = the server found enough USDC after all (a plain send).
+  const convertReady = !allowConvert || feeUsd !== null
 
   const mainEl = currency === 'USD' ? <>{displaySymbol('USDC')}{sendAmountStr}</>
     : currency === 'VND' ? <>{amount.toLocaleString('vi-VN')} <Cur>₫</Cur></>
@@ -134,12 +143,14 @@ export default function SendConfirm() {
           userToken, walletId: attempt.walletId,
           toAddress: address, token, amountDecimal: sendAmountStr, memo,
           idempotencyKey: crypto.randomUUID(), refId: attempt.refId,
+          allowConvert, convert: convertLegs,
         }),
       })
       const data = await res.json()
       if (data.error) {
         // No challenge → no transaction can exist. Safe to retry.
         clearPending(attempt.refId); attemptRef.current = null
+        if (data.code === 'RECHECK') { setRecheck(n => n + 1); return fail(data.error) }   // price/fee moved → new plan shown
         return fail(`Send failed: ${data.error}`)
       }
 
@@ -218,6 +229,14 @@ export default function SendConfirm() {
               </span>
             </div>
           )}
+          {convertLegs && (
+            <div className="confirm-row">
+              <span className="confirm-label">Converted</span>
+              <span className="confirm-value num">
+                {convertLegs.map(l => <span key={l.token} style={{ display: 'block' }}>{l.amountIn} <Cur>{l.token}</Cur></span>)}
+              </span>
+            </div>
+          )}
           {memo && (
             <div className="confirm-row">
               <span className="confirm-label">Note</span>
@@ -254,7 +273,7 @@ export default function SendConfirm() {
       <div style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '85.66dvh', transform: 'translateY(-50%)', display: 'flex', gap: 'calc(8 * var(--u))' }}>
         <button className="btn btn-secondary" style={{ flex: 1, boxShadow: '0 0 8px rgba(0, 0, 0, 0.48)' }} disabled={loading || done} onClick={() => navigate('SendAmount', params)}>Back</button>
         <button className="btn btn-primary" style={{ flex: 1, boxShadow: '0 0 8px rgba(0, 0, 0, 0.48)' }}
-          disabled={loading || done} onClick={() => (needsQrCheck && !attemptRef.current ? setQrCheck(true) : handleConfirm())}>
+          disabled={loading || done || !convertReady} onClick={() => (needsQrCheck && !attemptRef.current ? setQrCheck(true) : handleConfirm())}>
           {loading ? 'Processing...' : (attemptRef.current ? 'Check again' : 'Confirm PIN')}
         </button>
       </div>

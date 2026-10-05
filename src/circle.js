@@ -304,12 +304,16 @@ export async function estimateSwap({ walletAddress, tokenIn, tokenOut, amountIn 
 }
 
 // Circle's fee estimate for THIS send (functions/api/send.js action 'fee') → { feeMax, feeNow } in USDC (= USD).
-export async function estimateSendFee({ toAddress, token, amountDecimal, memo }) {
-  if (MOCK) return { feeMax: '0.004', feeNow: '0.002' }
+// allowConvert (a USD/USDC send short of USDC) → the server may answer with `convert: [{ token, amountIn, minOut }]`, the
+// swaps it will put in front of the payment (docs/SWAP-PLAN.md section 6); Confirm shows them and sends them back.
+export async function estimateSendFee({ toAddress, token, amountDecimal, memo, allowConvert = false }) {
+  if (MOCK) return allowConvert
+    ? { feeMax: '0.0412', feeNow: '0.02', convert: [{ token: 'EURC', amountIn: '0.897667', minOut: '0.997395' }] }
+    : { feeMax: '0.004', feeNow: '0.002' }
   const walletId = localStorage.getItem('ez_wallet_id')
   const ask = userToken => fetch('/api/send', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ action: 'fee', userToken, walletId, toAddress, token, amountDecimal, memo }),
+    body: JSON.stringify({ action: 'fee', userToken, walletId, toAddress, token, amountDecimal, memo, allowConvert }),
   }).then(r => r.json())
   let data = await ask(localStorage.getItem('ez_user_token'))
   if (data.error && isTokenExpiredError({ code: data.code, message: data.error })) data = await ask((await forceFreshSession()).userToken)
