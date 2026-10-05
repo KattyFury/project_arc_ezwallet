@@ -79,7 +79,7 @@ export default function CreateQR() {
           real icon layer) - a real token logo is used instead, EXCEPT for USD (a fiat label, not a token
           - no coin logo, same rule as SendAmount.jsx). */}
       <button onClick={() => setShowCur(true)}
-        style={{ position: 'absolute', left: '8.46%', top: '29.6dvh', transform: 'translateY(-50%)', display: 'inline-flex', alignItems: 'center', gap: 'calc(6 * var(--u))', border: 'none', background: 'var(--btn-grad-white)', borderRadius: 999, height: 'calc(42 * var(--u))', padding: '0 calc(14 * var(--u)) 0 calc(8 * var(--u))', boxShadow: '0 8px 8px rgba(0, 0, 0, 0.5)', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)', cursor: 'pointer' }}>
+        style={{ position: 'absolute', left: '8.46%', top: '29.6dvh', transform: 'translateY(-50%)', display: 'inline-flex', alignItems: 'center', gap: 'calc(6 * var(--u))', border: 'none', background: 'var(--btn-grad-white)', borderRadius: 999, height: 'calc(42 * var(--u))', padding: '0 calc(14 * var(--u)) 0 calc(8 * var(--u))', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.5)', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)', cursor: 'pointer' }}>
         {!isFiatLabel(cur) && <img src={`/tokens/${tokenIconFor(cur)}.png`} alt="" style={{ width: 'calc(24 * var(--u))', height: 'calc(24 * var(--u))', borderRadius: '50%', flexShrink: 0 }} />}
         {cur}
         <Icon name="down2" size="var(--is-content-2)" color="var(--color-brand)" />

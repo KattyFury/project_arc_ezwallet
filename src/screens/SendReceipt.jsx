@@ -156,8 +156,8 @@ export default function SendReceipt() {
       {/* Save receipt/Done - node 1:230-1:233: both exactly 166px, i.e. (340 − 8) / 2 - flex:1 with an
           8px gap. Centre 85.63dvh, glow shadow. */}
       <div style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '85.66dvh', transform: 'translateY(-50%)', display: 'flex', gap: 'calc(8 * var(--u))' }}>
-        <button className="btn btn-secondary" style={{ flex: 1, boxShadow: '0 8px 8px rgba(0, 0, 0, 0.48)' }} onClick={saveReceipt}>Save receipt</button>
-        <button className="btn btn-primary" style={{ flex: 1, boxShadow: '0 8px 8px rgba(0, 0, 0, 0.48)' }} onClick={() => navigate('HomeSend')}>Done</button>
+        <button className="btn btn-secondary" style={{ flex: 1, boxShadow: '0 4px 8px rgba(0, 0, 0, 0.48)' }} onClick={saveReceipt}>Save receipt</button>
+        <button className="btn btn-primary" style={{ flex: 1, boxShadow: '0 4px 8px rgba(0, 0, 0, 0.48)' }} onClick={() => navigate('HomeSend')}>Done</button>
       </div>
 
       <ExitBar onClick={() => navigate('HomeSend')} />

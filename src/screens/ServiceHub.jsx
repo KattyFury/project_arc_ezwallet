@@ -46,7 +46,7 @@ export default function ServiceHub() {
           <button key={id} disabled={soon} onClick={soon ? undefined : () => navigate(screen)}
             style={{
               position: 'absolute', left: '6.41%', top: '10.19dvh', width: '87.18%',
-              border: 'none', borderRadius: 16, background: 'var(--btn-grad-white)', boxShadow: '0 8px 8px rgba(0, 0, 0, 0.48)',
+              border: 'none', borderRadius: 16, background: 'var(--btn-grad-white)', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.48)',
               display: 'flex', alignItems: 'center', padding: 'calc(16 * var(--u)) calc(16 * var(--u)) calc(16 * var(--u)) 0', minWidth: 0,
               fontFamily: 'inherit', textAlign: 'left', opacity: soon ? 0.4 : 1, cursor: soon ? 'not-allowed' : 'pointer',
             }}>

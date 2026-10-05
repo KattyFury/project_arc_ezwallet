@@ -52,7 +52,7 @@ function TokenLogo({ sym, label }) {
 function TokenRow({ sym, label = sym, onClick }) {
   return (
     <button onClick={onClick}
-      style={{ display: 'flex', alignItems: 'center', gap: 'calc(8 * var(--u))', border: 'none', borderRadius: 999, height: 'calc(42 * var(--u))', background: 'var(--btn-grad-white)', cursor: 'pointer', fontFamily: 'inherit', padding: '0 calc(12 * var(--u)) 0 calc(8 * var(--u))', boxShadow: '0 8px 8px rgba(0, 0, 0, 0.5)', flexShrink: 0, maxWidth: '55%', minWidth: 0 }}>
+      style={{ display: 'flex', alignItems: 'center', gap: 'calc(8 * var(--u))', border: 'none', borderRadius: 999, height: 'calc(42 * var(--u))', background: 'var(--btn-grad-white)', cursor: 'pointer', fontFamily: 'inherit', padding: '0 calc(12 * var(--u)) 0 calc(8 * var(--u))', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.5)', flexShrink: 0, maxWidth: '55%', minWidth: 0 }}>
       <TokenLogo sym={sym} label={label} />
       <span className="num" style={{ fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-content)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', minWidth: 0 }}>{label}</span>
       <Icon name="down2" size="calc(15 * var(--u))" color="var(--color-brand)" />
@@ -527,7 +527,7 @@ export default function Swap() {
         style={{
           position: 'absolute', left: '50%', top: '29.62dvh', transform: `translate(-50%, -50%) rotate(${flip}deg)`, zIndex: 3,
           width: 'calc(50 * var(--u))', height: 'calc(50 * var(--u))', borderRadius: '50%', border: 'none', background: 'var(--btn-grad-brand)',
-          boxShadow: '0 8px 8px rgba(0, 0, 0, 0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center',
           cursor: isUnv(fromSym) ? 'default' : 'pointer', transition: 'transform .3s ease', opacity: isUnv(fromSym) ? 0.4 : 1,
         }} disabled={isUnv(fromSym)}>
         <Icon name="trade" size="var(--is-num)" color="var(--color-white)" />
@@ -611,7 +611,7 @@ export default function Swap() {
         <button className={`btn ${error ? 'btn-secondary' : success ? 'btn-success' : 'btn-primary'}`}
           style={{
             width: '100%', height: 'var(--btn-h)', minHeight: 0, borderRadius: 38, overflow: 'hidden',
-            boxShadow: error || success ? undefined : '0 8px 20px rgba(0, 0, 0, 0.32)',
+            boxShadow: error || success ? undefined : '0 4px 20px rgba(0, 0, 0, 0.32)',
             ...(error ? { color: 'var(--color-error)', borderColor: 'var(--color-error)' } : null),
             ...(success ? { opacity: confirmed ? 1 : 0.6 } : null),
           }}

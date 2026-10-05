@@ -283,7 +283,7 @@ export default function HomeSend() {
       <button onClick={() => navigate('PasteAddress')} style={{
         position: 'absolute', left: '6.41%', top: SIDE_BTN.top, width: '25.64%', height: SIDE_BTN.height,
         background: 'var(--btn-grad-white)', border: 'none', borderRadius: 16,
-        boxShadow: '0 8px 8px rgba(0, 0, 0, 0.48)',
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.48)',
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(2 * var(--u))',
         fontFamily: 'inherit', fontSize: 'var(--fs-caption)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)',
         cursor: 'pointer', WebkitTapHighlightColor: 'transparent',
@@ -295,7 +295,7 @@ export default function HomeSend() {
       <button onClick={() => navigate('QRScanner')} style={{
         position: 'absolute', left: '34.10%', top: BIG_BTN.top, width: '31.79%', height: BIG_BTN.height,
         background: 'var(--btn-grad-brand)', border: 'none', borderRadius: 16,
-        boxShadow: '0 8px 8px rgba(0, 0, 0, 0.48)',
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.48)',
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(2 * var(--u))',
         fontFamily: 'inherit', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-white)',
         cursor: 'pointer', WebkitTapHighlightColor: 'transparent',
@@ -307,7 +307,7 @@ export default function HomeSend() {
       <button onClick={() => navigate('Contacts')} style={{
         position: 'absolute', left: '67.95%', top: SIDE_BTN.top, width: '25.64%', height: SIDE_BTN.height,
         background: 'var(--btn-grad-white)', border: 'none', borderRadius: 16,
-        boxShadow: '0 8px 8px rgba(0, 0, 0, 0.48)',
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.48)',
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(2 * var(--u))',
         fontFamily: 'inherit', fontSize: 'var(--fs-caption)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)',
         cursor: 'pointer', WebkitTapHighlightColor: 'transparent',

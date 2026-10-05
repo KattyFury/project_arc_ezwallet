@@ -64,10 +64,10 @@ export default function PasteAddress() {
           edge - fixed 2026-09-24, an earlier pass here used 82.82dvh as if it were the centre, landing the
           row visibly higher than every other screen's button row). */}
       <div style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '85.66dvh', transform: 'translateY(-50%)', display: 'flex', gap: 'calc(8 * var(--u))' }}>
-        <button className="btn btn-secondary" style={{ flex: 1, boxShadow: '0 8px 8px rgba(0, 0, 0, 0.48)' }} onClick={() => navigate('HomeSend')}>Back</button>
+        <button className="btn btn-secondary" style={{ flex: 1, boxShadow: '0 4px 8px rgba(0, 0, 0, 0.48)' }} onClick={() => navigate('HomeSend')}>Back</button>
         {/* Field holds a valid EVM address → label flips "Paste" → "Confirm" (user decision 07-23: tapping goes
             straight on without reading the clipboard, so a "Paste" label would be confusing). handleDan covers both. */}
-        <button className="btn btn-primary" style={{ flex: 1, boxShadow: '0 8px 8px rgba(0, 0, 0, 0.48)' }} onClick={handleDan}>{valid ? 'Confirm' : 'Paste'}</button>
+        <button className="btn btn-primary" style={{ flex: 1, boxShadow: '0 4px 8px rgba(0, 0, 0, 0.48)' }} onClick={handleDan}>{valid ? 'Confirm' : 'Paste'}</button>
       </div>
 
       <ExitBar onClick={() => navigate('HomeSend')} />
