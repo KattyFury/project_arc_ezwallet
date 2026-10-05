@@ -13,7 +13,7 @@ import ScreenSheet from '../components/ScreenSheet'
 import ExitBar from '../components/ExitBar'
 import { GRADIENT } from '../brandBg'
 import { NET } from '../clientNet'
-import { amountProblem, normalizeTyped } from '../money'
+import { amountProblem, normalizeTyped, toBaseUnits } from '../money'
 
 // USD = the friendly label, what is sent = USDC (1:1). USDC/EURC/cirBTC send that exact token.
 // ⛔ VND TURNED OFF 2026-08-12 (user decision): the app runs English/USD while a scanned QR produced VND → 'VND' was
@@ -153,10 +153,34 @@ export default function SendAmount() {
   // VND with no rate yet → no going on (the USDC amount cannot be computed).
   const canContinue = amount > 0 && !overBalance && !selfSend && (!isVnd || !!vndRate)
   const decimalsFor = c => (effectiveToken(c) === 'cirBTC' ? 8 : isUnv(c) ? 4 : 2)
+  // [50%] [Max] (owner 2026-10-05) - EXACT strings, never a float: Max = everything spendable of the token being sent
+  // (USD/USDC = the USDC itself minus the 0.01 reserve - no auto-convert, owner's pick; typing more still converts);
+  // an unverified token = Circle's own balance string. 50% = half of Max in base units.
+  const maxStr = (() => {
+    if (isVnd || availableAmt === null) return null
+    const dec = decimalsOf(cur)
+    if (isUnv(cur)) {
+      const u = unvOf(cur); const str = u?.amountStr ?? (u ? String(u.amount) : null)
+      if (!str) return null
+      const [i, f = ''] = str.split('.'); return f ? `${i}.${f.slice(0, dec)}`.replace(/\.?0+$/, '') : i
+    }
+    // availableAmt sits within 1e-12 of an exact `dec`-decimal value (base units / 10^dec, minus 0.01) → toFixed(dec)
+    // lands on it exactly; flooring instead turned 127.66 − 0.01 = 127.64999999999999 into 127.649999.
+    return availableAmt > 0 ? availableAmt.toFixed(dec).replace(/\.?0+$/, '') : '0'
+  })()
+  const halfStr = (() => {
+    if (!maxStr || maxStr === '0') return null
+    const dec = decimalsOf(cur)
+    const s = (toBaseUnits(maxStr, dec) / 2n).toString().padStart(dec + 1, '0')
+    const out = `${s.slice(0, s.length - dec)}.${s.slice(s.length - dec)}`.replace(/\.?0+$/, '')
+    return out === '0' ? null : out
+  })()
+  function pickAmount(v) { if (v) setDigits(v) }
   const availableStr = isVnd
     ? `${availableInCur !== null ? Math.floor(availableInCur).toLocaleString('vi-VN') : '…'} ₫`
-    : isUnv(cur) ? `${availableInCur !== null ? availableInCur.toLocaleString('en-US', { maximumFractionDigits: 4 }) : '…'} ${labelOf(cur)}`
-    : `${availableInCur !== null ? floorTo(availableInCur, decimalsFor(cur)).toFixed(decimalsFor(cur)) : '…'} ${cur}`
+    : availableInCur === null ? '…'
+    : isUnv(cur) ? floorTo(availableInCur, 4).toLocaleString('en-US', { maximumFractionDigits: 4 })
+    : floorTo(availableInCur, decimalsFor(cur)).toLocaleString('en-US', { minimumFractionDigits: decimalsFor(cur), maximumFractionDigits: decimalsFor(cur) })
   // AMOUNT SUGGESTIONS (user decision 08-04) - VND ONLY: typing "50" → [5,000] [50,000] [500,000].
   // Never for USD/EUR: typing "50" already means 50 dollars, and suggesting ×100 (5,000 dollars) would be a deadly trap.
   const hints = isVnd && !showCur ? amountHints(digits, availableInCur) : []
@@ -216,9 +240,15 @@ export default function SendAmount() {
         <Icon name="down2" size="var(--is-content-2)" color="var(--color-brand)" />
       </button>
 
-      <span style={{ position: 'absolute', left: '8.46%', top: '25.28dvh', transform: 'translateY(-50%)', fontSize: 'var(--fs-content-2)', whiteSpace: 'nowrap' }}>
-        <span style={{ color: 'var(--color-muted-2)' }}>Available: </span>
-        <span className="num" style={{ fontWeight: 'var(--fw-semibold)', color: 'var(--color-brand)' }}>{availableStr}</span>
+      <span style={{ position: 'absolute', left: '8.46%', right: '8.46%', top: '25.28dvh', transform: 'translateY(-50%)', fontSize: 'var(--fs-content-2)', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: 'calc(6 * var(--u))', minWidth: 0 }}>
+        <span style={{ color: 'var(--color-muted-2)' }}>Available:</span>
+        <span className="num" style={{ fontWeight: 'var(--fw-semibold)', color: 'var(--color-brand)', overflow: 'hidden', textOverflow: 'ellipsis', minWidth: 0 }}>{availableStr}</span>
+        {!isVnd && [['50%', halfStr], ['Max', maxStr]].map(([label, v]) => (
+          <button key={label} disabled={!v || v === '0'} onClick={() => pickAmount(v)}
+            style={{ flexShrink: 0, border: 'none', borderRadius: 999, background: 'var(--btn-grad-white)', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.48)', height: 'calc(28 * var(--u))', padding: '0 calc(10 * var(--u))', fontFamily: 'inherit', fontSize: 'var(--fs-caption)', fontWeight: 'var(--fw-semibold)', color: !v || v === '0' ? 'var(--color-muted)' : 'var(--color-brand)', cursor: !v || v === '0' ? 'default' : 'pointer' }}>
+            {label}
+          </button>
+        ))}
       </span>
 
       {/* Amount - node 1:99: top-anchored (no y-centring in Figma) at 16.72dvh, right-aligned to the same
@@ -262,7 +292,7 @@ export default function SendAmount() {
         </span>
       ) : overBalance && (
         <span style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '39.5dvh', fontSize: 'var(--fs-caption)', color: 'var(--color-error)', textAlign: 'center' }}>
-          {'Insufficient balance (available:'} {availableStr})
+          {'Insufficient balance (available:'} {availableStr} {labelOf(cur)})
         </span>
       )}
 

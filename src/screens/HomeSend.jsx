@@ -73,7 +73,7 @@ export const HALF_OVAL_STYLE = {
   display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
   width: 'min(66.15vw, calc(var(--screen-max) * 0.6615))', height: 'calc(40 * var(--u))',
   borderRadius: '38px 38px 0 0', border: 'none', background: 'var(--btn-grad-white)',
-  boxShadow: '0 0 10px rgba(0, 0, 0, 0.4)',
+  boxShadow: 'none',   // owner 2026-10-05: these two tabs (Hold to show tokens, Tap to copy) carry NO shadow
   padding: '0 calc(18 * var(--u))', overflow: 'hidden', textOverflow: 'ellipsis',
   color: 'var(--color-content)', fontFamily: 'var(--font-condensed)', fontSize: 'var(--fs-content-2)',
   fontWeight: 'var(--fw-semibold)', cursor: 'pointer', whiteSpace: 'nowrap',
