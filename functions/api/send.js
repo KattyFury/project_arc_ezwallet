@@ -96,7 +96,9 @@ async function convertSend({ net, apiKey, userToken, walletId, toAddress, amount
         return reply({ error: fee.error, code: fee.code }, 502)
       }
       if (bal.USDC < fee.feeMax) return reply({ error: usdcFee(fee), code: 'NO_USDC_FOR_FEE' }, 400)
-      const need = amountBase + fee.feeMax - bal.USDC
+      // + ONE MORE feeMax kept as USDC (owner 2026-10-05): the fee is held up front, so a wallet left with less than
+      // feeMax USDC could not auto-convert the next time (measured: 0.036 left after two real sends, next feeMax 0.042).
+      const need = amountBase + 2n * fee.feeMax - bal.USDC
       if (need <= missing) {
         return reply({ feeMax: fee.feeMaxStr, feeNow: fee.feeNow, convert: plan.legs.map(l => ({
           token: l.token, amountIn: baseToDecimal(l.amountIn, net.tokens[l.token].decimals), minOut: baseToDecimal(l.minOut, 6),

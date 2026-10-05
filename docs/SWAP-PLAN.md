@@ -121,9 +121,18 @@ Design (built 2026-10-05, `functions/api/_convertCore.js`):
 - Plan: sources in order EURC → cirBTC (→ ETH when listed). Per source: quote the whole balance; if its minimum
   covers what is still missing, swap `ceil(missing × 1.01 / rate)` with stopLimit = missing; else swap it all with
   stopLimit = its quoted minimum and move on. Not enough in total → error, nothing is built.
-- `fee`: plan with `missing = amount + 0.01 − USDC`, estimateFee, re-plan with `missing = amount + feeMax − USDC`,
+- `fee`: plan with `missing = amount + 0.01 − USDC`, estimateFee, re-plan with `missing = amount + 2 × feeMax − USDC`
+  (one fee is paid, one more stays as USDC - owner 2026-10-05 after the first real sends left 0.036 < next feeMax 0.042),
   repeat until the fee stops growing (max 3) → `{ feeMax, convert: [{ token, amountIn, minOut }] }`.
 - `execute`: takes the legs the screen showed, re-fetches each intent with those amountIn + stopLimit = minOut,
   validates each (C5), re-estimates the fee and requires `USDC + Σ minOut ≥ amount + feeMax`, simulates the batch
   (recipient USDC +amount exactly; wallet USDC after ≥ feeMax) - only then the Circle challenge. Any mismatch →
   409 "The price or fee changed - check again", nothing signed.
+
+## 7. First real auto-convert sends (2026-10-05, test.ezwallet.cash, owner wallet 0xdfe2…b0ab → 0xEb2D…52F6)
+- `0x655dd390…836a` $2 no note: 0.906757 EURC (= the Confirm row) → 1.018982 USDC, provider fee 0.000182 EURC (2 bps),
+  recipient +2.000000, real fee 0.01367 (shown "up to 0.042"), 635,873 gas.
+- `0x7b46bfb9…8625` $1 with a note: 0.897164 EURC → 1.00573 USDC, recipient +1, Memo event sender = the wallet,
+  real fee 0.01187, 552,043 gas. Adapter holds 0 USDC / 0 EURC afterwards.
+- Found: the wallet was left with 0.036 USDC < the next feeMax (0.042) → the next auto-convert would be refused. Fixed
+  by converting one extra feeMax (see section 6). Merged to `main` the same day (owner).

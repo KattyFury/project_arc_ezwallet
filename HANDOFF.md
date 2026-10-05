@@ -1,6 +1,6 @@
 # HANDOFF – ezwallet
 
-**Updated:** 2026-10-05 (auto-convert on send, test only) · **Repo:** `KattyFury/project_arc_ezwallet` (public; renamed from
+**Updated:** 2026-10-05 (auto-convert on send live) · **Repo:** `KattyFury/project_arc_ezwallet` (public; renamed from
 `KattyFury/ezwallet` 2026-10-03 - Pages track it by repo id) · **Local:** `D:\Files\Claude\Big projects\project_arc_ezwallet`
 **Status:** ezwallet.cash serves **Arc MAINNET** (real money). Target: public launch within October 2026.
 
@@ -45,7 +45,7 @@
 | 3 | Bug 3b: Admin Lookup "Transfers"/balances still read the explorer/RPC from Cloudflare → fail on mainnet. | open |
 | 4 | Bug 5: Cloudflare Web Analytics beacon blocked by CSP (console noise). Turn Web Analytics off or allow it. | owner |
 | 5 | Bug 6: is ezwallet.cash needed as an allowed domain in Circle Console for the PIN window? Unchecked. | open |
-| 6 | **Auto-convert on send: BUILT on `test` only (2026-10-05), NOT on `main`.** A USD/USDC send short of USDC swaps EURC → cirBTC into the same tx (1% buffer, one PIN). Dry-run `node tools/verify-convert.mjs <wallet> <to> <amount> [note]` passed on the owner's wallet. Next: owner sends ≤ $1 more than their USDC on test.ezwallet.cash (with and without a note), check the receipt, then merge to `main`. Details `docs/SWAP-PLAN.md` §6. | owner |
+| 6 | **Auto-convert on send: LIVE on both branches (2026-10-05).** A USD/USDC send short of USDC swaps EURC → cirBTC into the same tx (1% buffer, one PIN, one extra feeMax kept as USDC). Two real owner sends checked on chain (`docs/SWAP-PLAN.md` §7). Left: Phase 3 - History shows it as one row. | next |
 | 7 | Confirm the EIP-681 QR with a real MetaMask scan (with and without Arc added). | owner |
 | 8 | Idea, not decided: rescue USDC sent on another chain (CCTP v2 / LI.FI) - open questions in `HANDOFF-LOG.md` (2026-10-03). | idea |
 | 9 | Cloudflare clean-up: delete old Pages projects `ezwallet`, `ezwallet-testnet`; old CF token 7d9d445c…; `TELEGRAM_*` vars. | owner |

@@ -28,7 +28,7 @@ console.log('\nBalances:', Object.entries(bal).map(([s, b]) => `${s} ${baseToDec
 if (bal.USDC >= amount + SEND_RESERVE_BASE) { console.log('✅ Enough USDC - a plain send, nothing to convert.'); process.exit(0) }
 if (bal.USDC < feeMax) { console.log(`❌ Holds ${usd(bal.USDC)} USDC < fee ${feeStr} - cannot auto-convert.`); process.exit(2) }
 
-const missing = amount + feeMax - bal.USDC
+const missing = amount + 2n * feeMax - bal.USDC   // + one more fee kept as USDC, as /api/send
 const plan = await planConvert({ net, apiKey: API_KEY, wallet, balances: bal, missing })
 if (plan.error) { console.log(`❌ Plan: ${plan.error} (missing ${usd(missing)} USDC)`); process.exit(2) }
 console.log(`Missing ${usd(missing)} USDC → legs:`)
