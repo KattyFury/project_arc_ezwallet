@@ -282,7 +282,7 @@ export default function LoginEmailPopup({ onClose }) {
         style={{
           position: 'absolute', left: '10.54%', top: '50.95dvh', width: '38.43%', height: 'var(--btn-h)',
           background: 'var(--btn-grad-white)', color: 'var(--color-black)', border: 'none', borderRadius: 16,
-          boxShadow: '0 0 8px rgba(0, 0, 0, 0.48)',
+          boxShadow: '0 8px 8px rgba(0, 0, 0, 0.48)',
           fontFamily: 'inherit', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', cursor: 'pointer',
         }}>
         Back
@@ -291,7 +291,7 @@ export default function LoginEmailPopup({ onClose }) {
         style={{
           position: 'absolute', left: '51.03%', top: '50.95dvh', width: '38.46%', height: 'var(--btn-h)',
           background: 'var(--btn-grad-brand)', color: 'var(--color-white)', border: 'none', borderRadius: 16,
-          boxShadow: '0 0 8px rgba(0, 0, 0, 0.48)',
+          boxShadow: '0 8px 8px rgba(0, 0, 0, 0.48)',
           fontFamily: 'inherit', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)',
           cursor: valid && !loading ? 'pointer' : 'not-allowed',
           opacity: valid && !loading ? 1 : 0.5,

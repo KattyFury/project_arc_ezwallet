@@ -280,8 +280,8 @@ export default function SendConfirm() {
           Centre 85.66dvh, glow shadow. "Back" (was "Edit") per the exact Figma label - functionally
           unchanged, still re-opens SendAmount with the same params to adjust the transaction. */}
       <div style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '85.66dvh', transform: 'translateY(-50%)', display: 'flex', gap: 'calc(8 * var(--u))' }}>
-        <button className="btn btn-secondary" style={{ flex: 1, boxShadow: '0 0 8px rgba(0, 0, 0, 0.48)' }} disabled={loading || done} onClick={() => navigate('SendAmount', params)}>Back</button>
-        <button className="btn btn-primary" style={{ flex: 1, boxShadow: '0 0 8px rgba(0, 0, 0, 0.48)' }}
+        <button className="btn btn-secondary" style={{ flex: 1, boxShadow: '0 8px 8px rgba(0, 0, 0, 0.48)' }} disabled={loading || done} onClick={() => navigate('SendAmount', params)}>Back</button>
+        <button className="btn btn-primary" style={{ flex: 1, boxShadow: '0 8px 8px rgba(0, 0, 0, 0.48)' }}
           disabled={loading || done || !convertReady} onClick={() => (needsQrCheck && !attemptRef.current ? setQrCheck(true) : handleConfirm())}>
           {loading ? 'Processing...' : (attemptRef.current ? 'Check again' : 'Confirm PIN')}
         </button>

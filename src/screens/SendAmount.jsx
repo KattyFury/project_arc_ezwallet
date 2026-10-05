@@ -210,7 +210,7 @@ export default function SendAmount() {
           real icon layer) - replaced with the real token logo for an actual token; USD (a fiat label,
           not a token) shows no logo at all. */}
       <button onClick={() => setShowCur(true)}
-        style={{ position: 'absolute', left: '8.46%', top: '19.4dvh', transform: 'translateY(-50%)', display: 'inline-flex', alignItems: 'center', gap: 'calc(6 * var(--u))', border: 'none', background: 'var(--btn-grad-white)', borderRadius: 999, height: 'calc(42 * var(--u))', padding: '0 calc(14 * var(--u)) 0 calc(8 * var(--u))', boxShadow: '0 0 8px rgba(0, 0, 0, 0.5)', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)', cursor: 'pointer' }}>
+        style={{ position: 'absolute', left: '8.46%', top: '19.4dvh', transform: 'translateY(-50%)', display: 'inline-flex', alignItems: 'center', gap: 'calc(6 * var(--u))', border: 'none', background: 'var(--btn-grad-white)', borderRadius: 999, height: 'calc(42 * var(--u))', padding: '0 calc(14 * var(--u)) 0 calc(8 * var(--u))', boxShadow: '0 8px 8px rgba(0, 0, 0, 0.5)', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)', cursor: 'pointer' }}>
         {!isFiatLabel(cur) && <img src={`/tokens/${tokenIconFor(cur)}.png`} alt="" style={{ width: 'calc(24 * var(--u))', height: 'calc(24 * var(--u))', borderRadius: '50%', flexShrink: 0 }} />}
         {isUnv(cur) ? <span style={{ maxWidth: 'calc(150 * var(--u))', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{labelOf(cur)}</span> : cur}
         <Icon name="down2" size="var(--is-content-2)" color="var(--color-brand)" />
@@ -283,7 +283,7 @@ export default function SendAmount() {
           style={{ flex: 1, minWidth: 0, height: 'var(--input-h)', borderRadius: 16, fontSize: 'var(--fs-content-1)', background: 'var(--color-card)' }}
         />
         <button onClick={openNotePopup} aria-label={'Set your default note'}
-          style={{ flexShrink: 0, width: 'calc(33 * var(--u))', height: 'var(--input-h)', borderRadius: 16, border: 'none', background: 'var(--btn-grad-white)', boxShadow: '0 0 8px rgba(0, 0, 0, 0.5)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          style={{ flexShrink: 0, width: 'calc(33 * var(--u))', height: 'var(--input-h)', borderRadius: 16, border: 'none', background: 'var(--btn-grad-white)', boxShadow: '0 8px 8px rgba(0, 0, 0, 0.5)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <Icon name="option" size="var(--is-caption)" color="var(--color-muted)" />
         </button>
       </div>

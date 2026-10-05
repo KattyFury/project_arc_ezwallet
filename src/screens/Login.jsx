@@ -252,7 +252,7 @@ export default function Login() {
           position: 'absolute', left: '23.33%', top: '81.52dvh',
           width: '70.26%', height: '8.29dvh',
           background: 'var(--btn-grad-white)', border: 'none', borderRadius: 16,
-          boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)',
+          boxShadow: '0 8px 10px rgba(0, 0, 0, 0.5)',
           fontSize: 'var(--fs-title)', fontWeight: 'var(--fw-semibold)', lineHeight: 'calc(30 * var(--u))',
           color: 'var(--color-black)', cursor: 'pointer',
           WebkitTapHighlightColor: 'transparent',

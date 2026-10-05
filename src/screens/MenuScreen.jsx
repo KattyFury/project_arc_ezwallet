@@ -113,7 +113,7 @@ export default function MenuScreen() {
       <button className="btn" onClick={() => setPopup('withdraw')} style={{
         position: 'absolute', left: '6.41%', top: '30.57dvh', width: '42.56%', height: 'calc(70 * var(--u))',
         background: 'var(--btn-grad-white)', border: 'none', borderRadius: 16,
-        boxShadow: '0 0 8px rgba(0, 0, 0, 0.48)', cursor: 'pointer',
+        boxShadow: '0 8px 8px rgba(0, 0, 0, 0.48)', cursor: 'pointer',
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(2 * var(--u))',
         fontFamily: 'inherit', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)',
       }}>
@@ -125,7 +125,7 @@ export default function MenuScreen() {
       <button className="btn" onClick={() => setPopup('deposit')} style={{
         position: 'absolute', left: '51.03%', top: '30.57dvh', width: '42.56%', height: 'calc(70 * var(--u))',
         background: 'var(--btn-grad-brand)', border: 'none', borderRadius: 16,
-        boxShadow: '0 0 8px rgba(0, 0, 0, 0.48)', cursor: 'pointer',
+        boxShadow: '0 8px 8px rgba(0, 0, 0, 0.48)', cursor: 'pointer',
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(2 * var(--u))',
         fontFamily: 'inherit', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-white)',
       }}>
