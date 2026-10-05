@@ -4,6 +4,7 @@ import {
   readBalances, planConvert, buildConvertBatch, payCall, simulateConvertSend, convertSources,
   usdcBaseCeil, baseToDecimal, SEND_RESERVE_BASE,
 } from './_convertCore.js'
+import { resolveTokenIn } from './_swapCore.js'
 
 const CIRCLE_API = 'https://api.circle.com/v1/w3s'
 
@@ -173,7 +174,9 @@ export async function onRequestPost(ctx) {
     return new Response(JSON.stringify({ error: 'missing params' }), { status: 400, headers: JSON_HEADERS })
   }
 
-  const tokenInfo = net.tokens[token]   // a token this network does not list → rejected below
+  // A listed symbol, or (owner 2026-10-05) the ADDRESS of an unverified token the wallet holds - its decimals are read
+  // on chain (resolveTokenIn), never taken from the request. Anything else → rejected.
+  const tokenInfo = await resolveTokenIn(net, token)
   if (!tokenInfo) return new Response(JSON.stringify({ error: 'unknown token' }), { status: 400, headers: JSON_HEADERS })
 
   // MAINNET-AUDIT H1/H6: validate, never round. The memo path hand-encodes calldata, so a malformed address

@@ -31,12 +31,14 @@ export default function SendReceipt() {
   const exact = amountStr ?? String(amount)
   const to = name || shortenAddr(address)
   // "$2" as one string in one style (NOT a bold "2" plus a regular "USD" - user decision)
-  const amountText = currency === 'VND' ? `${Number(amount).toLocaleString('vi-VN')} ₫` : fmtMoney(exact, currency)
+  // An unverified token: its own symbol, never a $ (a spam token may call itself "USDC").
+  const unv = typeof currency === 'string' && currency.startsWith('u:')
+  const amountText = unv ? `${exact} ${params.tokenLabel || '?'}` : currency === 'VND' ? `${Number(amount).toLocaleString('vi-VN')} ₫` : fmtMoney(exact, currency)
   // The REAL token moved on-chain (USD = a label, USDC actually moves 1:1) - shown plainly on the receipt
   // so sender and recipient can reconcile the actual asset (nobody should read a label and assume another token).
   // ⚠️ VND is NOT a token: what actually moves is USDC, and the USDC figure ≠ the VND typed → you must use
   // params.tokenAmount (decided in SendAmount, forwarded by SendConfirm), never `amount`.
-  const realToken = currency === 'USD' || currency === 'VND' ? 'USDC' : currency
+  const realToken = unv ? `${params.tokenLabel || '?'} (unverified)` : currency === 'USD' || currency === 'VND' ? 'USDC' : currency
   const realUnits = currency === 'VND' ? (params.tokenAmount ?? 0) : Number(amount)
   // The exact sent string (was toFixed(2): 0.004 showed as "0.00 USDC" - MAINNET-AUDIT H1). VND keeps its conversion.
   const realAmountText = `${currency === 'VND' ? realUnits.toFixed(2) : exact} ${realToken}`

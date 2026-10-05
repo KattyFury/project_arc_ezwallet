@@ -3,7 +3,7 @@ import { useNav } from '../nav'
 import Numpad from '../components/Numpad'
 import Icon from '../components/Icon'
 import ErrorToast from '../components/ErrorToast'
-import { getTokenInfo, getTokenBalances, getDisplayRates, cachedRates } from '../chain'
+import { getTokenInfo, getTokenBalances, getDisplayRates, cachedRates, getUnverifiedTokens } from '../chain'
 import { ensureWalletAddress } from '../circle'
 import { findContactName } from '../store'
 import { displaySymbol, spendableOf, floorTo, shortenAddr } from '../data'
@@ -26,10 +26,13 @@ import { amountProblem, normalizeTyped } from '../money'
 // where it does not exist (the server would refuse the send, but the app must not offer it at all).
 const CURRENCIES = ['USD', ...Object.keys(NET.tokens)]
 const effectiveToken = c => (c === 'USD' || c === 'VND' ? 'USDC' : c)
+// UNVERIFIED tokens (owner 2026-10-05): can be SENT, picked only in this screen's currency popup (yellow section),
+// keyed 'u:<address>'. No price, no auto-convert; Confirm shows a yellow warning line.
+const isUnv = c => typeof c === 'string' && c.startsWith('u:')
 // USD/VND are FIAT LABELS, not tokens - no coin logo for them (user decision 2026-09-24: "USD, EUR
 // tụi mình k dùng logo, còn token thì mới dùng" - showing USDC's logo under "USD" implied the user had
 // picked the token USDC, when they picked the fiat label). Only a real token (USDC/EURC/cirBTC) gets one.
-const isFiatLabel = c => c === 'USD' || c === 'VND'
+const isFiatLabel = c => c === 'USD' || c === 'VND' || isUnv(c)
 const tokenIconFor = c => (effectiveToken(c) === 'USDC' ? 'usdc' : effectiveToken(c).toLowerCase())
 
 export default function SendAmount() {
@@ -42,7 +45,15 @@ export default function SendAmount() {
   // QR SAFETY (mainnet v1 plan item 2 (2026-09-27, deleted doc - git history)): a currency this build does not have (an old 'VND' QR, a testnet 'cirBTC' QR)
   // keeps NO amount - the number meant something else, and "500000" VND must never turn into $500,000.
   const badCurrency = !!params.currency && !qrCurrency
-  const [cur, setCur] = useState(qrCurrency || 'USD')
+  const [cur, setCur] = useState(qrCurrency || (isUnv(params.currency) ? params.currency : 'USD'))
+  // The unverified tokens the wallet holds: [{ key, address, symbol, decimals, amount }] (Circle's balance list).
+  const [unvList, setUnvList] = useState([])
+  useEffect(() => {
+    getUnverifiedTokens().then(us => setUnvList(us.filter(u => Number.isInteger(u.decimals)).map(u => ({ ...u, key: `u:${u.address}` })))).catch(() => {})
+  }, [])
+  const unvOf = c => unvList.find(u => u.key === c)
+  const labelOf = c => (isUnv(c) ? (unvOf(c)?.symbol || '…') : c)
+  const decimalsOf = c => (isUnv(c) ? unvOf(c)?.decimals ?? 18 : NET.tokens[effectiveToken(c)]?.decimals ?? 6)
   // A prefilled amount (QR / back from Confirm) is only accepted if it is a clean decimal (qr.js already checks QRs).
   const [digits, setDigits] = useState(params.amount && !badCurrency && !amountProblem(String(params.amount), 8) ? String(params.amount) : '')
   // The amount was put there by a QR and the user has not changed it (amount AND currency) → SendConfirm asks for one
@@ -100,6 +111,11 @@ export default function SendAmount() {
     // send. Retry after 3s so it recovers by itself once the RPC unclogs.
     let alive = true, retry
     setExtraUsd(0)
+    if (isUnv(tok)) {   // Circle's balance list (the same read Home uses) - no on-chain multicall for unknown tokens
+      const u = unvOf(tok)
+      if (u) setAvailableAmt(u.amount)
+      return
+    }
     const load = () => (tok === 'USDC'
       ? getTokenBalances(walletAddr).then(list => {
           if (!alive) return
@@ -110,7 +126,7 @@ export default function SendAmount() {
       .catch(() => { if (alive) retry = setTimeout(load, 3000) })
     load()
     return () => { alive = false; clearTimeout(retry) }
-  }, [cur, walletAddr])
+  }, [cur, walletAddr, unvList])
 
   // ── VND: type in Vietnamese money, send USDC ──────────────────────────────────────────────
   // rates[cur] = USD per unit. rates.VND ≈ 0.000038 (1 dong ≈ 0.000038 dollars).
@@ -136,9 +152,10 @@ export default function SendAmount() {
   // the button merely because the balance is still loading (requiring availableAmt!==null used to "kill" it while the balance/address were in flight).
   // VND with no rate yet → no going on (the USDC amount cannot be computed).
   const canContinue = amount > 0 && !overBalance && !selfSend && (!isVnd || !!vndRate)
-  const decimalsFor = c => (effectiveToken(c) === 'cirBTC' ? 8 : 2)
+  const decimalsFor = c => (effectiveToken(c) === 'cirBTC' ? 8 : isUnv(c) ? 4 : 2)
   const availableStr = isVnd
     ? `${availableInCur !== null ? Math.floor(availableInCur).toLocaleString('vi-VN') : '…'} ₫`
+    : isUnv(cur) ? `${availableInCur !== null ? availableInCur.toLocaleString('en-US', { maximumFractionDigits: 4 }) : '…'} ${labelOf(cur)}`
     : `${availableInCur !== null ? floorTo(availableInCur, decimalsFor(cur)).toFixed(decimalsFor(cur)) : '…'} ${cur}`
   // AMOUNT SUGGESTIONS (user decision 08-04) - VND ONLY: typing "50" → [5,000] [50,000] [500,000].
   // Never for USD/EUR: typing "50" already means 50 dollars, and suggesting ×100 (5,000 dollars) would be a deadly trap.
@@ -153,7 +170,7 @@ export default function SendAmount() {
     // No more decimal places than the token has (USDC/EURC 6, cirBTC 8) - the old keypad took any number and
     // Confirm then sent toFixed(2) of it (MAINNET-AUDIT H1).
     const frac = digits.split('.')[1]
-    if (frac !== undefined && frac.length >= (NET.tokens[effectiveToken(cur)]?.decimals ?? 6)) return
+    if (frac !== undefined && frac.length >= decimalsOf(cur)) return
     if (digits === '0') { setDigits(key); return }
     setDigits(d => d + key)
   }
@@ -195,7 +212,7 @@ export default function SendAmount() {
       <button onClick={() => setShowCur(true)}
         style={{ position: 'absolute', left: '8.46%', top: '19.4dvh', transform: 'translateY(-50%)', display: 'inline-flex', alignItems: 'center', gap: 'calc(6 * var(--u))', border: 'none', background: 'var(--color-white)', borderRadius: 999, height: 'calc(42 * var(--u))', padding: '0 calc(14 * var(--u)) 0 calc(8 * var(--u))', boxShadow: '0 0 8px rgba(0, 0, 0, 0.5)', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)', cursor: 'pointer' }}>
         {!isFiatLabel(cur) && <img src={`/tokens/${tokenIconFor(cur)}.png`} alt="" style={{ width: 'calc(24 * var(--u))', height: 'calc(24 * var(--u))', borderRadius: '50%', flexShrink: 0 }} />}
-        {cur}
+        {isUnv(cur) ? <span style={{ maxWidth: 'calc(150 * var(--u))', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{labelOf(cur)}</span> : cur}
         <Icon name="down2" size="var(--is-content-2)" color="var(--color-brand)" />
       </button>
 
@@ -313,7 +330,7 @@ export default function SendAmount() {
       <div className="row10-dual">
         <button className="btn btn-secondary" onClick={() => navigate(back)}>Back</button>
         <button className="btn btn-primary" disabled={!canContinue}
-          onClick={() => navigate('SendConfirm', { address, name, amount, amountStr: normalizeTyped(digits), memo, currency: cur, tokenAmount, qrAmount: qrActive, convert: needsConvert, back })}>
+          onClick={() => navigate('SendConfirm', { address, name, amount, amountStr: normalizeTyped(digits), memo, currency: cur, tokenLabel: isUnv(cur) ? labelOf(cur) : null, tokenAmount, qrAmount: qrActive, convert: needsConvert, back })}>
           Continue
         </button>
       </div>
@@ -342,14 +359,16 @@ export default function SendAmount() {
       {/* Currency picker popup - standard .popup-card (centred over rows 2-5, leaving the bottom half for the keyboard) */}
       {showCur && (
         <div className="popup-overlay" onClick={() => setShowCur(false)}>
-          <div className="popup-card" onClick={e => e.stopPropagation()}>
+          <div className="popup-card" onClick={e => e.stopPropagation()} style={{ maxHeight: '80dvh', overflowY: 'auto' }}>
             <div className="popup-title">Select currency</div>
-            {CURRENCIES.map(c => (
+            {[...CURRENCIES, ...(unvList.length ? ['__unv'] : []), ...unvList.map(u => u.key)].map(c => c === '__unv' ? (
+              <div key={c} style={{ fontSize: 'var(--fs-caption)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-warning)', textAlign: 'center' }}>Unverified tokens</div>
+            ) : (
               // Changing currency → CLEAR what was typed. Whether "50" means 50 dollars or 50 dong are two entirely
               // different things; keeping the old number invites the user to send twenty thousand times too much.
               <button key={c} onClick={() => { if (c !== cur) setDigits(''); setCur(c); setShowCur(false) }}
-                className={`btn ${c === cur ? 'btn-primary' : 'btn-secondary'}`} style={{ width: '100%' }}>
-                {c}
+                className={`btn ${c === cur ? 'btn-primary' : 'btn-secondary'}`} style={{ width: '100%', flexShrink: 0 }}>
+                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', minWidth: 0 }}>{labelOf(c)}</span>
               </button>
             ))}
           </div>

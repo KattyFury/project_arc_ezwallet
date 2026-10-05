@@ -37,7 +37,10 @@ export default function SendConfirm() {
 
   // USD = USDC (1:1, only the label differs); USDC/EURC/cirBTC send exactly the amount entered, with NO conversion.
   // VND = fiat, which does NOT exist on-chain → USDC is sent.
-  const token = currency === 'USD' || currency === 'VND' ? 'USDC' : currency
+  // An unverified token (owner 2026-10-05) arrives as 'u:<address>' + its symbol in tokenLabel; the server gets the address.
+  const unv = typeof currency === 'string' && currency.startsWith('u:')
+  const tokenLabel = unv ? `${params.tokenLabel || '?'}` : null
+  const token = unv ? currency.slice(2) : currency === 'USD' || currency === 'VND' ? 'USDC' : currency
   // ⚠️⚠️ VND: REUSE the exact token amount SendAmount settled on (params.tokenAmount), NEVER re-convert
   // from the rate on this screen. Rates move constantly (CoinGecko refreshes every 60s) - converting a second
   // time makes the number the user just saw ("≈ 19.00 USDC") differ from the one that ACTUALLY leaves the wallet.
@@ -64,7 +67,7 @@ export default function SendConfirm() {
 
   const mainEl = currency === 'USD' ? <>{displaySymbol('USDC')}{sendAmountStr}</>
     : currency === 'VND' ? <>{amount.toLocaleString('vi-VN')} <Cur>₫</Cur></>
-    : <>{sendAmountStr} <Cur>{currency}</Cur></>
+    : <>{sendAmountStr} <Cur>{unv ? tokenLabel : currency}</Cur></>
 
   // QR SAFETY (mainnet v1 plan item 2 (2026-09-27, deleted doc - git history)): an amount a QR put there (untouched - SendAmount's qrActive) worth more than
   // $100 needs one more explicit "yes" before the PIN. A forged or swapped QR is the easiest way to trick someone
@@ -90,7 +93,7 @@ export default function SendConfirm() {
   function finishOk(tx) {
     clearPending(attemptRef.current?.refId)
     setDone(true)
-    navigate('SendReceipt', { address, name, amount, amountStr: sendAmountStr, memo, currency, tokenAmount: sendUnits, txHash: tx?.txHash || null, timestamp: Date.now() })
+    navigate('SendReceipt', { address, name, amount, amountStr: sendAmountStr, memo, currency, tokenLabel, tokenAmount: sendUnits, txHash: tx?.txHash || null, timestamp: Date.now() })
   }
   function fail(msg) {
     setLoading(false); setStatus(''); setError(msg); addNotif(msg, 'error')
@@ -235,6 +238,12 @@ export default function SendConfirm() {
               <span className="confirm-value num">
                 {convertLegs.map(l => <span key={l.token} style={{ display: 'block' }}>{l.amountIn} <Cur>{l.token}</Cur></span>)}
               </span>
+            </div>
+          )}
+          {unv && (
+            // UNVERIFIED token (owner 2026-10-05): one yellow line, never blocks.
+            <div className="confirm-row" style={{ justifyContent: 'center', color: 'var(--color-warning)', fontWeight: 'var(--fw-semibold)', fontSize: 'var(--fs-caption)', textAlign: 'center' }}>
+              Unverified token - make sure the receiver expects it
             </div>
           )}
           {memo && (
