@@ -33,12 +33,14 @@ function saveEmailHistory(email) {
 
 // The suggestion chip - node 1:204 / 7:33: 32 tall, RADIUS 8 (not a pill: the exported path's corner is
 // `a 8 8` and the shared app-wide hint chip's 999 would be visibly rounder), 1px brand border on white,
-// 14px brand text. Figma stacks two of them on a 42px step (32 tall + a 10px gap).
-function Chip({ label, onClick, top }) {
+// 14px brand text.
+// Owner 2026-10-05: the chips sit 16px under the field (they used to overlap it - the field is --input-h tall, not
+// Figma's 40) and flow side by side, wrapping to a new line only when the row is full.
+function Chip({ label, onClick }) {
   return (
     <button onClick={onClick} title={label}
       style={{
-        position: 'absolute', left: '10.51%', top, height: 'calc(32 * var(--u))', maxWidth: '79%',
+        flexShrink: 0, height: 'calc(32 * var(--u))', maxWidth: '100%',
         padding: '0 calc(12 * var(--u))', border: '1px solid var(--color-brand)', borderRadius: 16,
         background: 'var(--btn-grad-white)', cursor: 'pointer',
         fontFamily: 'inherit', fontSize: 'var(--fs-small)', color: 'var(--color-brand)',
@@ -195,8 +197,7 @@ export default function LoginEmailPopup({ onClose }) {
     onClose()
   }
 
-  // Which chips to show, and where. Figma draws two at y=236 and y=278 - a 42px step - so any further
-  // suggestion continues the same step rather than getting its own magic number.
+  // Which chips to show (they flow in one wrapping row under the field - see Chip).
   const chips = step === 'code' ? [] : suggestions.length > 0
     ? suggestions.map(s => ({ label: s, onClick: () => { setEmail(s); setError('') } }))
     : showDomains
@@ -251,7 +252,7 @@ export default function LoginEmailPopup({ onClose }) {
 
       {step === 'code' && (
         <div style={{
-          position: 'absolute', left: '10.51%', right: '10.51%', top: `${236 / 844 * 100}dvh`,
+          position: 'absolute', left: '10.52%', width: '78.96%', top: 'calc(22.04dvh + var(--input-h) + 16 * var(--u))',   // 16px under the field (owner 2026-10-05)
           fontSize: 'var(--fs-caption)', lineHeight: 1.4, color: 'var(--color-muted-2)',
         }}>
           We sent a 6-digit code to <span style={{ color: 'var(--color-black)', fontWeight: 'var(--fw-semibold)', overflowWrap: 'anywhere' }}>{email.trim()}</span>. It expires in 10 minutes.
@@ -262,9 +263,14 @@ export default function LoginEmailPopup({ onClose }) {
         </div>
       )}
 
-      {chips.map((c, i) => (
-        <Chip key={c.label} label={c.label} onClick={c.onClick} top={`${(236 + i * 42) / 844 * 100}dvh`} />
-      ))}
+      {chips.length > 0 && (
+        <div style={{
+          position: 'absolute', left: '10.52%', width: '78.96%', top: 'calc(22.04dvh + var(--input-h) + 16 * var(--u))',
+          display: 'flex', flexWrap: 'wrap', gap: 'calc(8 * var(--u))',
+        }}>
+          {chips.map(c => <Chip key={c.label} label={c.label} onClick={c.onClick} />)}
+        </div>
+      )}
 
       {error && (
         <div style={{
