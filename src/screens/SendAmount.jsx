@@ -153,7 +153,7 @@ export default function SendAmount() {
   // VND with no rate yet → no going on (the USDC amount cannot be computed).
   const canContinue = amount > 0 && !overBalance && !selfSend && (!isVnd || !!vndRate)
   const decimalsFor = c => (effectiveToken(c) === 'cirBTC' ? 8 : isUnv(c) ? 4 : 2)
-  // [50%] [Max] (owner 2026-10-05) - EXACT strings, never a float: Max = everything spendable of the token being sent
+  // [50%] [100%] hints (owner 2026-10-05) - EXACT strings, never a float: Max = everything spendable of the token being sent
   // (USD/USDC = the USDC itself minus the 0.01 reserve - no auto-convert, owner's pick; typing more still converts);
   // an unverified token = Circle's own balance string. 50% = half of Max in base units.
   const maxStr = (() => {
@@ -243,9 +243,11 @@ export default function SendAmount() {
       <span style={{ position: 'absolute', left: '8.46%', right: '8.46%', top: '25.28dvh', transform: 'translateY(-50%)', fontSize: 'var(--fs-content-2)', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: 'calc(6 * var(--u))', minWidth: 0 }}>
         <span style={{ color: 'var(--color-muted-2)' }}>Available:</span>
         <span className="num" style={{ fontWeight: 'var(--fw-semibold)', color: 'var(--color-brand)', overflow: 'hidden', textOverflow: 'ellipsis', minWidth: 0 }}>{availableStr}</span>
-        {!isVnd && [['50%', halfStr], ['Max', maxStr]].map(([label, v]) => (
+        {/* HINT chips, not buttons (owner 2026-10-05): the outlined flat pill of Exchange's amount hints - no gradient,
+            no shadow. Tapping one still fills the amount. */}
+        {!isVnd && [['50%', halfStr], ['100%', maxStr]].map(([label, v]) => (
           <button key={label} disabled={!v || v === '0'} onClick={() => pickAmount(v)}
-            style={{ flexShrink: 0, border: 'none', borderRadius: 999, background: 'var(--btn-grad-white)', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.48)', height: 'calc(28 * var(--u))', padding: '0 calc(10 * var(--u))', fontFamily: 'inherit', fontSize: 'var(--fs-caption)', fontWeight: 'var(--fw-semibold)', color: !v || v === '0' ? 'var(--color-muted)' : 'var(--color-brand)', cursor: !v || v === '0' ? 'default' : 'pointer' }}>
+            style={{ flexShrink: 0, border: `1.5px solid ${!v || v === '0' ? 'var(--color-muted)' : 'var(--color-brand)'}`, borderRadius: 999, background: 'var(--color-white)', height: 'calc(28 * var(--u))', padding: '0 calc(10 * var(--u))', fontFamily: 'inherit', fontSize: 'var(--fs-caption)', fontWeight: 'var(--fw-semibold)', color: !v || v === '0' ? 'var(--color-muted)' : 'var(--color-brand)', cursor: !v || v === '0' ? 'default' : 'pointer' }}>
             {label}
           </button>
         ))}
