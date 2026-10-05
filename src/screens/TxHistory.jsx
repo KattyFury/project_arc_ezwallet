@@ -98,7 +98,7 @@ function TxRow({ tx, walletAddr, contacts, onClick, cur, rates, memo, isSwap, sw
           </span>
           {!isSwap && !name && counter && (
             <span onClick={e => { e.stopPropagation(); onAdd(counter) }}
-              style={{ flexShrink: 0, fontSize: 'var(--fs-caption)', fontWeight: 'var(--fw-medium)', color: 'var(--color-brand)', border: '1px solid var(--color-brand)', borderRadius: 16, padding: 'calc(1 * var(--u)) calc(8 * var(--u))', whiteSpace: 'nowrap', background: 'var(--color-white)' }}>
+              style={{ flexShrink: 0, fontSize: 'var(--fs-caption)', fontWeight: 'var(--fw-medium)', color: 'var(--color-brand)', border: '1px solid var(--color-brand)', borderRadius: 16, padding: 'calc(1 * var(--u)) calc(8 * var(--u))', whiteSpace: 'nowrap', background: 'var(--btn-grad-white)' }}>
               Add contacts
             </span>
           )}

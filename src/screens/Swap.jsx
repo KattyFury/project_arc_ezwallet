@@ -52,7 +52,7 @@ function TokenLogo({ sym, label }) {
 function TokenRow({ sym, label = sym, onClick }) {
   return (
     <button onClick={onClick}
-      style={{ display: 'flex', alignItems: 'center', gap: 'calc(8 * var(--u))', border: 'none', borderRadius: 999, height: 'calc(42 * var(--u))', background: 'var(--color-white)', cursor: 'pointer', fontFamily: 'inherit', padding: '0 calc(12 * var(--u)) 0 calc(8 * var(--u))', boxShadow: '0 0 8px rgba(0, 0, 0, 0.5)', flexShrink: 0, maxWidth: '55%', minWidth: 0 }}>
+      style={{ display: 'flex', alignItems: 'center', gap: 'calc(8 * var(--u))', border: 'none', borderRadius: 999, height: 'calc(42 * var(--u))', background: 'var(--btn-grad-white)', cursor: 'pointer', fontFamily: 'inherit', padding: '0 calc(12 * var(--u)) 0 calc(8 * var(--u))', boxShadow: '0 0 8px rgba(0, 0, 0, 0.5)', flexShrink: 0, maxWidth: '55%', minWidth: 0 }}>
       <TokenLogo sym={sym} label={label} />
       <span className="num" style={{ fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-content)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', minWidth: 0 }}>{label}</span>
       <Icon name="down2" size="calc(15 * var(--u))" color="var(--color-brand)" />
@@ -526,7 +526,7 @@ export default function Swap() {
       <button onClick={swapDir} aria-label={'Reverse direction'}
         style={{
           position: 'absolute', left: '50%', top: '29.62dvh', transform: `translate(-50%, -50%) rotate(${flip}deg)`, zIndex: 3,
-          width: 'calc(50 * var(--u))', height: 'calc(50 * var(--u))', borderRadius: '50%', border: 'none', background: 'var(--grad-brand)',
+          width: 'calc(50 * var(--u))', height: 'calc(50 * var(--u))', borderRadius: '50%', border: 'none', background: 'var(--btn-grad-brand)',
           boxShadow: '0 0 8px rgba(0, 0, 0, 0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center',
           cursor: isUnv(fromSym) ? 'default' : 'pointer', transition: 'transform .3s ease', opacity: isUnv(fromSym) ? 0.4 : 1,
         }} disabled={isUnv(fromSym)}>
@@ -577,7 +577,7 @@ export default function Swap() {
                 // chip should follow instead of the stale 17. Both spans now match (semibold, brand blue)
                 // as one value, not a differently-weighted label:value pair.
                 <button key={v} onClick={() => pickHint(v)}
-                  style={{ border: '1.5px solid var(--color-brand)', background: 'var(--color-white)', borderRadius: 999, padding: 'calc(6 * var(--u)) calc(14 * var(--u))', cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap', minWidth: 0 }}>
+                  style={{ border: '1.5px solid var(--color-brand)', background: 'var(--btn-grad-white)', borderRadius: 999, padding: 'calc(6 * var(--u)) calc(14 * var(--u))', cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap', minWidth: 0 }}>
                   <span className="num" style={{ fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-brand)' }}>{fmtHint(v, decimalsFor(fromSym))}</span>
                   <span className="num" style={{ fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-brand)' }}> {labelOf(fromSym)}</span>
                 </button>

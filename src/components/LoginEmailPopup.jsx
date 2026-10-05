@@ -40,7 +40,7 @@ function Chip({ label, onClick, top }) {
       style={{
         position: 'absolute', left: '10.51%', top, height: 'calc(32 * var(--u))', maxWidth: '79%',
         padding: '0 calc(12 * var(--u))', border: '1px solid var(--color-brand)', borderRadius: 16,
-        background: 'var(--color-white)', cursor: 'pointer',
+        background: 'var(--btn-grad-white)', cursor: 'pointer',
         fontFamily: 'inherit', fontSize: 'var(--fs-small)', color: 'var(--color-brand)',
         overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
       }}>
@@ -281,7 +281,7 @@ export default function LoginEmailPopup({ onClose }) {
       <button onClick={back}
         style={{
           position: 'absolute', left: '10.54%', top: '50.95dvh', width: '38.43%', height: 'var(--btn-h)',
-          background: 'var(--color-white)', color: 'var(--color-black)', border: 'none', borderRadius: 16,
+          background: 'var(--btn-grad-white)', color: 'var(--color-black)', border: 'none', borderRadius: 16,
           boxShadow: '0 0 8px rgba(0, 0, 0, 0.48)',
           fontFamily: 'inherit', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', cursor: 'pointer',
         }}>
@@ -290,7 +290,7 @@ export default function LoginEmailPopup({ onClose }) {
       <button onClick={handleSubmit} disabled={!valid || loading}
         style={{
           position: 'absolute', left: '51.03%', top: '50.95dvh', width: '38.46%', height: 'var(--btn-h)',
-          background: 'var(--color-brand)', color: 'var(--color-white)', border: 'none', borderRadius: 16,
+          background: 'var(--btn-grad-brand)', color: 'var(--color-white)', border: 'none', borderRadius: 16,
           boxShadow: '0 0 8px rgba(0, 0, 0, 0.48)',
           fontFamily: 'inherit', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)',
           cursor: valid && !loading ? 'pointer' : 'not-allowed',

@@ -142,7 +142,7 @@ export default function HomeReceive() {
           pill 124x70 at y=688, the two side pills 100x48 at y=699, radius 16 on all three. */}
       <button onClick={() => navigate('SavedQRList')} style={{
         position: 'absolute', left: '6.41%', top: SIDE_BTN.top, width: '25.64%', height: SIDE_BTN.height,
-        background: 'var(--color-white)', border: 'none', borderRadius: 16,
+        background: 'var(--btn-grad-white)', border: 'none', borderRadius: 16,
         boxShadow: '0 0 8px rgba(0, 0, 0, 0.48)',
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(2 * var(--u))',
         fontFamily: 'inherit', fontSize: 'var(--fs-caption)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)',
@@ -154,7 +154,7 @@ export default function HomeReceive() {
 
       <button onClick={() => navigate('CreateQR')} style={{
         position: 'absolute', left: '34.10%', top: BIG_BTN.top, width: '31.79%', height: BIG_BTN.height,
-        background: 'var(--color-brand)', border: 'none', borderRadius: 16,
+        background: 'var(--btn-grad-brand)', border: 'none', borderRadius: 16,
         boxShadow: '0 0 8px rgba(0, 0, 0, 0.48)',
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(2 * var(--u))',
         fontFamily: 'inherit', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-white)',
@@ -166,7 +166,7 @@ export default function HomeReceive() {
 
       <button onClick={handleShare} style={{
         position: 'absolute', left: '67.95%', top: SIDE_BTN.top, width: '25.64%', height: SIDE_BTN.height,
-        background: 'var(--color-white)', border: 'none', borderRadius: 16,
+        background: 'var(--btn-grad-white)', border: 'none', borderRadius: 16,
         boxShadow: '0 0 8px rgba(0, 0, 0, 0.48)',
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(2 * var(--u))',
         fontFamily: 'inherit', fontSize: 'var(--fs-caption)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)',

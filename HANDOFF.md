@@ -90,8 +90,10 @@ Secrets (Pages env, `.env.txt` locally): `API_KEY` (Circle LIVE - wallets + swap
   - Blue `--btn-grad-brand`: `linear-gradient(to top, brand 88% + black, brand 88% + white)` (brand `#0B53BF`).
   - White `--btn-grad-white`: `linear-gradient(to top, --color-card 45% + white, #FFFFFF)` - the light grey is mixed
     from the card grey, so it is not a 4th grey.
-  - Not yet applied (inline-styled, ask the owner first): numpad keys, token chips, Exchange's reverse button,
-    Service hub cards.
+  - **EVERY button** carries one (owner: "mọi nút đều có gradient"), inline-styled ones included; green/red buttons use
+    `--btn-grad-success` / `--btn-grad-error` (same recipe). Deliberately flat: containers/popups/notification rows,
+    Home's token list rows (they match the plain token rows), the active NavBar cell (it joins the white sheet), the %
+    slider thumb, Send's down-arrow circle (not tappable).
 - **Everything scales with the viewport.** `--u` (index.css) = one design pixel =
   `min(1px, 100dvh/844, 100vw/390)`. Write every size as `calc(N * var(--u))` - fonts, heights, icons,
   paddings, gaps. Radii, borders, shadows and hairlines stay fixed. Gaps that must stay readable:

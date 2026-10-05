@@ -161,7 +161,7 @@ export default function Contacts() {
                   // No picture yet → a WHITE circle with a GREY BORDER (it sits inside the grey box → follows the
                   // white-chip rule of 07-17f), a muted "+", tap it to add an avatar
                   <button onClick={() => openEdit(c)}
-                    style={{ width: 'calc(52 * var(--u))', height: 'calc(52 * var(--u))', borderRadius: '50%', background: 'var(--color-white)', border: '1.5px solid var(--color-gray)', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    style={{ width: 'calc(52 * var(--u))', height: 'calc(52 * var(--u))', borderRadius: '50%', background: 'var(--btn-grad-white)', border: '1.5px solid var(--color-gray)', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                     <Icon name="add" size="calc(24 * var(--u))" color="var(--color-muted)" />
                   </button>
                 )}

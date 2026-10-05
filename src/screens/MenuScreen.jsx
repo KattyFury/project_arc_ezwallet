@@ -112,7 +112,7 @@ export default function MenuScreen() {
           Send/Receive, so Withdraw read as Send and Deposit as Receive. Size = 1.2x the label (--ib-content-1). */}
       <button className="btn" onClick={() => setPopup('withdraw')} style={{
         position: 'absolute', left: '6.41%', top: '30.57dvh', width: '42.56%', height: 'calc(70 * var(--u))',
-        background: 'var(--color-white)', border: 'none', borderRadius: 16,
+        background: 'var(--btn-grad-white)', border: 'none', borderRadius: 16,
         boxShadow: '0 0 8px rgba(0, 0, 0, 0.48)', cursor: 'pointer',
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(2 * var(--u))',
         fontFamily: 'inherit', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)',
@@ -124,7 +124,7 @@ export default function MenuScreen() {
           a send to another Arc address. No fiat on/off-ramp (Onramp Kit needs a KYB the owner does not have). */}
       <button className="btn" onClick={() => setPopup('deposit')} style={{
         position: 'absolute', left: '51.03%', top: '30.57dvh', width: '42.56%', height: 'calc(70 * var(--u))',
-        background: 'var(--color-brand)', border: 'none', borderRadius: 16,
+        background: 'var(--btn-grad-brand)', border: 'none', borderRadius: 16,
         boxShadow: '0 0 8px rgba(0, 0, 0, 0.48)', cursor: 'pointer',
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(2 * var(--u))',
         fontFamily: 'inherit', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-white)',

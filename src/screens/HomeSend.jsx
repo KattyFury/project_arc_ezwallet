@@ -72,7 +72,7 @@ export const HALF_OVAL_STYLE = {
   position: 'absolute', left: '50%', bottom: 0, transform: 'translateX(-50%)', zIndex: 10,
   display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
   width: 'min(66.15vw, calc(var(--screen-max) * 0.6615))', height: 'calc(40 * var(--u))',
-  borderRadius: '38px 38px 0 0', border: 'none', background: 'var(--color-white)',
+  borderRadius: '38px 38px 0 0', border: 'none', background: 'var(--btn-grad-white)',
   boxShadow: '0 0 10px rgba(0, 0, 0, 0.4)',
   padding: '0 calc(18 * var(--u))', overflow: 'hidden', textOverflow: 'ellipsis',
   color: 'var(--color-content)', fontFamily: 'var(--font-condensed)', fontSize: 'var(--fs-content-2)',
@@ -282,7 +282,7 @@ export default function HomeSend() {
           flex row with align-items would only approximate what the node draws. Radius 16 on all three. */}
       <button onClick={() => navigate('PasteAddress')} style={{
         position: 'absolute', left: '6.41%', top: SIDE_BTN.top, width: '25.64%', height: SIDE_BTN.height,
-        background: 'var(--color-white)', border: 'none', borderRadius: 16,
+        background: 'var(--btn-grad-white)', border: 'none', borderRadius: 16,
         boxShadow: '0 0 8px rgba(0, 0, 0, 0.48)',
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(2 * var(--u))',
         fontFamily: 'inherit', fontSize: 'var(--fs-caption)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)',
@@ -294,7 +294,7 @@ export default function HomeSend() {
 
       <button onClick={() => navigate('QRScanner')} style={{
         position: 'absolute', left: '34.10%', top: BIG_BTN.top, width: '31.79%', height: BIG_BTN.height,
-        background: 'var(--color-brand)', border: 'none', borderRadius: 16,
+        background: 'var(--btn-grad-brand)', border: 'none', borderRadius: 16,
         boxShadow: '0 0 8px rgba(0, 0, 0, 0.48)',
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(2 * var(--u))',
         fontFamily: 'inherit', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-white)',
@@ -306,7 +306,7 @@ export default function HomeSend() {
 
       <button onClick={() => navigate('Contacts')} style={{
         position: 'absolute', left: '67.95%', top: SIDE_BTN.top, width: '25.64%', height: SIDE_BTN.height,
-        background: 'var(--color-white)', border: 'none', borderRadius: 16,
+        background: 'var(--btn-grad-white)', border: 'none', borderRadius: 16,
         boxShadow: '0 0 8px rgba(0, 0, 0, 0.48)',
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(2 * var(--u))',
         fontFamily: 'inherit', fontSize: 'var(--fs-caption)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)',

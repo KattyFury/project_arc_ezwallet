@@ -413,6 +413,9 @@ body {
 :root {
   --btn-grad-brand: linear-gradient(to top, color-mix(in srgb, var(--color-brand) 88%, black), color-mix(in srgb, var(--color-brand) 88%, white));
   --btn-grad-white: linear-gradient(to top, color-mix(in srgb, var(--color-card) 45%, white), var(--color-white));
+  /* EVERY button (owner 2026-10-05) - the green/red ones use the same recipe as the blue. */
+  --btn-grad-success: linear-gradient(to top, color-mix(in srgb, var(--color-primary) 88%, black), color-mix(in srgb, var(--color-primary) 88%, white));
+  --btn-grad-error: linear-gradient(to top, color-mix(in srgb, var(--color-error) 88%, black), color-mix(in srgb, var(--color-error) 88%, white));
 }
 .btn-primary {
   background: var(--btn-grad-brand);
@@ -430,8 +433,8 @@ body {
 /* STATUS buttons - use this class, stop inlining `background: var(--color-primary)` yourself
    (a flat button looks out of place among gradient ones). Colours follow the semantic system: success/received = green,
    warning = yellow, error/delete = red. The gradient formulas are in :root --grad-*. */
-.btn-success { background: var(--grad-primary); color: var(--color-white); border: none; box-shadow: 0 0 8px rgba(0, 0, 0, 0.48); }
-.btn-error   { background: var(--grad-error);   color: var(--color-white); border: none; box-shadow: 0 0 8px rgba(0, 0, 0, 0.48); }
+.btn-success { background: var(--btn-grad-success); color: var(--color-white); border: none; box-shadow: 0 0 8px rgba(0, 0, 0, 0.48); }
+.btn-error   { background: var(--btn-grad-error);   color: var(--color-white); border: none; box-shadow: 0 0 8px rgba(0, 0, 0, 0.48); }
 /* (No screen needs the yellow warning button yet - when one does: background var(--grad-warning) + BLACK text is MANDATORY,
    white on yellow is only 2.15:1 and older users cannot read it.) */
 
@@ -585,7 +588,7 @@ body {
    fixing all three screens' numpad at once per the "one shared definition" rule. */
 .numpad-gray .numpad { gap: calc(8 * var(--u)); }
 .numpad-gray .numpad-row { gap: calc(8 * var(--u)); }
-.numpad-gray .numpad-key { background: var(--color-white); border-radius: 16px; box-shadow: 0 0 8px rgba(0, 0, 0, 0.48); }
+.numpad-gray .numpad-key { background: var(--btn-grad-white); border-radius: 16px; box-shadow: 0 0 8px rgba(0, 0, 0, 0.48); }
 .numpad-gray .numpad-key:active { background: rgba(0,0,0,0.06); }
 .numpad-gray .numpad-key.empty { background: transparent; box-shadow: none; }
 
@@ -694,7 +697,7 @@ body {
      the grey-border rule from 07-21 does not apply to this pill style). Fully rounded (radius = height/2). */
   border-radius: 28px;
   border: none;
-  background: var(--color-white);
+  background: var(--btn-grad-white);
   color: var(--color-black);
   font-family: var(--font-condensed);
   font-size: var(--fs-caption);      /* raw measurement (Paste/Contacts/QR storage/Share) was 13px, folded into Chú thích */
@@ -708,7 +711,7 @@ body {
   height: 7.58dvh;      /* 64px of 844 - the emphasized centre pill is taller, not just bigger text */
   min-height: calc(50 * var(--u));
   border-radius: 32px;
-  background: var(--grad-brand);
+  background: var(--btn-grad-brand);
   color: var(--color-white);
   font-size: var(--fs-content-2);      /* raw measurement ("Scan QR"/"Custom QR") was 16px, rounded up to Nội dung 2 */
 }
