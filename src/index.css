@@ -407,14 +407,21 @@ body {
    the right value this session, but the shared class itself, the actual DEFAULT every untouched button
    falls back to, was never fixed - so any button without its own inline override still rendered the old
    drop shadow. Fixed here once, for every .btn-primary/secondary/success/error app-wide. */
+/* DEPTH (owner 2026-10-05): a SOFT bottom→top gradient so buttons lift off the page without hurting legibility.
+   Blue = the brand a little darker at the bottom → a little lighter at the top. White = a light grey (the card grey
+   mixed into white - no 4th grey, HANDOFF §2) at the bottom → white at the top. Text colours are unchanged. */
+:root {
+  --btn-grad-brand: linear-gradient(to top, color-mix(in srgb, var(--color-brand) 88%, black), color-mix(in srgb, var(--color-brand) 88%, white));
+  --btn-grad-white: linear-gradient(to top, color-mix(in srgb, var(--color-card) 45%, white), var(--color-white));
+}
 .btn-primary {
-  background: var(--grad-brand);
+  background: var(--btn-grad-brand);
   color: var(--color-white);
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.48);
 }
 
 .btn-secondary {
-  background: var(--color-white);
+  background: var(--btn-grad-white);
   color: var(--color-black);
   border: 1.5px solid var(--color-gray);
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.48);
