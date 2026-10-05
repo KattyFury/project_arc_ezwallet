@@ -27,8 +27,9 @@ export async function onRequestPost(ctx) {
     const body = await ctx.request.json()
     const { action, userToken, walletId, walletAddress, tokenIn, tokenOut, amountIn, refId } = body
 
-    // tokenIn = a listed symbol or an unverified token's address (sell only); tokenOut = a listed symbol only.
-    const tIn = await resolveTokenIn(net, tokenIn)
+    // Exchange = the VERIFIED tokens only (owner 2026-10-05: unverified tokens get their own "Memes" hub later; the Send
+    // screen can send them, Exchange cannot swap them) - an address is refused here even though resolveTokenIn reads it.
+    const tIn = net.tokens[tokenIn] ? await resolveTokenIn(net, tokenIn) : null
     const fromAddr = tIn?.address
     const toAddr   = tokenOf(net, tokenOut)?.address
     const inBase = (dec) => toBaseUnits(dec, tIn.decimals)

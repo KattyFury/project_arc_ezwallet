@@ -213,8 +213,8 @@ export default function HomeSend() {
         )}
         {/* UNVERIFIED TOKENS (owner 2026-10-03) - ONE token-style row "Unverified tokens" with a down arrow; tapping it
             opens the list underneath. Amount + symbol, no $ value, no logo (the contract's own name/symbol is untrusted, so
-            it is truncated and never linked). Tapping a token opens Exchange to SELL it (owner 2026-10-05: allowed with a
-            yellow warning there, never blocked). */}
+            it is truncated and never linked). View only here: they can be SENT from the Send screen's currency popup, never
+            swapped (owner 2026-10-05 - a "Memes" service hub is planned for them). */}
         {!loading && unverified.length > 0 && (
           <>
             <button onClick={() => setShowUnverified(v => !v)} aria-expanded={showUnverified} style={{
@@ -229,16 +229,16 @@ export default function HomeSend() {
               </span>
             </button>
             {showUnverified && unverified.map(tk => (
-              <button key={tk.address} title={tk.address} onClick={() => navigate('Swap', { from: `u:${tk.address}` })} style={{
-                display: 'flex', alignItems: 'center', gap: 'calc(8 * var(--u))', flexShrink: 0, width: '100%', cursor: 'pointer',
-                height: 'calc(40 * var(--u))', borderRadius: 16, background: 'var(--color-white)', padding: '0 calc(16 * var(--u))', border: 'none', fontFamily: 'inherit',
+              <div key={tk.address} title={tk.address} style={{
+                display: 'flex', alignItems: 'center', gap: 'calc(8 * var(--u))', flexShrink: 0,
+                height: 'calc(40 * var(--u))', borderRadius: 16, background: 'var(--color-white)', padding: '0 calc(16 * var(--u))',
               }}>
                 <div className="token-icon" style={{ width: 'calc(26.325 * var(--u))', height: 'calc(26.325 * var(--u))', background: 'var(--color-muted-2)', flexShrink: 0, display: 'flex' }}>{tk.symbol.slice(0, 2)}</div>
                 <span style={{ ...TOKEN_TEXT_STYLE, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '50%' }}>{tk.symbol.slice(0, 16)}</span>
                 <span style={{ ...TOKEN_TEXT_STYLE, color: 'var(--color-muted-2)', marginLeft: 'auto', whiteSpace: 'nowrap' }}>
                   {tk.amount.toLocaleString('en-US', { maximumFractionDigits: 4 })}
                 </span>
-              </button>
+              </div>
             ))}
           </>
         )}

@@ -7,7 +7,7 @@ import ScreenSheet from '../components/ScreenSheet'
 import ExitBar from '../components/ExitBar'
 import { GRADIENT } from '../brandBg'
 import { estimateSwap, estimateSwapFee, executeSwap, getSDK, executeChallenge, refreshSession, ensureWalletAddress, circleErrorMessage } from '../circle'
-import { getTokenBalances, getDisplayRates, cachedRates, cachedBalances, getUnverifiedTokens } from '../chain'
+import { getTokenBalances, getDisplayRates, cachedRates, cachedBalances } from '../chain'
 import { spendableOf, floorTo, getDisplayCurrency, displaySymbol, fmtDisplay, decimalsOfCurrency, GAS_RESERVE_USDC } from '../data'
 import { useFitFontSize } from '../useFitFontSize'
 import { roundHints, fmtHint } from '../roundHint'
@@ -34,27 +34,16 @@ const SWAP_ENABLED = true
 // Row map (given by the user): 1 title · 2-6 You pay/You receive + Rate/Fee · 7 hints · 8 slider ·
 // 9 the Swap button · 10 NavBar.
 const SWAP_TOKENS = ['USDC', 'EURC', 'cirBTC']
-// UNVERIFIED tokens (owner 2026-10-05): SELL ONLY - allowed with a yellow warning, never blocked (the app serves everyday
-// AND web3 users). One is keyed 'u:<address>' everywhere a symbol is used on this screen; the server reads its decimals
-// on chain and only accepts it as tokenIn (functions/api/_swapCore.js resolveTokenIn).
-const isUnv = sym => typeof sym === 'string' && sym.startsWith('u:')
-const decimalsFor = sym => (sym === 'cirBTC' ? 6 : isUnv(sym) ? 4 : 2)
+const decimalsFor = sym => (sym === 'cirBTC' ? 6 : 2)
 
 // 2026-09-10, node 1:72/13:149: height 42 (was uncapped), NO border (was 1.5px grey - the glow shadow
 // alone is this app's "tappable" signal now), icon 24 (was 32), text 18 (was --fs-body 19).
-// An unverified token has no logo (its name is untrusted) → a grey circle with its first 2 letters, like Home.
-function TokenLogo({ sym, label }) {
-  const size = { width: 'calc(24 * var(--u))', height: 'calc(24 * var(--u))', borderRadius: '50%', flexShrink: 0 }
-  if (isUnv(sym)) return <span className="token-icon" style={{ ...size, background: 'var(--color-muted-2)', display: 'flex' }}>{label.slice(0, 2)}</span>
-  return <img src={`/tokens/${sym.toLowerCase()}.png`} alt="" style={size} />
-}
-
-function TokenRow({ sym, label = sym, onClick }) {
+function TokenRow({ sym, onClick }) {
   return (
     <button onClick={onClick}
-      style={{ display: 'flex', alignItems: 'center', gap: 'calc(8 * var(--u))', border: 'none', borderRadius: 999, height: 'calc(42 * var(--u))', background: 'var(--btn-grad-white)', cursor: 'pointer', fontFamily: 'inherit', padding: '0 calc(12 * var(--u)) 0 calc(8 * var(--u))', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.5)', flexShrink: 0, maxWidth: '55%', minWidth: 0 }}>
-      <TokenLogo sym={sym} label={label} />
-      <span className="num" style={{ fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-content)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', minWidth: 0 }}>{label}</span>
+      style={{ display: 'flex', alignItems: 'center', gap: 'calc(8 * var(--u))', border: 'none', borderRadius: 999, height: 'calc(42 * var(--u))', background: 'var(--btn-grad-white)', cursor: 'pointer', fontFamily: 'inherit', padding: '0 calc(12 * var(--u)) 0 calc(8 * var(--u))', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.5)', flexShrink: 0 }}>
+      <img src={`/tokens/${sym.toLowerCase()}.png`} alt={sym} style={{ width: 'calc(24 * var(--u))', height: 'calc(24 * var(--u))', borderRadius: '50%' }} />
+      <span className="num" style={{ fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-content)' }}>{sym}</span>
       <Icon name="down2" size="calc(15 * var(--u))" color="var(--color-brand)" />
     </button>
   )
@@ -63,24 +52,18 @@ function TokenRow({ sym, label = sym, onClick }) {
 // Token picker popup - the same popup style as SendAmount's currency picker (anchored to the top half).
 // Shows ALL 3 tokens (user decision: do not hide the token selected on the other side - picking the other side's token
 // simply swaps the two sides, which selectToken already handles).
-// unverified (the "You pay" side only - sell only): the unverified tokens the wallet holds, under a yellow heading.
-function TokenPicker({ current, onSelect, onClose, unverified = [] }) {
-  const pick = (sym, label) => (
-    <button key={sym} onClick={() => { onSelect(sym); onClose() }} className={`btn ${sym === current ? 'btn-primary' : 'btn-secondary'}`}
-      style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'calc(10 * var(--u))', flexShrink: 0 }}>
-      <TokenLogo sym={sym} label={label} />
-      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', minWidth: 0 }}>{label}</span>
-    </button>
-  )
+function TokenPicker({ current, onSelect, onClose }) {
   return (
     <div className="popup-overlay" onClick={onClose}>
-      <div className="popup-card" onClick={e => e.stopPropagation()} style={{ maxHeight: '80dvh', overflowY: 'auto' }}>
+      <div className="popup-card" onClick={e => e.stopPropagation()}>
         <div className="popup-title">Select token</div>
-        {SWAP_TOKENS.map(sym => pick(sym, sym))}
-        {unverified.length > 0 && <>
-          <div style={{ fontSize: 'var(--fs-caption)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-warning)', textAlign: 'center' }}>Unverified tokens</div>
-          {unverified.map(t => pick(t.key, t.symbol))}
-        </>}
+        {SWAP_TOKENS.map(sym => (
+          <button key={sym} onClick={() => { onSelect(sym); onClose() }} className={`btn ${sym === current ? 'btn-primary' : 'btn-secondary'}`}
+            style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'calc(10 * var(--u))' }}>
+            <img src={`/tokens/${sym.toLowerCase()}.png`} alt="" style={{ width: 'calc(24 * var(--u))', height: 'calc(24 * var(--u))', borderRadius: '50%' }} />
+            {sym}
+          </button>
+        ))}
       </div>
     </div>
   )
@@ -105,10 +88,8 @@ function TwoLineFit({ sizes, children }) {
 }
 
 export default function Swap() {
-  const { navigate, params } = useNav()          // the row 10 Exit button → back to Service Hub
-  // default: the "out of USDC" rescue → swap another token INTO USDC. params.from = 'u:<address>' when Home's unverified
-  // token row opened this screen.
-  const [fromSym, setFromSym] = useState(() => (isUnv(params?.from) ? params.from : 'EURC'))
+  const { navigate } = useNav()                  // the row 10 Exit button → back to Service Hub
+  const [fromSym, setFromSym] = useState('EURC') // default: the "out of USDC" rescue → swap another token INTO USDC
   const [toSym, setToSym] = useState('USDC')
   const [pct, setPct] = useState(0)              // the selected % OF BALANCE (0-100) - the single source of truth for the amount
   const [snapAmt, setSnapAmt] = useState(null)   // the ROUND amount the user tapped in row 7 (token units) - overrides pct
@@ -118,20 +99,10 @@ export default function Swap() {
   // (subsequent ones 130-360ms). The Swap screen used to start from {}, so "Available: …" sat frozen for
   // seconds on every open, even though the Send screen had just read the very same balances. It now reuses the module-level
   // cache (_balCache) like HomeSend/HomeReceive: show the previous number IMMEDIATELY, refresh in the background.
-  const [verifiedBal, setBalances] = useState(() => {
+  const [balances, setBalances] = useState(() => {
     const c = cachedBalances(localStorage.getItem('ez_wallet_addr'))
     return c ? Object.fromEntries(c.map(tk => [tk.symbol, tk.amount])) : {}
   })
-  // The unverified tokens the wallet holds: [{ key: 'u:<address>', symbol, decimals, amount }] (Circle's balance list).
-  const [unvList, setUnvList] = useState([])
-  const loadUnverified = () => getUnverifiedTokens()
-    .then(us => setUnvList(us.filter(u => Number.isInteger(u.decimals)).map(u => ({ ...u, key: `u:${u.address}` })))).catch(() => {})
-  useEffect(() => { loadUnverified() }, [])
-  const unvOf = sym => unvList.find(u => u.key === sym)
-  const balances = { ...verifiedBal, ...Object.fromEntries(unvList.map(u => [u.key, u.amount])) }
-  const labelOf = sym => (isUnv(sym) ? (unvOf(sym)?.symbol || '…') : sym)
-  const decOf = sym => (isUnv(sym) ? unvOf(sym)?.decimals ?? 18 : NET.tokens[sym]?.decimals ?? 6)
-  const apiTok = sym => (isUnv(sym) ? sym.slice(2) : sym)   // the server takes the unverified token's address
   const [rates, setRates] = useState(() => cachedRates())
   const [feeUsd, setFeeUsd] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -169,7 +140,7 @@ export default function Swap() {
   // to the 2 display decimals left dust behind (owner 2026-10-04: "0.01 EURC left over" - 1.009 EURC swapped only 1.00).
   // USDC's fee reserve (feeReserve) is already out of `available`. Other percentages stay on round 2-decimal amounts.
   const amountNum = snapAmt !== null ? snapAmt : (!hasBal ? 0
-    : pct >= 100 ? Number(toAmountString(available, decOf(fromSym)))
+    : pct >= 100 ? Number(toAmountString(available, NET.tokens[fromSym]?.decimals ?? 6))
     : floorTo(available * pct / 100, decimalsFor(fromSym)))
 
   // ── Converting to DISPLAY MONEY ($/€) ── rate = USD per token; display money = usd / rate[cur]
@@ -215,12 +186,12 @@ export default function Swap() {
     if (!amountNum || amountNum <= 0) { setEstAmt(null); return }
     debounceRef.current = setTimeout(async () => {
       try {
-        const res = await estimateSwap({ walletAddress, tokenIn: apiTok(fromSym), tokenOut: toSym, amountIn: toAmountString(amountNum, decOf(fromSym)) })
+        const res = await estimateSwap({ walletAddress, tokenIn: fromSym, tokenOut: toSym, amountIn: toAmountString(amountNum, NET.tokens[fromSym]?.decimals ?? 6) })
         // amountOut = the real token decimal (the server already converted from base units - the raw estimatedAmount is base units, do NOT show it directly)
         if (res?.amountOut) {
           setEstAmt(res.amountOut); setMinOut(res.minOut || null); setError('')
           // The real fee of this swap, from Circle (not a guess). No fee → the Swap button stays off.
-          estimateSwapFee({ walletId, walletAddress, tokenIn: apiTok(fromSym), tokenOut: toSym, amountIn: toAmountString(amountNum, decOf(fromSym)) })
+          estimateSwapFee({ walletId, walletAddress, tokenIn: fromSym, tokenOut: toSym, amountIn: toAmountString(amountNum, NET.tokens[fromSym]?.decimals ?? 6) })
             .then(f => setFeeUsd(Number(f.feeMax) > 0 ? Number(f.feeMax) : null))
             .catch(e => { setFeeUsd(null); setError(`Could not get the network fee: ${e.message}`) })
         }
@@ -287,12 +258,10 @@ export default function Swap() {
 
   // Reverse direction: 180° for the button (spec) + reset the amount (the two token balances differ → keeping the old % is meaningless)
   const [flip, setFlip] = useState(0)
-  function swapDir() { if (isUnv(fromSym)) return; setFromSym(toSym); setToSym(fromSym); resetAmount(); setFlip(f => f + 180) }   // unverified = sell only
+  function swapDir() { setFromSym(toSym); setToSym(fromSym); resetAmount(); setFlip(f => f + 180) }
 
   function selectToken(side, sym) {
-    // Picking the receive token as the pay token swaps the two sides - unless an unverified token would land on the
-    // receive side (sell only): then the receive side takes another verified token.
-    if (side === 'from') { if (sym === toSym) setToSym(isUnv(fromSym) ? SWAP_TOKENS.find(t => t !== sym) : fromSym); setFromSym(sym) }
+    if (side === 'from') { if (sym === toSym) setToSym(fromSym); setFromSym(sym) }
     else { if (sym === fromSym) setFromSym(toSym); setToSym(sym) }
     resetAmount()
   }
@@ -320,10 +289,10 @@ export default function Swap() {
       attempt = newAttempt('swap', { fromSym, toSym })
       // A 60' token may have expired mid-session → refresh it BEFORE creating a challenge that needs the PIN
       const { userToken, encryptionKey } = await refreshSession()
-      const amountIn = toAmountString(amountNum, decOf(fromSym))
+      const amountIn = toAmountString(amountNum, NET.tokens[fromSym]?.decimals ?? 6)
       // minOut from the SAME estimate whose amount is on screen - the swap can never deliver less (H2).
       if (!minOut) { clearPending(attempt.refId); throw new Error('Getting the price… try again in a second.') }
-      const res = await executeSwap({ userToken, walletId, walletAddress, tokenIn: apiTok(fromSym), tokenOut: toSym, amountIn, minOut, refId: attempt.refId })
+      const res = await executeSwap({ userToken, walletId, walletAddress, tokenIn: fromSym, tokenOut: toSym, amountIn, minOut, refId: attempt.refId })
       if (res.error) { clearPending(attempt.refId); throw new Error(res.error) }   // no challenge → nothing can exist
 
       setStatus('Enter PIN...')
@@ -339,7 +308,7 @@ export default function Swap() {
       const { outcome } = await waitFinal(attempt, { timeoutMs: signError ? 30000 : 90000 })
       if (outcome === 'failed' || (outcome === 'none' && signError)) {
         clearPending(attempt.refId)
-        addNotif(`Swapped ${amountIn} ${labelOf(fromSym)} to ${toSym} (failed - nothing was swapped)`, 'error', null, `swap-fail-${Date.now()}`)
+        addNotif(`Swapped ${amountIn} ${fromSym} to ${toSym} (failed - nothing was swapped)`, 'error', null, `swap-fail-${Date.now()}`)
         setLoading(false); setStatus('')
         setError(signError && outcome === 'none' ? circleErrorMessage(signError) : 'The network rejected this swap - nothing left your wallet.')
         return
@@ -349,9 +318,8 @@ export default function Swap() {
       clearPending(attempt.refId)
       // ONE notification per swap (user decision 07-20) - now only after Circle says COMPLETE.
       const outTxt = res.amountOut ? ` to ~${parseFloat(res.amountOut).toFixed(decimalsFor(toSym))} ${toSym}` : ` to ${toSym}`
-      addNotif(`Swapped ${amountIn} ${labelOf(fromSym)}${outTxt} (complete)`, 'sent', null, `swap-${Date.now()}`)
+      addNotif(`Swapped ${amountIn} ${fromSym}${outTxt} (complete)`, 'sent', null, `swap-${Date.now()}`)
       resetAmount()
-      if (isUnv(fromSym)) loadUnverified()
       setSuccess(true); setStatus('Swap successful')
       setLoading(false)
       try {
@@ -410,7 +378,7 @@ export default function Swap() {
         {/* 2026-09-10: 18px semibold BLACK (was --fs-body 19 medium muted) - nodes 1:70/1:76 */}
         <span style={{ fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-content)' }}>{label}</span>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'calc(8 * var(--u))', minWidth: 0 }}>
-          <TokenRow sym={sym} label={labelOf(sym)} onClick={onPick} />
+          <TokenRow sym={sym} onClick={onPick} />
           {/* THE AMOUNT FIELD. The white box's COLOUR/BORDER around the number was REMOVED (user decision 07-22: a bordered box looks rigid and long
               numbers easily spill outside the frame = ugly) - BUT ITS DIMENSIONS ARE KEPT (minHeight 56 + padding
               2/12) so the card does NOT get shorter (bug 07-22d: removing minHeight/padding as well dropped the whole You
@@ -438,7 +406,7 @@ export default function Swap() {
             {/* balLabel: You receive = "Balance", You pay = null (hidden - user decision 07-22f: the Available line was
                 dropped from You pay). A balance that cannot be read yet → "…", NEVER a drawn 0 (bug 07-17). */}
             {balLabel ? <>{balLabel}: <span className="num" style={{ color: 'var(--color-brand)', fontWeight: 'var(--fw-semibold)' }}>
-              {balKnown ? `${isUnv(sym) ? (balances[sym] || 0).toLocaleString('en-US', { maximumFractionDigits: 4 }) : (balances[sym] || 0).toFixed(decimalsFor(sym))} ${labelOf(sym)}` : '…'}
+              {balKnown ? `${(balances[sym] || 0).toFixed(decimalsFor(sym))} ${sym}` : '…'}
             </span></> : null}
           </span>
           <span className="num" style={{ fontSize: 'var(--fs-content-2)', color: 'var(--color-muted-2)', whiteSpace: 'nowrap' }}>{disp !== null ? `~ ${fmtDisp(disp)}` : ''}</span>
@@ -467,7 +435,7 @@ export default function Swap() {
   const estNum = estAmt !== null ? parseFloat(estAmt) : null
   const rateTxt = (() => {
     // The REAL rate from the Kit quote once available (provider fees included); until then, the market rate
-    if (estNum && amountNum > 0) { const r = estNum / amountNum; return `1 ${labelOf(fromSym)} ~ ${r < 0.0001 ? r.toPrecision(3) : r.toFixed(4)} ${toSym}` }
+    if (estNum && amountNum > 0) return `1 ${fromSym} ~ ${(estNum / amountNum).toFixed(4)} ${toSym}`
     const rf = rateOf(fromSym), rt = rateOf(toSym)
     return rf && rt ? `1 ${fromSym} ~ ${(rf / rt).toFixed(4)} ${toSym}` : '…'
   })()
@@ -475,7 +443,7 @@ export default function Swap() {
   return (
     <div className="screen" style={{ background: GRADIENT }}>
       <ScreenSheet />
-      {picker && <TokenPicker current={picker === 'from' ? fromSym : toSym} onSelect={sym => selectToken(picker, sym)} onClose={() => setPicker(null)} unverified={picker === 'from' ? unvList : []} />}
+      {picker && <TokenPicker current={picker === 'from' ? fromSym : toSym} onSelect={sym => selectToken(picker, sym)} onClose={() => setPicker(null)} />}
 
       {/* The numpad bottom sheet (user's layout 07-20): slides up TAKING half of row 6 + rows
           7-10, GREY background + WHITE keys, NO wasted space at the top, and it does NOT dim the main screen.
@@ -528,8 +496,8 @@ export default function Swap() {
           position: 'absolute', left: '50%', top: '29.62dvh', transform: `translate(-50%, -50%) rotate(${flip}deg)`, zIndex: 3,
           width: 'calc(50 * var(--u))', height: 'calc(50 * var(--u))', borderRadius: '50%', border: 'none', background: 'var(--btn-grad-brand)',
           boxShadow: '0 4px 8px rgba(0, 0, 0, 0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-          cursor: isUnv(fromSym) ? 'default' : 'pointer', transition: 'transform .3s ease', opacity: isUnv(fromSym) ? 0.4 : 1,
-        }} disabled={isUnv(fromSym)}>
+          cursor: 'pointer', transition: 'transform .3s ease',
+        }}>
         <Icon name="trade" size="var(--is-num)" color="var(--color-white)" />
       </button>
 
@@ -540,15 +508,7 @@ export default function Swap() {
       {/* Rate + Fee - node 1:83/10:123: raw Figma reading was 13px, rounded up to Chú thích (15px) - the
           new 5-tier scale (2026-09-10) has no tier below 15, absorbing the old --fs-tiny. Label colour
           --color-muted-2 #667085, figures BLACK semibold. Alone in row 6, centred at 51.4dvh. */}
-      {/* With the unverified warning (3 lines) the block hangs from just under the You receive card instead of being
-          centred on 51.4dvh - centred, it grew upwards over the card. */}
-      <div style={{ position: 'absolute', left: '6.41%', right: '6.41%', ...(isUnv(fromSym) ? { top: '50.1dvh' } : { top: '51.4dvh', transform: 'translateY(-50%)' }), display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', columnGap: 'calc(8 * var(--u))', rowGap: 'calc(2 * var(--u))', padding: '0 calc(11 * var(--u))' }}>
-        {/* UNVERIFIED token being sold (owner 2026-10-05): one yellow line, no popup, never blocks. */}
-        {isUnv(fromSym) && (
-          <span style={{ width: '100%', textAlign: 'center', fontSize: 'var(--fs-caption)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-warning)' }}>
-            Unverified token - check what you receive before you swap
-          </span>
-        )}
+      <div style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '51.4dvh', transform: 'translateY(-50%)', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', columnGap: 'calc(8 * var(--u))', rowGap: 'calc(2 * var(--u))', padding: '0 calc(11 * var(--u))' }}>
         <span style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)', whiteSpace: 'nowrap' }}>
           Rate: <span className="num" style={{ color: 'var(--color-content)', fontWeight: 'var(--fw-semibold)' }}>{rateTxt}</span>
         </span>
@@ -579,7 +539,7 @@ export default function Swap() {
                 <button key={v} onClick={() => pickHint(v)}
                   style={{ border: '1.5px solid var(--color-brand)', background: 'var(--btn-grad-white)', borderRadius: 999, padding: 'calc(6 * var(--u)) calc(14 * var(--u))', cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap', minWidth: 0 }}>
                   <span className="num" style={{ fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-brand)' }}>{fmtHint(v, decimalsFor(fromSym))}</span>
-                  <span className="num" style={{ fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-brand)' }}> {labelOf(fromSym)}</span>
+                  <span className="num" style={{ fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-brand)' }}> {fromSym}</span>
                 </button>
               ))}
             </div>

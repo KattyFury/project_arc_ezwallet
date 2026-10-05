@@ -18,11 +18,11 @@
 
 ## Current state (2026-10-04)
 - **Tokens:** verified = USDC, EURC, cirBTC (`src/network.js`). Anything else the wallet holds = "Unverified tokens"
-  (Home: one row with a ⌄ arrow, never in the total; tapping one opens Exchange to SELL it - owner 2026-10-05, sell only,
-  a yellow warning, never blocked; the server reads its decimals on chain (`resolveTokenIn`); dry run: 50,000 BANKARC →
-  +0.926622 USDC = the Kit estimate; they can also be SENT - picked only in Send's currency popup (yellow section),
-  Confirm shows a yellow 'Unverified token' line, the receipt says "(unverified)" and never shows a $ for them; source = Circle balances `includeAll=true`; a
-  YELLOW notification when one arrives; kept out of History). Whether Circle lists every Arc token is NOT measured.
+  (Home: one row with a ⌄ arrow, view only, never in the total. **They can be SENT** - picked only in Send's currency
+  popup (yellow section), Confirm shows a yellow 'Unverified token' line, the receipt says "(unverified)" and never a $.
+  **They can NOT be swapped** (owner 2026-10-05, reversing the same morning's sell-only Exchange): a separate "Memes"
+  service hub is planned for them; `/api/swap` refuses any token that is not listed. Source = Circle balances
+  `includeAll=true`; a YELLOW notification when one arrives; kept out of History). Whether Circle lists every Arc token is NOT measured.
 - **Swap: ON** (2026-10-04, `docs/SWAP-PLAN.md` Phase 1 done). No app fee (provider 2 bps only). 50 bps slippage +
   the screen's minimum as `stopLimit`; server validates the intent (`validateIntent`) and simulates the exact batch
   (`eth_simulateV1` on dRPC, `net.simRpc`) before any PIN; auth = `API_KEY` (the legacy Kit key leaked - see Open).
