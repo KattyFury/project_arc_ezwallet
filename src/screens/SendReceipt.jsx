@@ -9,6 +9,9 @@ import logoLong from '../../design/logo.svg'
 import ScreenSheet from '../components/ScreenSheet'
 import ExitBar from '../components/ExitBar'
 import { GRADIENT } from '../brandBg'
+import { fmtAmountShort } from '../money'
+// A token amount for display: 6 significant digits, "≈" when cut (owner 2026-10-06). The exact string is what was sent.
+const shortAmt = (str) => (({ text, cut }) => (cut ? '≈ ' : '') + text)(fmtAmountShort(str))
 
 // Big GREEN check icon (success) - check.svg already includes the outlined circle and the tick.
 // 70px (was 76) - node 1:238's exact placeholder size.
@@ -33,7 +36,7 @@ export default function SendReceipt() {
   // "$2" as one string in one style (NOT a bold "2" plus a regular "USD" - user decision)
   // An unverified token: its own symbol, never a $ (a spam token may call itself "USDC").
   const unv = typeof currency === 'string' && currency.startsWith('u:')
-  const amountText = unv ? `${exact} ${params.tokenLabel || '?'}` : currency === 'VND' ? `${Number(amount).toLocaleString('vi-VN')} ₫` : fmtMoney(exact, currency)
+  const amountText = unv ? `${shortAmt(exact)} ${params.tokenLabel || '?'}` : currency === 'VND' ? `${Number(amount).toLocaleString('vi-VN')} ₫` : fmtMoney(currency === 'USD' ? exact : shortAmt(exact), currency)
   // The REAL token moved on-chain (USD = a label, USDC actually moves 1:1) - shown plainly on the receipt
   // so sender and recipient can reconcile the actual asset (nobody should read a label and assume another token).
   // ⚠️ VND is NOT a token: what actually moves is USDC, and the USDC figure ≠ the VND typed → you must use
@@ -41,7 +44,7 @@ export default function SendReceipt() {
   const realToken = unv ? `${params.tokenLabel || '?'} (unverified)` : currency === 'USD' || currency === 'VND' ? 'USDC' : currency
   const realUnits = currency === 'VND' ? (params.tokenAmount ?? 0) : Number(amount)
   // The exact sent string (was toFixed(2): 0.004 showed as "0.00 USDC" - MAINNET-AUDIT H1). VND keeps its conversion.
-  const realAmountText = `${currency === 'VND' ? realUnits.toFixed(2) : exact} ${realToken}`
+  const realAmountText = `${currency === 'VND' ? realUnits.toFixed(2) : currency === 'USD' ? exact : shortAmt(exact)} ${realToken}`
 
   // Store the "sent" notification for HomeSend to show. dedupeKey is the timestamp (unique per real send)
   // → guards against duplication from React.StrictMode running the effect twice in dev mode.

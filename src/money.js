@@ -44,3 +44,20 @@ export function normalizeTyped(str) {
 export function isValidAddress(addr) {
   return isAddress(String(addr ?? '').trim(), { strict: true })
 }
+
+// A TOKEN amount for display only (owner 2026-10-06): 6 significant digits, so a huge meme balance does not show 18
+// decimals and a small BTC amount keeps the decimals that matter - 1250000.123 → "1,250,000", 1234.5678 → "1,234.56",
+// 0.00054912 → "0.00054912". Always rounded DOWN (never shows more than the real amount); `cut` = digits were dropped,
+// so the screen can say "≈". The exact string is still what gets sent. Fiat ($/€/₫) has its own formatting (data.js).
+export function fmtAmountShort(str, sig = 6) {
+  const s = String(str ?? '').trim()
+  if (!/^\d+(\.\d*)?$/.test(s)) return { text: s, cut: false }
+  const [rawI, f = ''] = s.split('.')
+  const i = rawI.replace(/^0+(?=\d)/, '')
+  const intDigits = i === '0' ? 0 : i.length
+  const keep = intDigits >= sig ? 0 : intDigits > 0 ? Math.max(2, sig - intDigits) : (f.match(/^0*/)[0].length + sig)
+  const kept = f.slice(0, keep).replace(/0+$/, '')
+  const cut = /[1-9]/.test(f.slice(keep))
+  const int = i.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+  return { text: kept ? `${int}.${kept}` : int, cut }
+}

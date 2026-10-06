@@ -9,6 +9,9 @@ import ExitBar from '../components/ExitBar'
 import { GRADIENT } from '../brandBg'
 import { assertNetworkReady } from '../clientNet'
 import { newAttempt, getPending, clearPending, lookup, classify, waitFinal } from '../txTracker'
+import { fmtAmountShort } from '../money'
+// A token amount for display: 6 significant digits, "≈" when cut (owner 2026-10-06). The exact string is what gets sent.
+const shortAmt = (str) => (({ text, cut }) => (cut ? '≈ ' : '') + text)(fmtAmountShort(str))
 
 // Currency symbols / token names use Barlow (--font-condensed); numbers stay Barlow via .num
 function Cur({ children }) {
@@ -67,7 +70,7 @@ export default function SendConfirm() {
 
   const mainEl = currency === 'USD' ? <>{displaySymbol('USDC')}{sendAmountStr}</>
     : currency === 'VND' ? <>{amount.toLocaleString('vi-VN')} <Cur>₫</Cur></>
-    : <>{sendAmountStr} <Cur>{unv ? tokenLabel : currency}</Cur></>
+    : <>{shortAmt(sendAmountStr)} <Cur>{unv ? tokenLabel : currency}</Cur></>
 
   // QR SAFETY (mainnet v1 plan item 2 (2026-09-27, deleted doc - git history)): an amount a QR put there (untouched - SendAmount's qrActive) worth more than
   // $100 needs one more explicit "yes" before the PIN. A forged or swapped QR is the easiest way to trick someone

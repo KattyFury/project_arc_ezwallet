@@ -50,3 +50,15 @@ test('addresses: format + EIP-55 checksum', () => {
   assert.ok(!isValidAddress('0xZaaeb6053f3e94c9b9a09f33669435e7ef1beaed'))
   assert.ok(!isValidAddress(''))
 })
+
+test('display amounts: 6 significant digits, rounded down, exact string untouched (owner 2026-10-06)', async () => {
+  const { fmtAmountShort: f } = await import('../src/money.js')
+  assert.deepEqual(f('1234.567890123456789012'), { text: '1,234.56', cut: true })
+  assert.deepEqual(f('1250000.123'), { text: '1,250,000', cut: true })
+  assert.deepEqual(f('0.00054912'), { text: '0.00054912', cut: false })
+  assert.deepEqual(f('0.000549123456'), { text: '0.000549123', cut: true })
+  assert.deepEqual(f('12.345678'), { text: '12.3456', cut: true })
+  assert.deepEqual(f('12.5'), { text: '12.5', cut: false })
+  assert.deepEqual(f('2'), { text: '2', cut: false })
+  assert.deepEqual(f('1234.5600000000'), { text: '1,234.56', cut: false })   // trailing zeros are not "cut"
+})

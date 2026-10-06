@@ -13,7 +13,7 @@ import ScreenSheet from '../components/ScreenSheet'
 import ExitBar from '../components/ExitBar'
 import { GRADIENT } from '../brandBg'
 import { NET } from '../clientNet'
-import { amountProblem, normalizeTyped, toBaseUnits } from '../money'
+import { amountProblem, normalizeTyped, toBaseUnits, fmtAmountShort } from '../money'
 
 // USD = the friendly label, what is sent = USDC (1:1). USDC/EURC/cirBTC send that exact token.
 // ⛔ VND TURNED OFF 2026-08-12 (user decision): the app runs English/USD while a scanned QR produced VND → 'VND' was
@@ -201,7 +201,10 @@ export default function SendAmount() {
 
   // The number being typed, formatted for READABILITY: VND groups thousands as you type (500000 → 500.000)
   // - older users typing 6 digits in a row cannot tell whether they are at 50 thousand or 500 thousand.
-  const shownDigits = isVnd && digits ? parseInt(digits, 10).toLocaleString('vi-VN') : digits
+  // A Max/50% pick can carry all of a token's decimals (18 on a meme) - longer than anything typed (12 chars max) → show
+  // it short (6 significant digits, "≈" when cut, owner 2026-10-06); `digits` itself stays exact and is what gets sent.
+  const shownDigits = isVnd && digits ? parseInt(digits, 10).toLocaleString('vi-VN')
+    : digits.length > 12 ? (({ text, cut }) => (cut ? '≈ ' : '') + text)(fmtAmountShort(digits)) : digits
   const amountStr = (cur === 'USD' ? displaySymbol('USDC') : '') + shownDigits + (isVnd && digits ? ' ₫' : '')
   // Font size shrinks by REAL WIDTH (VND numbers are twice as long as USD, so counting characters overflows) - the "_" caret
   // is included in the measurement, otherwise it comes up exactly one caret short and overflows at the longest numbers.
