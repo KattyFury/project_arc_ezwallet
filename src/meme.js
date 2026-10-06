@@ -7,7 +7,15 @@ const STABLE = {
   supported: true, launchpad: 'Argus', token: '0xC281dFF1A3eD6943123f53aEcCDc571DAB1Ce099', name: 'Stable', symbol: 'STABLE', decimals: 18,
   priceUsd: 0.0000029348, buyTaxBps: 100, sellTaxBps: 100, snipeTaxBps: 0, held: '1250000000000000000000000',
 }
+const MOCK_TOP = [
+  ['0x229fd9847e4e0411d93ee579c1b7cb3108f8e893', 'arip', 0.0000024573, -50.9, 108699, 10011],
+  ['0x7cd0be2c1d01b878ef7ce8cd77c92dc2c70769ac', 'Human', 0.0000024572, -50.9, 106581, 10090],
+  ['0x4481d412772cf7156ba4684c058a213a2752fd58', 'Mochi', 0.0000024637, -50.8, 79031, 9818],
+  ['0x6238d6f6e5e7eb2a1e8741781debb16a11057ed9', 'SCOUT', 0.0000024584, -50.9, 78279, 12019],
+  ['0xC281dFF1A3eD6943123f53aEcCDc571DAB1Ce099', 'STABLE', 0.0000029348, 12.4, 41200, 15100],
+].map(([token, symbol, priceUsd, change24h, volume24h, liquidityUsd]) => ({ token, symbol, name: symbol, priceUsd, change24h, volume24h, liquidityUsd, fdvUsd: priceUsd * 1e9 }))
 function mock(action, body) {
+  if (action === 'top') return { ts: Date.now(), source: 'GeckoTerminal (CoinGecko)', tokens: MOCK_TOP }
   if (action === 'inspect') return String(body.token).toLowerCase() === STABLE.token.toLowerCase()
     ? { ...STABLE, sellable: true, roundTripLossPct: 3.94 } : { supported: false, reason: 'not an Argus token' }
   if (action === 'portfolio') return { tokens: [
@@ -44,4 +52,5 @@ export function fmtUnits(raw, decimals, maxFrac = 2) {
   if (n >= 1e3) return (n / 1e3).toFixed(2) + 'K'
   return n.toLocaleString('en-US', { maximumFractionDigits: maxFrac })
 }
+export const fmtUsdShort = (n) => typeof n !== 'number' ? '…' : n >= 1e6 ? `$${(n / 1e6).toFixed(1)}M` : n >= 1e3 ? `$${(n / 1e3).toFixed(1)}K` : `$${n.toFixed(0)}`
 export const fmtPrice = (p) => typeof p === 'number' && p > 0 ? `$${p < 0.01 ? p.toPrecision(3) : p.toFixed(4)}` : '…'

@@ -1,6 +1,6 @@
 // Memes (Service hub → Memes) - buy/sell Argus launch tokens on Arc's Uniswap v4. Core + rules: ./_memeCore.js.
 // LABS feature (src/labs.js): answers only on the labs hosts until the owner turns it on for ezwallet.cash.
-// Actions: inspect · portfolio · quote · fee · execute (a contractExecution challenge → one PIN).
+// Actions: top · inspect · portfolio · quote · fee · execute (a contractExecution challenge → one PIN).
 import { MEME_MAX_BUY_USD, MEME_SLIPPAGE_BPS, inspect, buySellCheck, simulate, swapBatch } from './_memeCore.js'
 import { netFrom, netError } from './_net.js'
 import { amountProblem, toBaseUnits } from '../../src/money.js'
@@ -16,6 +16,8 @@ const err = (msg, detail, status = 500) => {
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 const isAddr = (a) => /^0x[0-9a-fA-F]{40}$/.test(String(a || ''))
 const ONE_USDC = 1000000n
+const TOP_KV = 'memes:top:v1'
+const TOP_FRESH_MS = 5 * 60 * 1000
 // What the screen shows for a token (the pool key stays on the server).
 const pub = ({ pool, hook, ...i }) => i
 
@@ -26,6 +28,48 @@ export async function onRequestPost(ctx) {
   try {
     const body = await ctx.request.json()
     const { action, token, side, amount, walletAddress, walletId, userToken, minOut, refId } = body
+
+    // TOP ARGUS MEMES (owner 2026-10-06: the dashboard on rows 5-8). Source = CoinGecko's on-chain API (GeckoTerminal
+    // data, dex id 'argus' on network 'arc', sorted by 24h volume), Demo key server-side (COINGECKO_API), one result
+    // cached in KV for 5 minutes for everyone (same budget rule as /api/prices). Tokens that NAME themselves like a
+    // verified token (a "USDC" meme was #7 when measured 2026-10-06) are dropped - a copycat name is a scam signal.
+    if (action === 'top') {
+      const kv = ctx.env.EZ_SYNC
+      let cached = null
+      try { cached = kv ? JSON.parse(await kv.get(TOP_KV) || 'null') : null } catch {}
+      if (cached && Date.now() - cached.ts < TOP_FRESH_MS) return ok(cached)
+      const key = ctx.env.COINGECKO_API
+      if (!key) return cached ? ok(cached) : err('COINGECKO_API not configured', null, 503)
+      try {
+        const r = await fetch('https://api.coingecko.com/api/v3/onchain/networks/arc/dexes/argus/pools?sort=h24_volume_usd_desc&include=base_token', {
+          headers: { 'x-cg-demo-api-key': key, 'User-Agent': 'ezwallet.cash memes', 'Accept': 'application/json' }, signal: AbortSignal.timeout(6000) })
+        if (!r.ok) throw new Error(`CoinGecko ${r.status}`)
+        const j = await r.json()
+        const tokens = Object.fromEntries((j.included || []).map(t => [t.id, t.attributes]))
+        const verified = new Set(Object.keys(net.tokens).map(s => s.toLowerCase()))
+        const seen = new Set()
+        const list = []
+        for (const p of j.data || []) {
+          const a = p.attributes, baseId = p.relationships?.base_token?.data?.id || '', quoteId = p.relationships?.quote_token?.data?.id || ''
+          const addr = baseId.replace(/^arc_/, '')
+          if (!isAddr(addr) || !quoteId.toLowerCase().endsWith(net.tokens.USDC.address.toLowerCase())) continue
+          const meta = tokens[baseId] || {}
+          const symbol = meta.symbol || (a.name || '').split(' / ')[0]
+          if (verified.has(String(symbol).toLowerCase()) || seen.has(addr.toLowerCase())) continue
+          seen.add(addr.toLowerCase())
+          const n = (x) => x == null ? null : Number(x)
+          list.push({ token: addr, symbol, name: meta.name || symbol, priceUsd: n(a.base_token_price_usd), change24h: n(a.price_change_percentage?.h24),
+            volume24h: n(a.volume_usd?.h24), liquidityUsd: n(a.reserve_in_usd), fdvUsd: n(a.fdv_usd) })
+        }
+        const out = { ts: Date.now(), source: 'GeckoTerminal (CoinGecko)', tokens: list.slice(0, 15) }
+        if (kv) { try { await kv.put(TOP_KV, JSON.stringify(out)) } catch {} }
+        return ok(out)
+      } catch (e) {
+        if (cached) return ok({ ...cached, stale: true })
+        return err('Could not load the top memes right now.', { message: e.message }, 502)
+      }
+    }
+
     if (!isAddr(walletAddress)) return err('missing wallet', null, 400)
 
     // One token (the screen after pasting a CA): what it is + the honeypot guard (buy 1 USDC → sell all, simulated).
