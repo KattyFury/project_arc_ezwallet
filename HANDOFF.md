@@ -41,6 +41,12 @@
   is still sent) · QRs made in USDC/EURC/cirBTC now carry their amount (only USD/EUR were mapped → bare address QR) and a
   scanned EURC QR reads back as 'EURC' (was 'EUR', unknown to Send) · QR labels in the QR's own unit ("5 EURC", not "$5") ·
   shared QR image = name + QR + amount · QR storage Add = Create QR (currency + optional name), the popup is gone.
+- **Legal + support (2026-10-06):** About rebuilt (App / Links / Legal); in-app Terms of Use + Privacy Policy in
+  `src/legal.js` (live everywhere, owner reviews later; draft + VN-law findings on the owner's Desktop
+  `ezwallet-LEGAL-DRAFT.md` - incl. Resolution 05/2025/NQ-CP art. 7(2)). The app is global, open-source (MIT),
+  non-profit, by an individual, 18+. **support@ezwallet.cash** = Cloudflare Email Routing (MX route1-3 + SPF on the
+  root, DKIM cf2024-1) → owner's Gmail, tested. Resend's records live on `send.ezwallet.cash` and are untouched.
+  Rule: if the app starts collecting new data or adds a provider/fee, update `src/legal.js` in the same commit.
 - Next: owner's 1 USDC round trips (Lending, Memes) · Borrow (owner picks the liquidation alert: Circle webhook = a 2nd
   PIN, or a scheduled Worker) · more launchpads (ArcStockPad / Arcade use the same v4 path; Mercuri pre-graduation needs its curve).
 
