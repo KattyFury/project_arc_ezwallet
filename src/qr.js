@@ -11,7 +11,7 @@
 // EIP-681's @chainId). The owner reversed that on 2026-10-03; the "send on Arc only" warning is in the app's
 // notifications. Old `ezwallet:` QRs are still READ (src/qrFormat.js).
 import { NET } from './clientNet'
-import { isValidAddress } from './money'
+import { isValidAddress, toAmountString } from './money'
 import { buildQRFor, parseQRFor } from './qrFormat'
 
 // The chain id of THIS build's network (5042, Arc mainnet) - src/network.js.
@@ -28,3 +28,13 @@ export const buildQR = (addr, opts) => buildQRFor(NET, addr, opts)
 
 // Returns { address, amount, currency } · null if unreadable · { wrongChain: <id> } - see src/qrFormat.js.
 export const parseQR = text => parseQRFor(NET, text)
+
+// The amount a QR asks for, IN ITS OWN UNIT (owner 2026-10-06: "không gom tất cả về $"): 'USD' → "$5",
+// USDC/EURC/cirBTC → "5 USDC" / "5 EURC" / "0.0015 cirBTC" (legacy 'EUR' = EURC). Display only.
+export function qrAmountLabel(amount, currency = 'USD') {
+  const sym = currency === 'EUR' ? 'EURC' : currency
+  const dec = NET.tokens[sym === 'USD' ? 'USDC' : sym]?.decimals ?? 6
+  const n = Number(amount)
+  const txt = n > 0 ? toAmountString(n, dec).replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, '') : '0'
+  return sym === 'USD' ? `$${txt}` : `${txt} ${sym}`
+}

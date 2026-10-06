@@ -23,7 +23,7 @@ test('amount QR = ERC-20 transfer of the right token in exact base units', () =>
 
 test('what we draw, we read back', () => {
   assert.deepEqual(parseQRFor(net, buildQRFor(net, ME)), { address: ME, amount: null, currency: 'USD' })
-  assert.deepEqual(parseQRFor(net, buildQRFor(net, ME, { amount: 12.5, currency: 'EUR' })), { address: ME, amount: '12.5', currency: 'EUR' })
+  assert.deepEqual(parseQRFor(net, buildQRFor(net, ME, { amount: 12.5, currency: 'EUR' })), { address: ME, amount: '12.5', currency: 'EURC' })
   assert.deepEqual(parseQRFor(net, buildQRFor(net, ME, { amount: 0.004 })), { address: ME, amount: '0.004', currency: 'USD' })
 })
 
@@ -36,9 +36,19 @@ test('other wallets\' EIP-681 forms', () => {
 })
 
 test('old ezwallet: QRs and bare addresses still work', () => {
-  assert.deepEqual(parseQRFor(net, `ezwallet:${ME}@5042?amount=25&cur=EUR`), { address: ME, amount: '25', currency: 'EUR' })
+  assert.deepEqual(parseQRFor(net, `ezwallet:${ME}@5042?amount=25&cur=EUR`), { address: ME, amount: '25', currency: 'EURC' })
   assert.deepEqual(parseQRFor(net, `ezwallet:${ME}`), { address: ME, amount: null, currency: 'USD' })
   assert.deepEqual(parseQRFor(net, `ezwallet:${ME}@5042002`), { wrongChain: 5042002 })
   assert.deepEqual(parseQRFor(net, ME), { address: ME, amount: null, currency: 'USD' })
   assert.equal(parseQRFor(net, 'hello'), null)
+})
+
+test('a QR made in USDC / EURC / cirBTC carries its amount and reads back as that token (bug 2026-10-06)', () => {
+  const CIRBTC = net.tokens.cirBTC.address
+  assert.equal(buildQRFor(net, ME, { amount: 5, currency: 'USDC' }), `ethereum:${USDC}@5042/transfer?address=${ME}&uint256=5000000`)
+  assert.equal(buildQRFor(net, ME, { amount: 5, currency: 'EURC' }), `ethereum:${EURC}@5042/transfer?address=${ME}&uint256=5000000`)
+  assert.equal(buildQRFor(net, ME, { amount: '0.0015', currency: 'cirBTC' }), `ethereum:${CIRBTC}@5042/transfer?address=${ME}&uint256=150000`)
+  assert.deepEqual(parseQRFor(net, buildQRFor(net, ME, { amount: 5, currency: 'EURC' })), { address: ME, amount: '5', currency: 'EURC' })
+  assert.deepEqual(parseQRFor(net, buildQRFor(net, ME, { amount: '0.0015', currency: 'cirBTC' })), { address: ME, amount: '0.0015', currency: 'cirBTC' })
+  assert.deepEqual(parseQRFor(net, buildQRFor(net, ME, { amount: 5, currency: 'USDC' })), { address: ME, amount: '5', currency: 'USD' })
 })

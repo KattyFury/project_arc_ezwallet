@@ -1,11 +1,9 @@
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import { useNav } from '../nav'
 import { QRCodeSVG } from 'qrcode.react'
 import Icon from '../components/Icon'
-import Numpad from '../components/Numpad'
-import { fmtMoney, getDisplayCurrency, displaySymbol } from '../data'
 import { loadSavedQRs, saveSavedQRs } from '../store'
-import { buildQR } from '../qr'
+import { buildQR, qrAmountLabel } from '../qr'
 import ScreenSheet from '../components/ScreenSheet'
 import ExitBar from '../components/ExitBar'
 import { GRADIENT } from '../brandBg'
@@ -13,44 +11,17 @@ import { GRADIENT } from '../brandBg'
 export default function SavedQRList() {
   const { navigate } = useNav()
   const [list, setList] = useState(loadSavedQRs)
-  const [adding, setAdding] = useState(false)
-  const [name, setName] = useState('')
-  const [amountStr, setAmountStr] = useState('')
   const [pendingDelete, setPendingDelete] = useState(null)   // the QR awaiting delete confirmation (user decision 07-20e)
-  // KEYBOARD RULE (user decision 07-23, option A): ENTERING MONEY = the app numpad, ENTERING TEXT = the iPhone keyboard.
-  // The Amount field in the popup is no longer an <input> (the iPhone numeric keyboard lacks a locale decimal separator and
-  // breaks the app standard) → tapping it opens the app numpad SHEET (geometry identical to the Swap sheet). Back = discard what
-  // was typed, Done / tapping outside = keep it.
-  const [pad, setPad] = useState(false)
-  const padPrev = useRef('')
   const walletAddr = localStorage.getItem('ez_wallet_addr') || ''
-
-  const amountNum = parseFloat(amountStr || '0')
-
-  function openPad() { padPrev.current = amountStr; setPad(true) }
-  function cancelPad() { setAmountStr(padPrev.current); setPad(false) }
-  // Numpad keys - same logic as SendAmount ('.' once, BACK deletes backwards, at most 12 characters)
-  function handlePadKey(key) {
-    if (key === 'BACK') { setAmountStr(d => d.slice(0, -1)); return }
-    if (key === '.') { setAmountStr(d => (d.includes('.') ? d : (d === '' ? '0.' : d + '.'))); return }
-    setAmountStr(d => (d.length >= 12 ? d : d === '0' ? key : d + key))
-  }
+  // ADD = the Create QR screen with the currency picker + an optional name (owner 2026-10-06; the old popup had no
+  // currency choice and always saved USD). ShowQR saves it to this library and Done/Exit come back here.
+  const addQR = () => navigate('CreateQR', { from: 'SavedQRList' })
 
   // Tapping × → OPEN A CONFIRMATION POPUP (no instant delete - guards against mis-taps, like Delete contact)
   function askDelete(q, e) { e.stopPropagation(); setPendingDelete(q) }
   function confirmDelete() {
     const updated = list.filter(q => q.id !== pendingDelete.id)
     setList(updated); saveSavedQRs(updated); setPendingDelete(null)
-  }
-
-  function resetForm() { setAdding(false); setName(''); setAmountStr(''); setPad(false) }
-
-  // Save = CREATE a QR in the LIBRARY (it does not show the QR for scanning - that is the Create QR feature). Currency defaults to USD.
-  function handleSave() {
-    if (!(amountNum > 0)) return
-    const updated = [...list, { id: Date.now(), amount: amountNum, currency: 'USD', name: name.trim(), createdAt: new Date().toISOString() }]
-    setList(updated); saveSavedQRs(updated)
-    resetForm()
   }
 
   return (
@@ -78,7 +49,7 @@ export default function SavedQRList() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 'calc(8 * var(--u))', alignContent: 'start' }}>
           {list.map(q => {
             const c = q.currency || 'USD'
-            const label = fmtMoney(q.amount, c)
+            const label = qrAmountLabel(q.amount, c)   // in the QR's own unit - "5 USDC", not "$5" (owner 2026-10-06)
             return (
               // View a saved QR (it is not re-saved), Back returns to the QR library. Tile - node 18:171/
               // 18:181/18:186, RE-VERIFIED 2026-09-10: fixed 242px tall (was a dynamic minHeight:190), NO
@@ -107,10 +78,10 @@ export default function SavedQRList() {
               </button>
             )
           })}
-          {/* The + tile → opens the ADD QR POPUP (no new screen). Node 18:191: SAME fixed 242px height as
+          {/* The + tile → Create QR (from the library: currency picker + name). Node 18:191: SAME fixed 242px height as
               the QR tiles (was minHeight:190, an aspect-ratio approximation) - Do NOT use aspectRatio (bug
               07-23c: aspectRatio plus stretch inflated it sideways). */}
-          <button onClick={() => setAdding(true)}
+          <button onClick={addQR}
             style={{ minWidth: 0, height: 'calc(242 * var(--u))', border: '2px dashed var(--color-muted)', borderRadius: 16, background: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Icon name="add" size="calc(40 * var(--u))" color="var(--color-muted)" />
           </button>
@@ -123,63 +94,16 @@ export default function SavedQRList() {
           the main action of this screen, so it needs a button in row 9 rather than making people scroll to find "+". */}
       <div className="row10-dual">
         <button className="btn btn-secondary" onClick={() => navigate('HomeReceive')}>Back</button>
-        <button className="btn btn-primary" onClick={() => setAdding(true)}>Add</button>
+        <button className="btn btn-primary" onClick={addQR}>Add</button>
       </div>
 
       <ExitBar onClick={() => navigate('HomeReceive')} />
-
-      {/* Add QR popup - standard .popup-card (centred over rows 2-5, leaving the bottom half for the keyboard) */}
-      {adding && (
-        <div className="popup-overlay" onClick={resetForm}>
-          <div className="popup-card" onClick={e => e.stopPropagation()}>
-            <div className="popup-title">Add to QR Storage</div>
-            <input className="address-input" placeholder={'Name (optional)'} value={name} onChange={e => setName(e.target.value)} maxLength={30} style={{ fontSize: 'var(--fs-content-1)' }} />
-            {/* Label carries the user's DEFAULT currency symbol (user decision 07-20: USDC→$, EURC→€…) */}
-            {/* The Amount field is NOT an input (keyboard rule 07-23) - tapping opens the app numpad sheet; the Name field is
-                blurred first so the iPhone keyboard drops before the numpad rises (never both at once).
-                A blinking _ caret while the sheet is open (the app-wide signal that money is being entered). */}
-            <div className="address-input" onClick={() => { document.activeElement?.blur?.(); openPad() }}
-              style={{ fontSize: 'var(--fs-content-1)', display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-              {amountStr ? (
-                <span className="num">{amountStr}{pad && <span className="caret">_</span>}</span>
-              ) : pad ? (
-                <span className="num"><span className="caret">_</span></span>   /* empty while typing = caret ONLY (standard 07-20b) */
-              ) : (
-                <span style={{ color: 'var(--color-muted)' }}>{`Amount (${displaySymbol(getDisplayCurrency())})`}</span>
-              )}
-            </div>
-            <div className="popup-actions">
-              <button className="btn btn-secondary" onClick={resetForm}>Cancel</button>
-              <button className="btn btn-primary" disabled={!(amountNum > 0)} onClick={handleSave}>Save</button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* The Amount numpad sheet - geometry IDENTICAL to the Swap sheet (.sheet-overlay/.sheet numpad-gray,
-          55→100dvh, transparent overlay). Rendered AFTER the popup → it floats above it (same z-index 100,
-          later in the DOM wins); the popup is anchored to the top half, so they do not cover each other. */}
-      {pad && (
-        <div className="sheet-overlay" onClick={() => setPad(false)}>
-          <div className="sheet numpad-gray" onClick={e => e.stopPropagation()}>
-            <div style={{ flex: 5.5, minHeight: 0, paddingTop: 'calc(24 * var(--u))' }}>
-              <Numpad onKey={handlePadKey} showComma />
-            </div>
-            <div style={{ flex: 0.5 }} />
-            <div style={{ flex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'calc(12 * var(--u))' }}>
-              <button className="btn btn-secondary" style={{ width: '44%' }} onClick={cancelPad}>Back</button>
-              <button className="btn btn-primary" style={{ width: '44%' }} onClick={() => setPad(false)}>Done</button>
-            </div>
-            <div style={{ flex: 1 }} />
-          </div>
-        </div>
-      )}
 
       {/* QR delete confirmation - standard popup (centred over rows 1-6). "Delete QR: <name>" (no name → the amount) */}
       {pendingDelete && (
         <div className="popup-overlay" onClick={() => setPendingDelete(null)}>
           <div className="popup-card" style={{ textAlign: 'center' }} onClick={e => e.stopPropagation()}>
-            <div className="popup-title">{'Delete QR:'} {pendingDelete.name || fmtMoney(pendingDelete.amount, pendingDelete.currency || 'USD')}</div>
+            <div className="popup-title">{'Delete QR:'} {pendingDelete.name || qrAmountLabel(pendingDelete.amount, pendingDelete.currency || 'USD')}</div>
             <div className="popup-actions" style={{ marginTop: 'calc(4 * var(--u))' }}>
               <button className="btn btn-secondary" onClick={() => setPendingDelete(null)}>Back</button>
               <button className="btn btn-error" onClick={confirmDelete}>Confirm</button>

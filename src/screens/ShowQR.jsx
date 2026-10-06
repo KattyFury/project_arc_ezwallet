@@ -2,10 +2,9 @@ import { useRef, useEffect } from 'react'
 import { useNav } from '../nav'
 import { QRCodeCanvas } from 'qrcode.react'
 import Icon from '../components/Icon'
-import { fmtMoney } from '../data'
 import { saveImageToPhotos, brandedQrCanvas } from '../saveImage'
 import { loadSavedQRs, saveSavedQRs } from '../store'
-import { buildQR } from '../qr'
+import { buildQR, qrAmountLabel } from '../qr'
 import ScreenSheet from '../components/ScreenSheet'
 import ExitBar from '../components/ExitBar'
 import { GRADIENT } from '../brandBg'
@@ -17,8 +16,9 @@ export default function ShowQR() {
   const walletAddr = localStorage.getItem('ez_wallet_addr') || ''
   // Arc chain lock - see src/qr.js. Do NOT hand-build `ezwallet:...` strings here any more.
   const qrValue = buildQR(walletAddr, { amount, currency })
-  // ONE STRING, ONE STYLE: "$2" / "2 USDC" (fmtMoney) - not a bold number plus a regular unit.
-  const amountText = fmtMoney(amount, currency)
+  // ONE STRING, ONE STYLE, in the QR's OWN unit: "$2" for USD, "2 USDC" / "2 EURC" otherwise (owner 2026-10-06 - fmtMoney
+  // turned USDC into "$").
+  const amountText = qrAmountLabel(amount, currency)
   const wrapRef = useRef(null)
 
   // Only saved to the library when created FROM the library (saveToLibrary) - with a NAME. A QR created on the
@@ -39,7 +39,7 @@ export default function ShowQR() {
   async function shareQR() {
     const canvas = wrapRef.current?.querySelector('canvas')
     if (!canvas) return
-    saveImageToPhotos(await brandedQrCanvas(canvas), `ezwallet-qr-${amount}.png`)
+    saveImageToPhotos(await brandedQrCanvas(canvas, { name, amount: amountText }), `ezwallet-qr-${amount}.png`)
   }
 
   // Title, RE-VERIFIED 2026-09-24 against nodes 58:588/58:632: a newly created QR reads "QR created"

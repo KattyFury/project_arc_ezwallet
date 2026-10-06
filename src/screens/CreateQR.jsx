@@ -59,6 +59,9 @@ export default function CreateQR() {
     if (key === 'BACK') { setDigits(d => d.slice(0, -1)); return }
     if (key === '.') { setDigits(d => (d.includes('.') ? d : (d === '' ? '0.' : d + '.'))); return }
     if (digits.length >= 12) return
+    // No more decimals than the token has (USDC/EURC 6, cirBTC 8) - the QR carries exact base units.
+    const frac = digits.split('.')[1]
+    if (frac !== undefined && frac.length >= (NET.tokens[cur === 'USD' ? 'USDC' : cur]?.decimals ?? 6)) return
     if (digits === '0') { setDigits(key); return }
     setDigits(d => d + key)
   }
@@ -66,7 +69,7 @@ export default function CreateQR() {
   return (
     <div className="screen" style={{ background: GRADIENT }}>
       <ScreenSheet />
-      <div className="sheet-title">Create QR</div>
+      <div className="sheet-title">{fromLibrary ? 'Add to QR storage' : 'Create QR'}</div>
 
       {/* "You receive" card - node 18:84: rows 3-4 (340x156, top 20.38dvh, radius 16 - ONE row lower than
           Send money's "You send" card). Colour #D2DCE6 (var(--color-card)), matching every other card in
@@ -109,7 +112,7 @@ export default function CreateQR() {
       {fromLibrary && (
         <div className="memo-row" style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '44.5dvh' }}>
           <Icon name="pencil" size="var(--is-content-1)" color="var(--color-muted)" />
-          <input className="memo-input" value={name} onChange={e => setName(e.target.value)} placeholder={'Name your QR'} maxLength={30}
+          <input className="memo-input" value={name} onChange={e => setName(e.target.value)} placeholder={'Name your QR (optional)'} maxLength={30}
             onFocus={() => setTypingText(true)} onBlur={() => setTypingText(false)} />
         </div>
       )}
@@ -143,7 +146,7 @@ export default function CreateQR() {
           <div className="popup-card" onClick={e => e.stopPropagation()}>
             <div className="popup-title">Select currency</div>
             {CURRENCIES.map(c => (
-              <button key={c} onClick={() => { setCur(c); setShowCur(false) }}
+              <button key={c} onClick={() => { if (c !== cur) setDigits(''); setCur(c); setShowCur(false) }}
                 className={`btn ${c === cur ? 'btn-primary' : 'btn-secondary'}`} style={{ width: '100%' }}>{c}</button>
             ))}
           </div>

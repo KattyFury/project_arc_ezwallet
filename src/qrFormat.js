@@ -9,13 +9,18 @@
 import { formatUnits } from 'viem'
 import { amountProblem, toAmountString, toBaseUnits, isValidAddress } from './money.js'
 
-// App currency code ↔ token symbol (USD = USDC, EUR = EURC).
+// App currency code → token: 'USD' = USDC (the friendly label), a token symbol (USDC/EURC/cirBTC) = itself, and the
+// legacy 'EUR' = EURC. Bug fixed 2026-10-06: only USD/EUR were mapped, so a QR made in USDC/EURC/cirBTC on Create QR
+// carried NO amount at all (a bare address QR).
 const TOKEN_OF = { USD: 'USDC', EUR: 'EURC' }
-const CUR_OF = { USDC: 'USD', EURC: 'EUR' }
+const tokenFor = (net, currency) => net.tokens[currency] ? currency : TOKEN_OF[currency || 'USD']
+// Token read from a QR → the currency code the Send screen uses ('USD' | 'EURC' | 'cirBTC'). Was 'EUR', which Send does
+// not list, so a scanned EURC QR lost its amount (bug 2026-10-06).
+const CUR_OF = (sym) => sym === 'USDC' ? 'USD' : sym
 
 export function buildQRFor(net, addr, { amount, currency } = {}) {
   const amt = Number(amount)
-  const token = net.tokens[TOKEN_OF[currency || 'USD']]
+  const token = net.tokens[tokenFor(net, currency)]
   if (!(amt > 0) || !token) return `ethereum:${addr}@${net.chainId}`
   const units = toBaseUnits(toAmountString(amt, token.decimals), token.decimals)
   return `ethereum:${token.address}@${net.chainId}/transfer?address=${addr}&uint256=${units}`
@@ -47,10 +52,11 @@ export function parseQRFor(net, text) {
     // an unknown token would otherwise open the amount screen in USDC for a different asset.
     const sym = Object.keys(net.tokens).find(s => net.tokens[s].address.toLowerCase() === e[1].toLowerCase())
     const to = params.get('address')
-    if (!sym || !CUR_OF[sym] || !isValidAddress(to)) return null
+    if (!sym || !isValidAddress(to)) return null
+    const dec = net.tokens[sym].decimals
     const n = params.get('uint256')
-    const amount = n && /^\d+$/.test(n) ? formatUnits(BigInt(n), net.tokens[sym].decimals) : null
-    return { address: to, amount: amount && !amountProblem(amount, 6) ? amount : null, currency: CUR_OF[sym] }
+    const amount = n && /^\d+$/.test(n) ? formatUnits(BigInt(n), dec) : null
+    return { address: to, amount: amount && !amountProblem(amount, dec) ? amount : null, currency: CUR_OF(sym) }
   }
 
   const m = raw.match(/^ezwallet:(0x[0-9a-fA-F]{40})(?:@(\d+))?(?:\?amount=([\d.]+))?(?:&cur=(\w+))?$/)
@@ -61,7 +67,7 @@ export function parseQRFor(net, text) {
     // The QR amount stays a STRING and must be a clean decimal with ≤ 6 places (USDC/EURC) - otherwise it is
     // dropped and the user types the amount (MAINNET-AUDIT H1: "0.004" used to be sent as 0).
     const amount = m[3] && !amountProblem(m[3], 6) ? m[3] : null
-    return { address: m[1], amount, currency: m[4] || 'USD' }
+    return { address: m[1], amount, currency: m[4] === 'EUR' ? 'EURC' : (m[4] || 'USD') }
   }
 
   if (isValidAddress(raw)) return { address: raw, amount: null, currency: 'USD' }
