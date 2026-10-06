@@ -8,6 +8,7 @@ import { earnApi } from '../earn'
 import { getDisplayRates, cachedRates } from '../chain'
 import { getDisplayCurrency, fmtDisplay } from '../data'
 import ScrollBox from '../components/ScrollBox'
+import BorrowTab from './BorrowTab'
 
 // LENDING / BORROW - one Service hub card, two tabs in row 1 (owner 2026-10-05, plan on the owner's Desktop §6-§11).
 // No Figma for Service hub screens any more: built from the design system + the 10-row grid, the owner adjusts after.
@@ -111,11 +112,7 @@ export default function Lending() {
         </div>
       )}
 
-      {tab === 'borrow' ? (
-        <div style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '10.19dvh', height: '18.48dvh', ...BOX, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 'calc(16 * var(--u))', textAlign: 'center' }}>
-          <span style={{ fontSize: 'var(--fs-content-2)', color: 'var(--color-muted-2)', lineHeight: 1.4 }}>Borrow is coming next: borrow EURC with cirBTC as collateral.</span>
-        </div>
-      ) : (<>
+      {tab === 'borrow' ? <BorrowTab /> : (<>
         {/* MY DEPOSITS - rows 2-3, always first (owner). */}
         {/* Open (owner 2026-10-05) → every position as its own card (LendPositions). Hidden while there is nothing. */}
         <div style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '10.19dvh', height: '18.48dvh', ...BOX, display: 'flex', alignItems: 'center', gap: 'calc(12 * var(--u))', padding: 'calc(16 * var(--u))' }}>

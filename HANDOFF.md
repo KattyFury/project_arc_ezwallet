@@ -1,6 +1,6 @@
 # HANDOFF – ezwallet
 
-**Updated:** 2026-10-05 evening (auto-convert live, unverified send, button depth, owner polish round) · **Repo:** `KattyFury/project_arc_ezwallet` (public; renamed from
+**Updated:** 2026-10-06 (Service hub: Lending live-tested, Memes + Borrow built LABS-only; legal pages; QR fixes) · **Repo:** `KattyFury/project_arc_ezwallet` (public; renamed from
 `KattyFury/ezwallet` 2026-10-03 - Pages track it by repo id) · **Local:** `D:\Files\Claude\Big projects\project_arc_ezwallet`
 **Status:** ezwallet.cash serves **Arc MAINNET** (real money). Target: public launch within October 2026.
 
@@ -15,6 +15,40 @@
 2. For each bug: measure read-only first, find the rule in the official docs, offer options - the owner picks.
 3. **Every change goes to BOTH branches** (owner, 2026-10-03): commit on `test`, then
    `git checkout main && git merge --ff-only test`, push both. Both Pages projects auto-deploy.
+
+## ▶ Session 2026-10-06 - where we stopped (READ THIS FIRST)
+**State of the Service hub (all LABS = test.ezwallet.cash + localhost only, `src/labs.js`):**
+| Feature | Built | Real-money test | Next |
+|---|---|---|---|
+| Lending (Earn, Morpho vaults) | yes | **owner tested deposit + withdraw: smooth** | owner happy → enable on ezwallet.cash |
+| Memes (Argus on Uniswap v4) | yes, layout v2 (CA + Paste · My memes · Top on Argus · risk line) | **not yet** | owner buys ~1 USDC of STABLE `0xC281…C099`, sells all |
+| Borrow (USDC vs cirBTC) | **yes, pushed 2026-10-06, NOT measured on a real wallet** | not yet | see Borrow below |
+
+**Borrow (plan on the owner's Desktop `ezwallet-LEND-MEMES-PLAN.md` §14; code `functions/api/_borrowCore.js`, `borrow.js`,
+`borrow-alert.js`, `src/borrow.js`, `screens/BorrowTab.jsx` + `BorrowAction.jsx`, `test/borrow.test.mjs`):**
+- Circle Borrow Kit lends **USDC only** (SDK source: "the only loan asset Borrow Service originates against"); market
+  cirBTC/USDC `0xc2db…815d` on Morpho Blue `0x34CD04070dD72b14E241112F6d83812Df5Af7fCD` (morpho API + eth_getCode +
+  idToMarketParams checked). Free USDC moves a lot (3 → 50.75 USDC between 10-05 and 10-06).
+- Service sizes collateral at HF ≈ 1.236 (LTV ≈ 70%, measured). **Owner rule = LTV ≤ 50%** → the batch appends a direct
+  Morpho `supplyCollateral` top-up (HF 1.72 via `requiredCollateral/quote`). One PIN. Execute refuses unless eth_simulateV1
+  shows: USDC received, collateral ≥ the 50% need, **no Morpho authorization left open**. Max $200 per loan.
+- Liquidation alert = **the owner's pick: 2nd PIN right after borrowing** (EIP-712 WebhookRegistration via Circle
+  `/user/sign/typedData`). Circle → `/api/borrow-alert` → re-read the loan → email (Resend) to the address Circle has for
+  the user (KV `loan:{id}`), dedupe `loanalert:{event_id}`. Some Borrow Service calls refuse an API key (SDK
+  `credential:'forbidden'`) - `kit()` only sends it where allowed.
+- **NEXT (B0):** the owner is buying cirBTC. Get the owner's full wallet address → simulate a small borrow on it
+  (read-only) → then the owner borrows 2-5 USDC on the test site, turns alerts on, "Repay all & close".
+
+**Other things done 2026-10-06:** About rebuilt + in-app Terms/Privacy (`src/legal.js`, live everywhere, owner reviews
+later; draft + Vietnam-law findings on the Desktop `ezwallet-LEGAL-DRAFT.md`) · **support@ezwallet.cash** works (Cloudflare
+Email Routing → owner's Gmail; Resend untouched on `send.`) · one red network note "Only available network: Arc" everywhere ·
+QR: USDC/EURC/cirBTC QRs carry their amount, labels in their own unit, shared image = name + QR + amount, storage Add =
+Create QR · Send/Lending show amounts short (display only - Max still sends everything) · ScrollBox (fixed box headers,
+fades only where more content) · auto-reload once when a lazy chunk is gone after a deploy (`vite:preloadError`).
+
+**Owner rules learned 2026-10-06 (don't break):** plans/specs → Desktop file, not the repo · "simplify the number" = display
+only, never change the amount that moves, never claim the owner accepted a side effect · the app is global, open-source
+(MIT), non-profit, by an individual, 18+ · fades only on the side that has more to scroll · box titles are fixed headers.
 
 ## ▶ Session 2026-10-05 (2) - Lending (Earn) built, LABS only
 - **Plans live on the owner's Desktop, not in the repo** (owner): `ezwallet-LEND-MEMES-PLAN.md` = Lending/Borrow +
