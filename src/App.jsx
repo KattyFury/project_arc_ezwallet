@@ -37,6 +37,7 @@ const QRScanner   = lazy(() => import('./screens/QRScanner'))
 const TxHistory   = lazy(() => import('./screens/TxHistory'))
 const Security    = lazy(() => import('./screens/Security'))
 const About       = lazy(() => import('./screens/About'))
+const Legal       = lazy(() => import('./screens/Legal'))
 const PinGate     = lazy(() => import('./screens/PinGate'))
 const ForgotPin   = lazy(() => import('./screens/ForgotPin'))
 
@@ -51,7 +52,7 @@ const SCREENS = {
   Contacts, QRScanner,
   TxHistory,
   Security,
-  About,
+  About, Legal,
   PinGate,
   ForgotPin,
 }

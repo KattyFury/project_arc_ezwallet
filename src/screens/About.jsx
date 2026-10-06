@@ -3,32 +3,35 @@ import Icon from '../components/Icon'
 import ScreenSheet from '../components/ScreenSheet'
 import ExitBar from '../components/ExitBar'
 import { GRADIENT } from '../brandBg'
-import { ROW_TOP } from './Security'
 import { NET } from '../clientNet'
+import { CONTACT_URL } from '../legal'
 
 const VERSION = '0.1.0'
 
-// ABOUT - Figma node 58:424, rebuilt 2026-09-24 against the 2026-09-23 redesign's gradient+sheet shell
-// (was the pre-redesign plain-white `.screen`/row-10-single "Back" layout).
-// ⚠️ FIGMA'S CARD (node 58:430) IS EMPTY - no text layers at all, unlike Security's own card which fully
-// spells out its rows. That almost certainly means this frame's content hasn't been drawn yet (the
-// two-sources-of-truth rule treats a blank export as incomplete, not as "delete everything"; About.md's
-// own real info - version, network, links - is functional content the app still needs to show). Kept the
-// existing 7 rows and their already-correct grid positions (same 86px-cadence card this redesign uses
-// elsewhere, re-verified: they land inside the new card's 86-672 span with no change needed), migrated
-// only the shell + card colour (#D2DCE6 = var(--color-card), was --color-surface) to match Security/Menu.
-// Flag to the user if Figma is later filled in with different content than this.
-// Row spacing - user decision 2026-09-27: the SAME even step as Security & Region (ROW_TOP, 64px), no
-// longer one full 86px grid row per item, so the two screens read as one system.
-const ITEMS = [
-  { label: 'App', value: 'ezwallet' },
-  { label: 'Version', value: VERSION },
-  { label: 'Network', value: NET.label },
-  { label: 'Wallet', value: 'Circle Wallet' },
-  { label: 'Github', link: 'https://github.com/KattyFury/project_arc_ezwallet' },
-  { label: 'Term of use', link: 'https://www.circle.com/en/legal/privacy-policy' },
-  { label: 'Privacy policy', link: 'https://www.circle.com/en/legal/privacy-policy' },
-].map((it, i) => ({ ...it, top: ROW_TOP(i) }))
+// ABOUT - rebuilt 2026-10-06 (owner: "sơ sài và tùy tiện", Terms of use and Privacy policy both opened Circle's privacy
+// page). Three groups, each a short header + rows on the SAME 64px step as Security (ROW_TOP's step - keep the two
+// screens in sync): APP (facts) · LINKS · LEGAL. The list scrolls inside the grey card and fades at both edges.
+// Terms / Privacy = in-app pages (src/legal.js), live everywhere (owner 2026-10-06: "áp dụng vào main luôn, duyệt sau"); Circle's own User Agreement and
+// Privacy Policy are linked as Circle's (both URLs checked 2026-10-06, HTTP 200).
+const GROUPS = [
+  ['App', [
+    { label: 'Version', value: VERSION },
+    { label: 'Network', value: NET.label },
+    { label: 'Wallet', value: 'Circle · non-custodial' },
+  ]],
+  ['Links', [
+    { label: 'Website', link: 'https://ezwallet.cash' },
+    { label: 'Source code (MIT)', link: 'https://github.com/KattyFury/project_arc_ezwallet' },
+    { label: 'Support', link: CONTACT_URL },
+  ]],
+  ['Legal', [
+    { label: 'Terms of Use', screen: ['Legal', { doc: 'terms' }] },
+    { label: 'Privacy Policy', screen: ['Legal', { doc: 'privacy' }] },
+    { label: 'Circle User Agreement', link: 'https://www.circle.com/legal/user-agreement' },
+    { label: 'Circle Privacy Policy', link: 'https://www.circle.com/en/legal/privacy-policy' },
+  ]],
+]
+const ROW = { height: 'calc(64 * var(--u))', flexShrink: 0, display: 'flex', alignItems: 'center' }
 
 export default function About() {
   const { navigate } = useNav()
@@ -38,22 +41,33 @@ export default function About() {
       <ScreenSheet />
       <div className="sheet-title">About</div>
 
-      <div style={{ position: 'absolute', left: '6.41%', top: '10.19dvh', width: '87.18%', height: '69.43dvh', background: 'var(--color-card)', borderRadius: 16 }} />
-
-      {ITEMS.map(({ label, value, link, top }) => (
-        link ? (
-          <button key={label} onClick={() => window.open(link, '_blank')}
-            style={{ position: 'absolute', left: '7.95%', right: '9.23%', top, transform: 'translateY(-50%)', display: 'flex', alignItems: 'center', gap: 'calc(10 * var(--u))', border: 'none', background: 'none', cursor: 'pointer', fontFamily: 'inherit', padding: 0 }}>
-            <Icon name="right2" size="calc(17 * var(--u))" color="var(--color-brand)" />
-            <span style={{ fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)' }}>{label}</span>
-          </button>
-        ) : (
-          <div key={label} style={{ position: 'absolute', left: '9.23%', right: '9.23%', top, transform: 'translateY(-50%)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 'calc(12 * var(--u))' }}>
-            <span style={{ fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', flexShrink: 0 }}>{label}</span>
-            <span style={{ fontSize: 'var(--fs-content-2)', color: 'var(--color-muted-2)', textAlign: 'right', wordBreak: 'break-word' }}>{value}</span>
-          </div>
-        )
-      ))}
+      <div style={{ position: 'absolute', left: '6.41%', top: '10.19dvh', width: '87.18%', height: '69.43dvh', background: 'var(--color-card)', borderRadius: 16, overflow: 'hidden' }}>
+        <div className="scroll-hidden scroll-fade" style={{ height: '100%', boxSizing: 'border-box', padding: 'calc(8 * var(--u)) calc(16 * var(--u))', display: 'flex', flexDirection: 'column' }}>
+          <p style={{ fontSize: 'var(--fs-caption)', lineHeight: 1.45, color: 'var(--color-muted-2)', margin: 'calc(8 * var(--u)) 0', flexShrink: 0 }}>
+            A free, open-source wallet for USDC and EURC on Arc. Your wallet is secured by Circle - only you can approve a
+            transaction, with your PIN. No app fees, no ads.
+          </p>
+          {GROUPS.map(([title, rows]) => (
+            <div key={title} className="col" style={{ flexShrink: 0 }}>
+              <span style={{ fontSize: 'var(--fs-caption)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-muted-2)', marginTop: 'calc(8 * var(--u))' }}>{title.toUpperCase()}</span>
+              {rows.map(({ label, value, link, screen }) => (
+                value !== undefined ? (
+                  <div key={label} style={{ ...ROW, justifyContent: 'space-between', gap: 'calc(12 * var(--u))' }}>
+                    <span style={{ fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', flexShrink: 0 }}>{label}</span>
+                    <span style={{ fontSize: 'var(--fs-content-2)', color: 'var(--color-muted-2)', textAlign: 'right' }}>{value}</span>
+                  </div>
+                ) : (
+                  <button key={label} onClick={() => (screen ? navigate(...screen) : window.open(link, '_blank', 'noopener'))}
+                    style={{ ...ROW, gap: 'calc(10 * var(--u))', border: 'none', background: 'none', cursor: 'pointer', fontFamily: 'inherit', padding: 0, width: '100%', textAlign: 'left' }}>
+                    <Icon name="right2" size="calc(17 * var(--u))" color="var(--color-brand)" />
+                    <span style={{ fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)' }}>{label}</span>
+                  </button>
+                )
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
 
       <button className="btn btn-primary" onClick={() => navigate('MenuScreen')}
         style={{ position: 'absolute', left: '6.41%', width: '87.18%', top: 'calc(85.665dvh - var(--btn-h) / 2)', height: 'var(--btn-h)', minHeight: 0 }}>
