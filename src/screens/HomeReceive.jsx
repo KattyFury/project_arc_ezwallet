@@ -10,6 +10,7 @@ import { useNav } from '../nav'
 import { getTokenBalances, cachedBalances, sumUsd } from '../chain'
 import { ensureWalletAddress } from '../circle'
 import { buildQR } from '../qr'
+import { shortenAddr } from '../data'
 import { HALF_OVAL_STYLE } from './HomeSend'
 import { GRADIENT } from '../brandBg'
 
@@ -44,7 +45,7 @@ export default function HomeReceive() {
     getTokenBalances(walletAddr).then(ts => setTotalUsd(sumUsd(ts))).catch(() => {})
   }, [walletAddr])
 
-  // Share = the QR IMAGE (with logo + the "Only Arc" label) **PLUS the WALLET ADDRESS AS TEXT** - user decision
+  // Share = the QR IMAGE (with logo + the red network note) **PLUS the WALLET ADDRESS AS TEXT** - user decision
   // 08-13: "as long as it shares 2 things, not 1".
   //
   // ⚠️ A KNOWN, ACCEPTED TRADE-OFF: including `text` makes iOS FILTER the apps offered in the share sheet
@@ -59,7 +60,8 @@ export default function HomeReceive() {
       setCopied(true); setTimeout(() => setCopied(false), 2000)
       return
     }
-    saveImageToPhotos(await brandedQrCanvas(qrCanvas), 'ezwallet-qr.png', walletAddr)
+    // The address QR has no name or amount → its title is the short wallet address (owner 2026-10-06).
+    saveImageToPhotos(await brandedQrCanvas(qrCanvas, { name: shortenAddr(walletAddr) }), 'ezwallet-qr.png', walletAddr)
   }
 
   async function handleCopyAddr() {
@@ -101,15 +103,18 @@ export default function HomeReceive() {
               - on a short screen the VERTICAL budget - card height minus the 8+8+40 = 56px those two
                 rules reserve - wins instead, and the QR shrinks to fit it. `min()` picks whichever is
                 smaller, so this is one rule, not a media-query special case. */}
+        {/* Owner 2026-10-06: the QR sits CENTRED in the space between the card's top edge and the pill's top edge, so
+            the gap above the QR always equals the gap below it (≥ 8px each; the size rule above is unchanged). */}
+        <div style={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 'calc(40 * var(--u))', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div style={{
-          position: 'absolute', left: '50%', top: 'calc(8 * var(--u))', transform: 'translateX(-50%)',
           width: 'min(66.15vw, calc(var(--screen-max) * 0.6615), calc(38.86dvh - calc(56 * var(--u))))',
-          aspectRatio: '1 / 1',
+          aspectRatio: '1 / 1', flexShrink: 0,
           background: 'var(--color-white)', display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}>
           {walletAddr
             ? <QRCodeSVG value={buildQR(walletAddr)} size={256} level="M" style={{ width: '94%', height: '94%' }} />
             : <span style={{ fontSize: 'var(--fs-small)', color: 'var(--color-muted-2)' }}>Loading...</span>}
+        </div>
         </div>
 
         {/* "Tap to copy your address" - nodes 56:74 / 56:75. IDENTICAL IN SHAPE to Send's "Hold to

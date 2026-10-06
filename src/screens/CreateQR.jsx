@@ -66,6 +66,12 @@ export default function CreateQR() {
     setDigits(d => d + key)
   }
 
+  // From the library the "You receive" card + the name box (16px under it) are ONE group, centred in the space between
+  // row 2's top (10.19dvh) and 16px above the numpad (row 6, 50.95dvh) - owner 2026-10-06: the numpad used to cover the
+  // name box. OFF shifts every piece of the card by the same amount; from Receive it is 0 (layout unchanged).
+  const OFF = fromLibrary ? 'calc(0.95dvh - (32 * var(--u) + var(--input-h)) / 2)' : '0px'
+  const at = (dvh) => `calc(${dvh}dvh + ${OFF})`
+
   return (
     <div className="screen" style={{ background: GRADIENT }}>
       <ScreenSheet />
@@ -74,22 +80,22 @@ export default function CreateQR() {
       {/* "You receive" card - node 18:84: rows 3-4 (340x156, top 20.38dvh, radius 16 - ONE row lower than
           Send money's "You send" card). Colour #D2DCE6 (var(--color-card)), matching every other card in
           this redesign. */}
-      <div style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '20.38dvh', height: '18.48dvh', background: 'var(--color-card)', borderRadius: 16 }} />
+      <div style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: at(20.38), height: '18.48dvh', background: 'var(--color-card)', borderRadius: 16 }} />
 
-      <span style={{ position: 'absolute', left: '8.46%', top: '23.74dvh', transform: 'translateY(-50%)', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)' }}>You receive</span>
+      <span style={{ position: 'absolute', left: '8.46%', top: at(23.74), transform: 'translateY(-50%)', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)' }}>You receive</span>
 
       {/* Chip - node 18:88: centre 29.6dvh. Figma draws a flat 24x24 BLACK SQUARE placeholder (18:89, no
           real icon layer) - a real token logo is used instead, EXCEPT for USD (a fiat label, not a token
           - no coin logo, same rule as SendAmount.jsx). */}
       <button onClick={() => setShowCur(true)}
-        style={{ position: 'absolute', left: '8.46%', top: '29.6dvh', transform: 'translateY(-50%)', display: 'inline-flex', alignItems: 'center', gap: 'calc(6 * var(--u))', border: 'none', background: 'var(--btn-grad-white)', borderRadius: 999, height: 'calc(42 * var(--u))', padding: '0 calc(14 * var(--u)) 0 calc(8 * var(--u))', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.5)', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)', cursor: 'pointer' }}>
+        style={{ position: 'absolute', left: '8.46%', top: at(29.6), transform: 'translateY(-50%)', display: 'inline-flex', alignItems: 'center', gap: 'calc(6 * var(--u))', border: 'none', background: 'var(--btn-grad-white)', borderRadius: 999, height: 'calc(42 * var(--u))', padding: '0 calc(14 * var(--u)) 0 calc(8 * var(--u))', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.5)', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)', cursor: 'pointer' }}>
         {!isFiatLabel(cur) && <img src={`/tokens/${tokenIconFor(cur)}.png`} alt="" style={{ width: 'calc(24 * var(--u))', height: 'calc(24 * var(--u))', borderRadius: '50%', flexShrink: 0 }} />}
         {cur}
         <Icon name="down2" size="var(--is-content-2)" color="var(--color-brand)" />
       </button>
 
       {/* node 18:87: "Balance:" (not "Available:" - Receive's own wording, verbatim from Figma). */}
-      <span style={{ position: 'absolute', left: '8.46%', top: '35.47dvh', transform: 'translateY(-50%)', fontSize: 'var(--fs-content-2)', whiteSpace: 'nowrap' }}>
+      <span style={{ position: 'absolute', left: '8.46%', top: at(35.47), transform: 'translateY(-50%)', fontSize: 'var(--fs-content-2)', whiteSpace: 'nowrap' }}>
         <span style={{ color: 'var(--color-muted-2)' }}>Balance: </span>
         <span className="num" style={{ fontWeight: 'var(--fw-semibold)', color: 'var(--color-brand)' }}>{balanceStr}</span>
       </span>
@@ -100,7 +106,7 @@ export default function CreateQR() {
       {/* Idle colour is --color-content (was --color-faint, #F1F5F9 - nearly invisible against white,
           user decision 2026-09-24: "ít ra phải màu đen" - the caret already signals "not typed yet",
           the currency symbol/digits don't also need to fade to near-invisible). */}
-      <div ref={fitRef} style={{ position: 'absolute', left: '51%', right: '8.46%', top: '26.92dvh', textAlign: 'right' }}>
+      <div ref={fitRef} style={{ position: 'absolute', left: '51%', right: '8.46%', top: at(26.92), textAlign: 'right' }}>
         <span className="num" style={{ fontSize: fitSize, fontWeight: 'var(--fw-light)', lineHeight: 1, whiteSpace: 'nowrap', color: 'var(--color-content)' }}>
           {amountStr}<span className="caret">_</span>
         </span>
@@ -110,7 +116,7 @@ export default function CreateQR() {
           library, which has no dedicated Figma frame) - kept, placed in the blank space between the card
           and the numpad panel. */}
       {fromLibrary && (
-        <div className="memo-row" style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '44.5dvh' }}>
+        <div className="memo-row" style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: `calc(${at(20.38)} + 18.48dvh + 16 * var(--u))` }}>
           <Icon name="pencil" size="var(--is-content-1)" color="var(--color-muted)" />
           <input className="memo-input" value={name} onChange={e => setName(e.target.value)} placeholder={'Name your QR (optional)'} maxLength={30}
             onFocus={() => setTypingText(true)} onBlur={() => setTypingText(false)} />

@@ -66,7 +66,8 @@ export default function Memes() {
       </div>
 
       {/* Rows 3-9: one grey box - my memes, then Hidden. */}
-      <div className="scroll-hidden" style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '20.38dvh', height: '69.43dvh', border: 'none', borderRadius: 16, background: 'var(--color-card)', padding: 'calc(16 * var(--u))', display: 'flex', flexDirection: 'column', gap: 'calc(16 * var(--u))' }}>
+      <div style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '20.38dvh', height: '69.43dvh', border: 'none', borderRadius: 16, background: 'var(--color-card)', overflow: 'hidden' }}>
+      <div className="scroll-hidden scroll-fade" style={{ height: '100%', boxSizing: 'border-box', padding: 'calc(16 * var(--u))', display: 'flex', flexDirection: 'column', gap: 'calc(16 * var(--u))' }}>
         {error && <div className="warning-badge" style={{ background: 'var(--color-error-soft)', flexShrink: 0 }}>{error}</div>}
         {tokens === null && <span style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)' }}>Checking your tokens…</span>}
         {tokens !== null && shown.length === 0 && (
@@ -91,6 +92,7 @@ export default function Memes() {
             lines={[t.reason === 'cannot be sold' ? 'Cannot be sold - likely a scam token. Do not interact with it.' : t.unresolved ? 'Could not be checked right now.' : 'Not supported.']}
             action={null} />
         ))}
+      </div>
       </div>
 
       <ExitBar onClick={() => navigate('ServiceHub')} />

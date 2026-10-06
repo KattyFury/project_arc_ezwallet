@@ -1,8 +1,8 @@
 import logoLong from '../design/logo.svg'
-import { NET } from './clientNet'
+import { NETWORK_NOTE } from './clientNet'
 
 // ══ BRANDED QR IMAGE - shared by EVERY place that shares a QR (user decision 08-13) ══
-// Takes a bare QR canvas → returns a new canvas: QR + the words "Only <network>" (NET.label) + the ezwallet logo.
+// Takes a bare QR canvas → returns a new canvas: [name] + QR + [amount] + NETWORK_NOTE (red) + the ezwallet logo.
 // Used by: the Receive screen (Share) and the ShowQR screen (a created QR / a QR from the library).
 //
 // ⚠️ DELIBERATELY does not draw the wallet address onto the image (user decision 08-13: "putting the address on the QR looks awful").
@@ -31,8 +31,8 @@ export async function brandedQrCanvas(qrCanvas, { name = '', amount = '' } = {})
   x.drawImage(qrCanvas, (W - QR) / 2, PAD + TOP, QR, QR)
   if (amount) { x.fillStyle = '#0B53BF'; x.font = '700 48px sans-serif'; x.fillText(amount, W / 2, PAD + TOP + QR + 62) }
 
-  x.fillStyle = '#0B53BF'; x.font = '600 30px sans-serif'
-  x.fillText(`Only ${NET.label}`, W / 2, PAD + TOP + QR + AMT + 58)
+  x.fillStyle = '#FF383C'; x.font = '600 30px sans-serif'   // --color-error: the network warning is red everywhere
+  x.fillText(NETWORK_NOTE, W / 2, PAD + TOP + QR + AMT + 58)
 
   const lw = 168, lh = lw * 71 / 201   // logo.svg aspect ratio (viewBox 201×71), same as the receipt image
   const img = new Image()

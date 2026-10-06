@@ -8,7 +8,7 @@ import { buildQR, qrAmountLabel } from '../qr'
 import ScreenSheet from '../components/ScreenSheet'
 import ExitBar from '../components/ExitBar'
 import { GRADIENT } from '../brandBg'
-import { NET } from '../clientNet'
+import { NETWORK_NOTE } from '../clientNet'
 
 export default function ShowQR() {
   const { navigate, params } = useNav()
@@ -35,7 +35,7 @@ export default function ShowQR() {
   // "Share": Web Share API → iOS/Android "Save image to Photos" + sending through social apps.
   // IMAGE ONLY, no address text attached (user decision 08-13) - unlike the Receive screen. Here what matters is the
   // AMOUNT in the QR, and scanning it yields the address anyway; attaching the address is both redundant and makes iOS
-  // filter the share targets. The image still goes through brandedQrCanvas for the logo + the "Only Arc" label, like Receive.
+  // filter the share targets. The image still goes through brandedQrCanvas for the logo + the red network note, like Receive.
   async function shareQR() {
     const canvas = wrapRef.current?.querySelector('canvas')
     if (!canvas) return
@@ -65,7 +65,7 @@ export default function ShowQR() {
           pass, ONE line only - "Have the sender scan this code" is gone, Figma draws just the network
           line): caption top-anchored 43.32dvh, amount centred 50dvh, 48px semibold brand blue. */}
       <div style={{ position: 'absolute', left: '50%', top: '43.32dvh', transform: 'translateX(-50%)', width: 'calc(340 * var(--u))', fontSize: 'var(--fs-small)', fontWeight: 'var(--fw-semibold)', textAlign: 'center', color: 'var(--color-error)' }}>
-        Current Available Network: {NET.label}
+        {NETWORK_NOTE}
       </div>
       <span className="num" style={{ position: 'absolute', left: '50%', top: '50dvh', transform: 'translate(-50%, -50%)', fontSize: 'var(--fs-amount-2)', fontWeight: 'var(--fw-semibold)', lineHeight: 1, color: 'var(--color-brand)', whiteSpace: 'nowrap' }}>{amountText}</span>
 
