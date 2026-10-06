@@ -7,6 +7,7 @@ import { GRADIENT } from '../brandBg'
 import { earnApi } from '../earn'
 import { getDisplayRates, cachedRates } from '../chain'
 import { getDisplayCurrency, fmtDisplay } from '../data'
+import ScrollBox from '../components/ScrollBox'
 
 // LENDING / BORROW - one Service hub card, two tabs in row 1 (owner 2026-10-05, plan on the owner's Desktop §6-§11).
 // No Figma for Service hub screens any more: built from the design system + the 10-row grid, the owner adjusts after.
@@ -135,8 +136,7 @@ export default function Lending() {
         {/* Rows 4-8: ONE grey box, scrolling inside (owner 2026-10-05). One white card per vault, each with the same
             neutral "Open" button - inside, row 1 switches between Deposit and Withdraw. The vaults I hold come first and
             show my balance on the card. */}
-        <div style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '30.57dvh', height: '49.05dvh', ...BOX, overflow: 'hidden' }}>
-        <div className="scroll-hidden scroll-fade" style={{ height: '100%', boxSizing: 'border-box', padding: 'calc(16 * var(--u))', display: 'flex', flexDirection: 'column', gap: 'calc(16 * var(--u))' }}>
+        <ScrollBox style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '30.57dvh', height: '49.05dvh', ...BOX, overflow: 'hidden' }} listStyle={{ padding: 'calc(16 * var(--u))', gap: 'calc(16 * var(--u))' }}>
           {error && <div className="warning-badge" style={{ background: 'var(--color-error-soft)', flexShrink: 0 }}>{error}</div>}
           {vaults === null && <span style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)' }}>Loading vaults…</span>}
           {[...(vaults || [])].sort((a, b) => (posOf(b) ? 1 : 0) - (posOf(a) ? 1 : 0)).map(v => {
@@ -152,8 +152,8 @@ export default function Lending() {
                 action={<button {...smallBtn('btn-primary')} onClick={() => open(v, p)}>Open</button>} />
             )
           })}
-        </div>
-        </div>
+        
+        </ScrollBox>
 
         {/* Row 9: the always-visible risk line (plan §7). */}
         <div className="warning-badge" style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '81.52dvh', height: '8.29dvh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 calc(12 * var(--u))', fontSize: 'var(--fs-small)', lineHeight: 1.3 }}>

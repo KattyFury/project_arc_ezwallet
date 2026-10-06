@@ -20,6 +20,9 @@ import { usdRateOf, Tabs } from './Lending'
 // Row map (owner 2026-10-05): 1 tabs Deposit | Withdraw · 2-3 the vault · 4-5 the amount (tap → numpad) + [50%] [Max]
 // hints · 6 fee + the note right under it · 9 the button · 10 Exit (back to Lending).
 const MAX_USD = 200   // also enforced by the server (functions/api/_earnCore.js EARN_MAX_USD)
+// [50%] / [Max] land on 2 decimals, ROUNDED DOWN (owner 2026-10-06: Max showed 1.00000008 USDC - "dùng 1.xx thôi").
+// A withdraw-all can leave < 0.01 in the vault; that dust keeps earning and the owner accepted it.
+const MAX_DEC = 2
 const BOX = { border: 'none', borderRadius: 16, background: 'var(--color-card)' }
 const at = (top, height) => ({ position: 'absolute', left: '6.41%', right: '6.41%', top, height })
 const fmtAmt = (n, d = 2) => Number(n || 0).toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d })
@@ -73,11 +76,11 @@ export default function LendAction() {
       const bal = balances[asset]
       if (bal === undefined || rate === null) return null
       const spendable = asset === 'USDC' ? bal - Math.max(GAS_RESERVE_USDC, feeUsd ?? 0) : bal
-      return Math.max(0, floorTo(Math.min(spendable, vault.withdrawable ?? 0, MAX_USD / rate), dec))
+      return Math.max(0, floorTo(Math.min(spendable, vault.withdrawable ?? 0, MAX_USD / rate), MAX_DEC))
     }
     if (maxOut === null) return null
     if (!position) return 0
-    return Math.max(0, floorTo(Math.min(position.balance, maxOut), dec))
+    return Math.max(0, floorTo(Math.min(position.balance, maxOut), MAX_DEC))
   })()
   const amount = parseFloat(typed) || 0
   const over = max !== null && amount > max + 1e-12
@@ -187,7 +190,7 @@ export default function LendAction() {
           </span>
         </button>
         <div style={{ display: 'flex', gap: 'calc(8 * var(--u))' }}>
-          {hint('50%', max === null ? 0 : floorTo(max / 2, dec))}
+          {hint('50%', max === null ? 0 : floorTo(max / 2, MAX_DEC))}
           {hint('Max', max ?? 0)}
         </div>
       </div>

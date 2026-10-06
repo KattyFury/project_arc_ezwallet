@@ -6,6 +6,7 @@ import { GRADIENT } from '../brandBg'
 import { getDisplayRates, cachedRates } from '../chain'
 import { getDisplayCurrency, fmtDisplay } from '../data'
 import { Card, smallBtn, fmtAmt, fmtApy, usdRateOf } from './Lending'
+import ScrollBox from '../components/ScrollBox'
 
 // MY DEPOSITS - every position as its own white card (owner 2026-10-05: the "My deposits" card on Lending has an Open
 // button). Params: positions + vaults, already loaded by Lending. Row map: 1 title left · 2-9 ONE grey box of cards,
@@ -29,8 +30,7 @@ export default function LendPositions() {
         My deposits
       </div>
 
-      <div style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '10.19dvh', height: '69.43dvh', border: 'none', borderRadius: 16, background: 'var(--color-card)', overflow: 'hidden' }}>
-      <div className="scroll-hidden scroll-fade" style={{ height: '100%', boxSizing: 'border-box', padding: 'calc(16 * var(--u))', display: 'flex', flexDirection: 'column', gap: 'calc(16 * var(--u))' }}>
+      <ScrollBox style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '10.19dvh', height: '69.43dvh', border: 'none', borderRadius: 16, background: 'var(--color-card)', overflow: 'hidden' }} listStyle={{ padding: 'calc(16 * var(--u))', gap: 'calc(16 * var(--u))' }}>
         {positions.length === 0 && <span style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)' }}>No deposit yet</span>}
         {positions.map(p => {
           const v = vaults.find(x => x.address === p.vault) || { address: p.vault, name: p.name, asset: p.asset, apy: p.apy }
@@ -47,8 +47,8 @@ export default function LendPositions() {
               action={<button {...smallBtn('btn-primary')} onClick={() => navigate('LendAction', { kind: 'withdraw', vault: v, position: p })}>Open</button>} />
           )
         })}
-      </div>
-      </div>
+      
+      </ScrollBox>
 
       <ExitBar onClick={() => navigate('Lending')} />
     </div>

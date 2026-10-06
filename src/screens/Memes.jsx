@@ -6,14 +6,15 @@ import { GRADIENT } from '../brandBg'
 import { getUnverifiedTokens } from '../chain'
 import { memeApi, fmtUnits, fmtPrice, fmtUsdShort } from '../meme'
 import { Tabs, smallBtn } from './Lending'
+import ScrollBox, { BoxHeader } from '../components/ScrollBox'
 
 // MEMES (Service hub, owner 2026-10-06 layout). M1 = Argus launch tokens on Arc's Uniswap v4 (plan §8 + §13).
 // Row map: 1 "Memes" + menu · 2 paste a token address (CA) + [Paste] · 3-4 MY MEMES (scrolls, fades; Hidden at its end)
 // · 5-8 TOP ARGUS MEMES by 24h volume (GeckoTerminal via /api/meme 'top', 5-min cache) · 9 the risk line · 10 Exit.
 // Any row → MemeToken (Buy | Sell, with the honeypot check). LABS only (src/labs.js).
 const isAddr = (a) => /^0x[0-9a-fA-F]{40}$/.test(String(a || '').trim())
-const BOX = { position: 'absolute', left: '6.41%', right: '6.41%', border: 'none', borderRadius: 16, background: 'var(--color-card)', overflow: 'hidden' }
-const LIST = { height: '100%', boxSizing: 'border-box', padding: 'calc(12 * var(--u))', display: 'flex', flexDirection: 'column', gap: 'calc(8 * var(--u))' }
+const BOX = { position: 'absolute', left: '6.41%', right: '6.41%' }
+const LIST = { padding: '0 calc(12 * var(--u)) calc(12 * var(--u))', gap: 'calc(8 * var(--u))' }   // under the fixed BoxHeader
 const muted = { fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)' }
 
 // One compact white row: name on the left, two short lines; a value block on the right. Tap = open the token.
@@ -100,9 +101,7 @@ export default function Memes() {
       </div>
 
       {/* Rows 3-4: my memes (+ Hidden at the end). */}
-      <div style={{ ...BOX, top: '20.38dvh', height: '18.48dvh' }}>
-        <div className="scroll-hidden scroll-fade" style={LIST}>
-          <span style={{ ...muted, fontWeight: 'var(--fw-semibold)', flexShrink: 0 }}>My memes</span>
+      <ScrollBox header={<BoxHeader title="My memes" />} style={{ ...BOX, top: '20.38dvh', height: '18.48dvh' }} listStyle={LIST}>
           {error && <span style={{ ...muted, color: 'var(--color-error)', flexShrink: 0 }}>{error}</span>}
           {mine === null && <span style={muted}>Checking your tokens…</span>}
           {mine !== null && shown.length === 0 && <span style={muted}>None yet - paste an address or pick one below.</span>}
@@ -119,15 +118,11 @@ export default function Memes() {
             <Row key={t.token} faded title={t.symbol || `${t.token.slice(0, 6)}…${t.token.slice(-4)}`}
               sub={t.reason === 'cannot be sold' ? 'Cannot be sold - likely a scam. Do not touch it.' : t.unresolved ? 'Could not be checked right now.' : 'Not supported.'} />
           ))}
-        </div>
-      </div>
+        
+      </ScrollBox>
 
       {/* Rows 5-8: top Argus memes by 24h volume. */}
-      <div style={{ ...BOX, top: '40.76dvh', height: '38.86dvh' }}>
-        <div className="scroll-hidden scroll-fade" style={LIST}>
-          <span style={{ ...muted, fontWeight: 'var(--fw-semibold)', flexShrink: 0, display: 'flex', justifyContent: 'space-between', gap: 'calc(8 * var(--u))' }}>
-            <span>Top on Argus · 24h volume</span><span style={{ fontWeight: 'var(--fw-normal)' }}>GeckoTerminal</span>
-          </span>
+      <ScrollBox header={<BoxHeader title="Top on Argus" right="24h volume · GeckoTerminal" />} style={{ ...BOX, top: '40.76dvh', height: '38.86dvh' }} listStyle={LIST}>
           {topError && <span style={{ ...muted, color: 'var(--color-error)' }}>{topError}</span>}
           {top === null && <span style={muted}>Loading…</span>}
           {(top?.tokens || []).map((t, i) => {
@@ -139,8 +134,8 @@ export default function Memes() {
                 onClick={() => open(t.token)} />
             )
           })}
-        </div>
-      </div>
+        
+      </ScrollBox>
 
       {/* Row 9: the risk line (owner 2026-10-06: plain words, what a member must know). */}
       <div className="warning-badge" style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '81.52dvh', height: '8.29dvh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 calc(12 * var(--u))', fontSize: 'var(--fs-small)', lineHeight: 1.3 }}>

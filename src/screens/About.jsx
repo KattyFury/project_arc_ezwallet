@@ -5,6 +5,7 @@ import ExitBar from '../components/ExitBar'
 import { GRADIENT } from '../brandBg'
 import { NET } from '../clientNet'
 import { CONTACT_URL, SUPPORT_EMAIL } from '../legal'
+import ScrollBox from '../components/ScrollBox'
 
 const VERSION = '0.1.0'
 
@@ -41,8 +42,7 @@ export default function About() {
       <ScreenSheet />
       <div className="sheet-title">About</div>
 
-      <div style={{ position: 'absolute', left: '6.41%', top: '10.19dvh', width: '87.18%', height: '69.43dvh', background: 'var(--color-card)', borderRadius: 16, overflow: 'hidden' }}>
-        <div className="scroll-hidden scroll-fade" style={{ height: '100%', boxSizing: 'border-box', padding: 'calc(8 * var(--u)) calc(16 * var(--u))', display: 'flex', flexDirection: 'column' }}>
+      <ScrollBox style={{ position: 'absolute', left: '6.41%', top: '10.19dvh', width: '87.18%', height: '69.43dvh', background: 'var(--color-card)', borderRadius: 16, overflow: 'hidden' }} listStyle={{ padding: 'calc(8 * var(--u)) calc(16 * var(--u))' }}>
           <p style={{ fontSize: 'var(--fs-caption)', lineHeight: 1.45, color: 'var(--color-muted-2)', margin: 'calc(8 * var(--u)) 0', flexShrink: 0 }}>
             A free, open-source wallet for USDC and EURC on Arc. Your wallet is secured by Circle - only you can approve a
             transaction, with your PIN. No app fees, no ads.
@@ -66,8 +66,8 @@ export default function About() {
               ))}
             </div>
           ))}
-        </div>
-      </div>
+        
+      </ScrollBox>
 
       <button className="btn btn-primary" onClick={() => navigate('MenuScreen')}
         style={{ position: 'absolute', left: '6.41%', width: '87.18%', top: 'calc(85.665dvh - var(--btn-h) / 2)', height: 'var(--btn-h)', minHeight: 0 }}>

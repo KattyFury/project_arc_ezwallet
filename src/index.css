@@ -855,10 +855,3 @@ body {
   -webkit-text-fill-color: var(--color-black);
 }
 
-/* A SCROLLING LIST INSIDE A BOX fades at its top AND bottom edge (owner 2026-10-06: "bắt buộc làm mờ biên trên dưới"
-   so people see the box scrolls). Same fade length as Home/History's one-sided fades (100dvh/30). Put it on the INNER
-   scrolling element, never on the grey box itself (the mask would fade the box's own background too). */
-.scroll-fade {
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0, black calc(100dvh / 30), black calc(100% - 100dvh / 30), transparent 100%);
-  mask-image: linear-gradient(to bottom, transparent 0, black calc(100dvh / 30), black calc(100% - 100dvh / 30), transparent 100%);
-}
