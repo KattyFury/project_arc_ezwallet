@@ -37,6 +37,10 @@
   Hidden = not supported or cannot be sold. Measured read-only on mainnet (STABLE -3.94%, ARPEP -7.78% round trip); **no
   real buy/sell yet** → first owner test with ~1 USDC on the test site.
   ⚠️ Arc's UniversalRouter needs the NEW v4 `ExactInputSingleParams` (with `minHopPriceX36`).
+- **2026-10-06 fixes:** Send shows long token amounts with 6 significant digits + "≈" (`fmtAmountShort`, the exact string
+  is still sent) · QRs made in USDC/EURC/cirBTC now carry their amount (only USD/EUR were mapped → bare address QR) and a
+  scanned EURC QR reads back as 'EURC' (was 'EUR', unknown to Send) · QR labels in the QR's own unit ("5 EURC", not "$5") ·
+  shared QR image = name + QR + amount · QR storage Add = Create QR (currency + optional name), the popup is gone.
 - Next: owner's 1 USDC round trips (Lending, Memes) · Borrow (owner picks the liquidation alert: Circle webhook = a 2nd
   PIN, or a scheduled Worker) · more launchpads (ArcStockPad / Arcade use the same v4 path; Mercuri pre-graduation needs its curve).
 
