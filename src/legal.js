@@ -3,10 +3,11 @@
 // - every sentence must stay TRUE of the app: change the code (new data, new provider, new fee) → change this file.
 // - plain English for members; "non-custodial" and "open-source", never "decentralized" (there is a small server).
 // - live on every host since 2026-10-06 (owner: "áp dụng vào main luôn, mình duyệt sau") - the owner still reviews the text.
-// Contact = GitHub Issues until the owner's support email exists (owner 2026-10-06: "email cung cấp sau").
+// Contact = support@ezwallet.cash (Cloudflare Email Routing → the owner's inbox, set up and tested 2026-10-06).
 export const LEGAL_UPDATED = '6 October 2026'
-export const CONTACT_URL = 'https://github.com/KattyFury/project_arc_ezwallet/issues'
-const CONTACT = 'GitHub Issues (github.com/KattyFury/project_arc_ezwallet/issues). A dedicated email address is coming.'
+export const SUPPORT_EMAIL = 'support@ezwallet.cash'
+export const CONTACT_URL = `mailto:${SUPPORT_EMAIL}`
+const CONTACT = `Email ${SUPPORT_EMAIL} - for help, and for any request about your personal data.`
 
 export const TERMS = {
   title: 'Terms of Use',
@@ -96,7 +97,7 @@ export const PRIVACY = {
       'Sign-in codes 10 minutes · IP counters 1 hour · sign-in token 30 days, on your device · backups until you delete them or ask us to · blockchain records forever (nobody can delete them).',
     ]],
     ['6. Your rights', [
-      'You can ask to know how your data is used, give or withdraw consent, get a copy, correct it, delete it, limit or object to its use, and complain to your data-protection authority. These follow Vietnam\'s Law 91/2025/QH15 and match the main rights in other privacy laws such as the EU GDPR.',
+      'Write to support@ezwallet.cash to know how your data is used, give or withdraw consent, get a copy, correct it, delete it, or limit or object to its use. You can also complain to the data-protection authority where you live. These rights follow Vietnam\'s Law 91/2025/QH15 and match the main rights in other privacy laws such as the EU GDPR.',
       'Deleting your ezwallet data does not delete your Circle wallet or anything on the blockchain.',
     ]],
     ['7. Security', [

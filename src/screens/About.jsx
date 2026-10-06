@@ -4,7 +4,7 @@ import ScreenSheet from '../components/ScreenSheet'
 import ExitBar from '../components/ExitBar'
 import { GRADIENT } from '../brandBg'
 import { NET } from '../clientNet'
-import { CONTACT_URL } from '../legal'
+import { CONTACT_URL, SUPPORT_EMAIL } from '../legal'
 
 const VERSION = '0.1.0'
 
@@ -22,7 +22,7 @@ const GROUPS = [
   ['Links', [
     { label: 'Website', link: 'https://ezwallet.cash' },
     { label: 'Source code (MIT)', link: 'https://github.com/KattyFury/project_arc_ezwallet' },
-    { label: 'Support', link: CONTACT_URL },
+    { label: SUPPORT_EMAIL, link: CONTACT_URL },
   ]],
   ['Legal', [
     { label: 'Terms of Use', screen: ['Legal', { doc: 'terms' }] },
@@ -57,7 +57,7 @@ export default function About() {
                     <span style={{ fontSize: 'var(--fs-content-2)', color: 'var(--color-muted-2)', textAlign: 'right' }}>{value}</span>
                   </div>
                 ) : (
-                  <button key={label} onClick={() => (screen ? navigate(...screen) : window.open(link, '_blank', 'noopener'))}
+                  <button key={label} onClick={() => (screen ? navigate(...screen) : link.startsWith('mailto:') ? (window.location.href = link) : window.open(link, '_blank', 'noopener'))}
                     style={{ ...ROW, gap: 'calc(10 * var(--u))', border: 'none', background: 'none', cursor: 'pointer', fontFamily: 'inherit', padding: 0, width: '100%', textAlign: 'left' }}>
                     <Icon name="right2" size="calc(17 * var(--u))" color="var(--color-brand)" />
                     <span style={{ fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)' }}>{label}</span>
