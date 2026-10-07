@@ -1,7 +1,7 @@
 # HANDOFF – ezwallet
 
 **Updated:** 2026-10-06 (Service hub: Lending live-tested, Memes + Borrow built LABS-only; legal pages; QR fixes) · **Repo:** `KattyFury/project_arc_ezwallet` (public; renamed from
-`KattyFury/ezwallet` 2026-10-03 - Pages track it by repo id) · **Local:** `D:\Files\Claude\Big projects\project_arc_ezwallet`
+`KattyFury/ezwallet` 2026-10-03 - Pages track it by repo id) · **Local:** `D:\Files\Claude\project_arc_ezwallet`
 **Status:** ezwallet.cash serves **Arc MAINNET** (real money). Target: public launch within October 2026.
 
 > **Start of every session:** read `CLAUDE.md`, this file, then `git pull`.
