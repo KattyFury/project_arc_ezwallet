@@ -3,7 +3,7 @@ import { useNav } from '../nav'
 import Icon from './Icon'
 import { getTokenBalances, cachedBalances } from '../chain'
 import { isOwnAddress } from '../data'
-import { amountProblem, isValidAddress, normalizeTyped } from '../money'
+import { amountProblem, isValidAddress, normalizeTyped, fmtAmountShort } from '../money'
 import { NET } from '../clientNet'
 
 // DEPOSIT / WITHDRAW popups over the Menu (owner spec 2026-10-03). Same pattern as LoginEmailPopup: a white
@@ -46,7 +46,7 @@ function Deposit() {
         </button>
       </div>
       <p style={note}>
-        Send USDC on the <b>Arc network</b> to this address to add money to your wallet.
+        Send USDC, EURC or cirBTC on the <b>Arc network</b> to this address to add money to your wallet.
         Money sent from another network (Ethereum, Base…) will not arrive.
       </p>
     </>
@@ -101,7 +101,7 @@ function Withdraw() {
           <input value={amountStr} inputMode="decimal" placeholder="Amount"
             onChange={e => setAmountStr(e.target.value.replace(',', '.').replace(/[^\d.]/g, ''))} style={input} />
         </div>
-        {/* One button, tap = next held token (there are at most two: USDC, EURC). */}
+        {/* One button, tap = next held token (any verified token with a balance: USDC, EURC, cirBTC). */}
         <button onClick={() => setSym(choices[(choices.indexOf(cur) + 1) % choices.length].symbol)}
           disabled={choices.length < 2}
           style={{
@@ -117,7 +117,9 @@ function Withdraw() {
 
       <p style={{ ...note, color: 'var(--color-muted-2)' }}>
         Current balance: <span style={{ fontWeight: 'var(--fw-semibold)', color: 'var(--color-brand)' }}>
-          {cur.amount === null ? '…' : `${cur.amount.toFixed(2)} ${cur.symbol}`}
+          {/* Same short form as Send (6 significant digits, "≈" when cut) - toFixed(2) showed a small cirBTC
+              balance as 0.00 / 0.02. Display only. */}
+          {cur.amount === null ? '…' : (({ text, cut }) => `${cut ? '≈ ' : ''}${text} ${cur.symbol}`)(fmtAmountShort(cur.amount.toFixed(decimals)))}
         </span>
       </p>
 
@@ -126,7 +128,7 @@ function Withdraw() {
       )}
 
       <p style={note}>
-        Paste the wallet you want to send your money to, then enter the amount and pick USDC or EURC.
+        Paste the wallet you want to send your money to, enter the amount, then tap the token to switch between the ones you hold.
         The wallet must be on the <b>Arc network</b>.
       </p>
 
