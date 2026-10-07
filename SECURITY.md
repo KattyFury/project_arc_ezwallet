@@ -12,7 +12,7 @@ Circle's own cross-origin iframe. This project never sees the PIN. This is
 *user-controlled* custody, not seed-phrase self-custody – an intentional trade-off
 to remove the seed phrase from the onboarding path.
 
-**Secrets:** the Circle API key (`API_KEY`, used for wallets and swap), `AUTH_SECRET` and `RESEND_API_KEY` live only in Cloudflare Pages
+**Secrets:** the Circle API key (`API_KEY`, used for wallets and swap), `AUTH_SECRET`, `RESEND_API_KEY` and `COINGECKO_API` live only in Cloudflare Pages
 environment variables and are used exclusively from server-side Pages Functions
 (`functions/api/*`). They are never shipped to the browser.
 
@@ -27,13 +27,18 @@ output to the screen's estimate minus at most 0.5% (enforced on chain), and simu
 (`eth_simulateV1`); if the check or the simulation fails, nothing is sent for signing. The network fee shown is
 Circle's own estimate for that transaction.
 
+**Service hub (test site only):** Lending, Borrow and Memes run only on test.ezwallet.cash (the API answers `503`
+elsewhere) until real-money tests pass. They follow the same rule: one batch, simulated with `eth_simulateV1` before
+any PIN, refused if the simulation does not show the expected result (e.g. Borrow refuses unless the USDC arrives,
+the loan stays at ≤ 50% LTV and no Morpho authorization is left open; Memes refuses a token that cannot be sold back).
+
 ## Reporting a vulnerability
 
 Please **do not open a public issue** for security problems.
 
 - Preferred: GitHub → **Security → Report a vulnerability** (private advisory) on
   [this repository](https://github.com/KattyFury/project_arc_ezwallet/security/advisories/new).
-- Alternative: DM [@0xhieuxyz](https://x.com/0xhieuxyz) on X.
+- Alternative: email **support@ezwallet.cash** or DM [@0xhieuxyz](https://x.com/0xhieuxyz) on X.
 
 Please include what you did, what happened, and what you expected. Since this is a
 project maintained by one person, expect a reply in days rather than hours.
@@ -43,7 +48,8 @@ project maintained by one person, expect a reply in days rather than hours.
 Being explicit about what is *not* hardened yet:
 
 - **No audit.** The contract interactions (Arc Memo, Multicall3From, Circle Swap
-  Adapter) and the app itself have not been reviewed by a third party.
+  Adapter; on the test site also Morpho and Uniswap v4) and the app itself have not
+  been reviewed by a third party.
 - **Account identity is an email address.** Signing in sends a 6-digit code to that
   email (`/api/auth`); a Circle session is only minted for an email whose code was
   verified (`/api/session`). Circle's own email-OTP mode stays off because OTP/SSO

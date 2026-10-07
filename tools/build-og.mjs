@@ -18,7 +18,7 @@ const logo = 'data:image/svg+xml;base64,' + readFileSync(new URL('../design/logo
 
 const browser = await chromium.launch()
 
-// 1. A fresh HomeSend screenshot (mock data: USDC + EURC only).
+// 1. A fresh HomeSend screenshot (mock data: USDC, EURC, cirBTC + unverified tokens).
 const phone = await browser.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 3 })
 await phone.goto(`${APP}/?screen=HomeSend`)
 await phone.waitForTimeout(3000)
@@ -46,7 +46,7 @@ const html = `<!doctype html><html><head><meta charset="utf-8"><style>
 </style></head><body>
   <img class="logo" src="${logo}" alt="">
   <h1>A crypto wallet simple enough<br>for <span>my mom</span> to use.</h1>
-  <p>Send and receive USDC and EURC with an email and a 6-digit PIN.<br>No seed phrase – fees are paid in USDC on Arc.</p>
+  <p>Send, receive and swap USDC, EURC and cirBTC.<br>Email + 6-digit PIN. No seed phrase – fees paid in USDC.</p>
   <div class="pills"><div class="pill">Live on Arc Mainnet</div><div class="pill">Open source · MIT</div></div>
   <div class="url">ezwallet.cash</div>
   <div class="phone"><img src="${shot}" alt=""></div>

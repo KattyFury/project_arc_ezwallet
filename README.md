@@ -20,9 +20,10 @@
 <div align="center">
 <table>
 <tr>
-<td align="center" width="33%"><img src="docs/app-send.png" width="180" alt="Send"><br><sub>Balance & send</sub></td>
-<td align="center" width="33%"><img src="docs/app-receive.png" width="180" alt="Receive"><br><sub>Receive by QR</sub></td>
-<td align="center" width="33%"><img src="docs/app-withdraw.png" width="180" alt="Withdraw"><br><sub>Deposit & withdraw</sub></td>
+<td align="center" width="25%"><img src="docs/app-send.png" width="160" alt="Send"><br><sub>Balance & send</sub></td>
+<td align="center" width="25%"><img src="docs/app-receive.png" width="160" alt="Receive"><br><sub>Receive by QR</sub></td>
+<td align="center" width="25%"><img src="docs/app-exchange.png" width="160" alt="Exchange"><br><sub>Exchange</sub></td>
+<td align="center" width="25%"><img src="docs/app-withdraw.png" width="160" alt="Withdraw"><br><sub>Deposit & withdraw</sub></td>
 </tr>
 </table>
 </div>
@@ -67,15 +68,22 @@ ezwallet removes the crypto vocabulary from the surface:
 | | |
 |---|---|
 | 🔑 **Email + PIN login** | No seed phrase to write down or lose. Keys are held in Circle's MPC infrastructure; the PIN authorises every signature. |
-| 💸 **Send with a note** | Attach a short message to a transfer, so the receiver knows what the money is for. |
+| 💸 **Send with a note** | Attach a short message to a transfer, so the receiver knows what the money is for. The network fee is shown up front ("up to", Circle's own estimate). |
+| 🔄 **Auto-convert on send** | Sending dollars but short of USDC? The missing part is swapped from your EURC (then cirBTC) inside the same transaction – still one PIN. |
 | ⇅ **Deposit & withdraw** | Menu → Deposit shows your Arc address to top up from an exchange or another wallet; Withdraw sends to any Arc address. |
 | 📷 **Receive by QR** | Show a QR to get paid. Standard EVM format (EIP-681, with Arc's chain ID), so other wallets such as MetaMask can scan it. Optionally set an exact amount, name it, and keep it in a QR library for reuse. |
 | ⇄ **Exchange** | Swap between USDC, EURC and cirBTC. What you receive is never more than 0.5% below the amount shown (the minimum is enforced on chain, otherwise nothing is swapped); the network fee shown is Circle's estimate for that exact swap. No app fee. |
-| ❔ **Unverified tokens** | Tokens the app does not list (airdrops, meme coins) are shown separately, view only, with a yellow notice when one arrives – never counted in your balance. |
+| ❔ **Unverified tokens** | Tokens the app does not list (airdrops, meme coins) are shown separately with a yellow notice when one arrives – never counted in your balance. They can be sent on (clearly marked), but not swapped. |
 | 👥 **Contacts** | Save addresses under a name (with an avatar) so you never paste a raw `0x…` twice. |
 | 🧾 **History + receipts** | Full transaction history with per-transaction detail and a saveable receipt image. |
 | 🌐 **USD or EUR display** | Show balances in US dollars or euros. The underlying token (USDC or EURC) is always labelled honestly. |
 | 📣 **Notices from the team** | Short announcements (never with a link) appear in the app's notification area. |
+| 📄 **Terms, privacy, support** | Terms of Use and Privacy Policy are inside the app (Menu → About); support at **support@ezwallet.cash**. |
+
+**In testing** (only on [test.ezwallet.cash](https://test.ezwallet.cash), same mainnet, real money): a **Service hub**
+with *Lending* (earn interest on USDC/EURC in curated Morpho vaults), *Borrow* (USDC against cirBTC, kept at ≤ 50% LTV,
+with liquidation alerts by email) and *Memes* (buy/sell tokens launched on Argus, honeypot-checked by simulation first).
+They reach ezwallet.cash only after real-money tests pass.
 
 ## Tech stack
 
@@ -84,7 +92,9 @@ ezwallet removes the crypto vocabulary from the surface:
 | **Wallet** | [Circle User-Controlled Wallets](https://developers.circle.com/w3s/programmable-wallets) – MPC key management, PIN-based signing (`@circle-fin/w3s-pw-web-sdk`) |
 | **Chain** | [Arc](https://docs.arc.io) L1 mainnet (`chainId 5042`); **USDC is the native gas token** |
 | **Frontend** | React 18 + Vite 5, `viem` for on-chain reads, `qrcode.react` / `jsqr` for QR |
-| **Backend** | Cloudflare Pages + Pages Functions (`functions/api/*`) – keeps the Circle API key server-side |
+| **Backend** | Cloudflare Pages + Pages Functions (`functions/api/*`) – keeps the Circle API key server-side; KV for sign-in codes and the contacts backup |
+| **Swap / earn / borrow** | Circle Stablecoin Kits (quote + one-PIN batch through Multicall3), every batch simulated with `eth_simulateV1` before the PIN |
+| **Prices** | CoinGecko (cross-checked with Binance), cached 5 minutes – no price, no number (`…`) |
 
 Tokens: **USDC**, **EURC** and **cirBTC**. Transfer notes are written on-chain through Arc's
 predeployed Memo contract.
@@ -122,6 +132,7 @@ cp .env.example .env.txt      # .env.txt is gitignored
 | `API_KEY` | Circle LIVE API key: User-Controlled Wallets (login, PIN, send) and swap (Stablecoin Kit). `CIRCLE_API_KEY` also accepted. |
 | `AUTH_SECRET` | Signs the email-code sign-in tokens (any long random string). |
 | `RESEND_API_KEY` | Sends the 6-digit sign-in code and security emails ([Resend](https://resend.com)). |
+| `COINGECKO_API` | CoinGecko Demo key for `/api/prices` (EURC / cirBTC prices; Binance public data is the backup). |
 
 Sign-in codes and the contact backup also need a Cloudflare KV namespace bound as `EZ_SYNC`.
 

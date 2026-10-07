@@ -1,6 +1,6 @@
 # HANDOFF – ezwallet
 
-**Updated:** 2026-10-06 (Service hub: Lending live-tested, Memes + Borrow built LABS-only; legal pages; QR fixes) · **Repo:** `KattyFury/project_arc_ezwallet` (public; renamed from
+**Updated:** 2026-10-07 (docs + images refreshed to the current app; 2026-10-06: Service hub Lending live-tested, Memes + Borrow built LABS-only) · **Repo:** `KattyFury/project_arc_ezwallet` (public; renamed from
 `KattyFury/ezwallet` 2026-10-03 - Pages track it by repo id) · **Local:** `D:\Files\Claude\project_arc_ezwallet`
 **Status:** ezwallet.cash serves **Arc MAINNET** (real money). Target: public launch within October 2026.
 
@@ -15,6 +15,15 @@
 2. For each bug: measure read-only first, find the rule in the official docs, offer options - the owner picks.
 3. **Every change goes to BOTH branches** (owner, 2026-10-03): commit on `test`, then
    `git checkout main && git merge --ff-only test`, push both. Both Pages projects auto-deploy.
+
+## ▶ Session 2026-10-07 - docs/images clean-up (no app logic changed)
+- README / SECURITY / `.env.example` brought up to date: auto-convert, unverified tokens sendable, Terms/Privacy +
+  support@ezwallet.cash, the Service hub as "in testing (test site only)", `COINGECKO_API`.
+- Images re-shot from `npm run mock` at 390×844 @2x: `docs/app-send|receive|exchange|withdraw.png` (exchange is new;
+  README grid is now 4) and `public/og.png` rebuilt with `tools/build-og.mjs` (copy now mentions swap + cirBTC),
+  `og.png?v=7` + meta descriptions in `index.html`. Re-shoot the same way whenever Home/Send/Receive change.
+- Noticed, NOT changed (owner's call): the Withdraw popup text says "pick USDC or EURC" although cirBTC is also in its
+  picker.
 
 ## ▶ Session 2026-10-06 - where we stopped (READ THIS FIRST)
 **State of the Service hub (all LABS = test.ezwallet.cash + localhost only, `src/labs.js`):**
@@ -201,9 +210,6 @@ Secrets (Pages env, `.env.txt` locally): `API_KEY` (Circle LIVE - wallets + swap
 
 ---
 
-
----
-
 ## 3. Stack & infrastructure
 
 - **Frontend:** React + Vite → Cloudflare Pages. **Backend:** Pages Functions `functions/api/*.js` (Circle calls with
@@ -222,7 +228,7 @@ Secrets (Pages env, `.env.txt` locally): `API_KEY` (Circle LIVE - wallets + swap
   Circle SDK does not run on localhost → PIN/login only on a deploy (test.ezwallet.cash).
 - **Mock mode:** `npm run mock`; `?screen=<Name>` opens a screen directly. Playwright (not in package.json):
   `npm i --no-save playwright && npx playwright install chromium`. Screenshots for the owner go to the Desktop.
-- **Tools:** `tools/verify-swap.mjs` (read-only swap dry run), `tools/verify-convert.mjs` (read-only auto-convert send dry run), `tools/build-og.mjs`, `tools/figma-check.mjs`,
+- **Tools:** `tools/verify-swap.mjs` (read-only swap dry run), `tools/verify-convert.mjs` (read-only auto-convert send dry run), `tools/verify-earn.mjs` (read-only Lending dry run), `tools/build-og.mjs` (needs `npm run mock` running), `tools/figma-check.mjs`,
   `tools/update-disposable-domains.mjs`.
 - **Tests / CI:** `npm test` (node:test, `test/*.test.mjs`); `.github/workflows/ci.yml` runs tests + build on `main`.
 - **KV backup of contacts + QR library:** `functions/api/sync.js` + `src/sync.js` (PIN-signature auth, avatars never
