@@ -22,8 +22,17 @@
 - Images re-shot from `npm run mock` at 390×844 @2x: `docs/app-send|receive|exchange|withdraw.png` (exchange is new;
   README grid is now 4) and `public/og.png` rebuilt with `tools/build-og.mjs` (copy now mentions swap + cirBTC),
   `og.png?v=7` + meta descriptions in `index.html`. Re-shoot the same way whenever Home/Send/Receive change.
-- Noticed, NOT changed (owner's call): the Withdraw popup text says "pick USDC or EURC" although cirBTC is also in its
-  picker.
+- Deposit/Withdraw popups fixed (BOTH branches): Deposit names USDC/EURC/cirBTC, Withdraw explains the token tap,
+  balance in Send's short form (was toFixed(2) → a small cirBTC balance read 0.02).
+- **Lag investigation (owner: "the app feels laggy"), measured:** rendering is NOT the problem (tab switch 20-60 ms
+  with 4x CPU throttling, no long tasks; first load 155 KB). Cloudflare ~0.3 s from VN (HKG/SIN). Circle calls
+  ~0.4-0.7 s each, and every PIN action chained them: refreshSession ALWAYS minted a token = /api/session → Circle
+  POST /users (155101 every time) → POST /users/token, then the action; the post-send status poll minted again.
+- **Fix e72ff9e - ON `test` ONLY, owner must try it on the phone (unlock, send, swap) before `merge --ff-only` to main:**
+  token reuse < 50 min (`ez_user_token_at`; minting does not invalidate older tokens - measured on sandbox), session.js
+  token-first / create on 155102 (`test/session.test.mjs`), PinGate parallel SDK + nonce + token, shared getSDK and
+  /api/prices promises. Not done yet (ideas): each tab switch re-reads balances/history (remount), Circle `balances`
+  for unverified tokens on every Home open.
 
 ## ▶ Session 2026-10-06 - where we stopped (READ THIS FIRST)
 **State of the Service hub (all LABS = test.ezwallet.cash + localhost only, `src/labs.js`):**
