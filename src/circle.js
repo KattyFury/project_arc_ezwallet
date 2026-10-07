@@ -21,13 +21,16 @@ async function loadW3SSdk() {
 // ⚠️ ASYNC (changed 2026-07-17 when the SDK became lazy) - EVERY call site MUST `await getSDK()`.
 // Forgetting the await → a Promise is passed where the real SDK is expected → the PIN dies silently. All 6 call sites were fixed:
 // EnterEmail(×3), PinGate, Security, SendConfirm, Swap.
+// The PROMISE is shared, so two overlapping callers (PinGate now starts it early, 2026-10-07) get ONE W3SSdk
+// instance, never two. A failed download is forgotten so the next call tries again.
+let sdkP = null
 export async function getSDK() {
   if (MOCK) return {}   // mock: do not init the real SDK
-  if (!sdk) {
-    const W3SSdk = await loadW3SSdk()
-    sdk = new W3SSdk({ appSettings: { appId: NET.circleAppId } })
-  }
-  return sdk
+  if (sdk) return sdk
+  if (!sdkP) sdkP = loadW3SSdk()
+    .then(W3SSdk => (sdk = new W3SSdk({ appSettings: { appId: NET.circleAppId } })))
+    .catch(e => { sdkP = null; throw e })
+  return sdkP
 }
 
 export const GOOGLE_CLIENT_ID = '51031114717-f9chve1ge9bbo8j3kspj82qrga40342n.apps.googleusercontent.com'
@@ -72,7 +75,7 @@ export async function verifyEmailCode(email, code) {
 }
 
 // Every session key a sign-out removes. One list, shared by every sign-out path.
-export const SESSION_KEYS = ['ez_user_token', 'ez_wallet_addr', 'ez_wallet_id', 'ez_encryption_key', 'ez_email', 'ez_auth_token', 'ez_refresh_token', 'ez_google_email', 'ez_login_method']
+export const SESSION_KEYS = ['ez_user_token', 'ez_user_token_at', 'ez_wallet_addr', 'ez_wallet_id', 'ez_encryption_key', 'ez_email', 'ez_auth_token', 'ez_refresh_token', 'ez_google_email', 'ez_login_method']
 
 // The auth token is missing/expired (30 days, or a session from before the email code existed) → back to Login.
 function expireToLogin() {
@@ -209,10 +212,22 @@ export async function refreshSocialToken(userToken, refreshToken, deviceId) {
   return data   // { userToken, encryptionKey, refreshToken }
 }
 
+// A token THIS module minted less than 50' ago is reused as is (Circle OpenAPI: "The token will expire after 60
+// minutes"). Lag fix 2026-10-07: every PIN action (unlock, send, swap, the post-send status poll) used to mint a new
+// token first = a server round trip + Circle calls (~1-1.5s measured) even with a fresh token in hand. 10' of margin;
+// a token that dies anyway is still caught by the 155104 → forceFreshSession() retry every caller already has.
+const TOKEN_REUSE_MS = 50 * 60 * 1000
+function storeUserToken(userToken) {
+  localStorage.setItem('ez_user_token', userToken)
+  localStorage.setItem('ez_user_token_at', String(Date.now()))
+}
+
 export async function refreshSession() {
   if (MOCK) return { userToken: 'mock-token', encryptionKey: 'mock-key' }
   const email = localStorage.getItem('ez_email')
   const fallback = { userToken: localStorage.getItem('ez_user_token'), encryptionKey: localStorage.getItem('ez_encryption_key') }
+  const mintedAt = Number(localStorage.getItem('ez_user_token_at') || 0)
+  if (fallback.userToken && fallback.encryptionKey && Date.now() - mintedAt < TOKEN_REUSE_MS) return fallback
 
   // EMAIL flow: mint a new token with the stored auth token (proof of email ownership, 30 days).
   if (email) {
@@ -220,7 +235,7 @@ export async function refreshSession() {
     if (!authToken) { expireToLogin(); return fallback }   // a session from before the email code existed
     try {
       const { userToken, encryptionKey } = await createSession(authToken)
-      localStorage.setItem('ez_user_token', userToken)
+      storeUserToken(userToken)
       localStorage.setItem('ez_encryption_key', encryptionKey)
       return { userToken, encryptionKey }
     } catch (e) {
@@ -238,7 +253,7 @@ export async function refreshSession() {
     try {
       const r = await refreshSocialToken(fallback.userToken, refreshToken, deviceId)
       if (r?.userToken) {
-        localStorage.setItem('ez_user_token', r.userToken)
+        storeUserToken(r.userToken)
         if (r.encryptionKey) localStorage.setItem('ez_encryption_key', r.encryptionKey)
         if (r.refreshToken) localStorage.setItem('ez_refresh_token', r.refreshToken)  // Circle rotates it → store the new one
         return { userToken: r.userToken, encryptionKey: r.encryptionKey || fallback.encryptionKey }
@@ -270,7 +285,7 @@ export async function forceFreshSession() {
     if (r.refreshToken) localStorage.setItem('ez_refresh_token', r.refreshToken)
     s = { userToken: r.userToken, encryptionKey: r.encryptionKey }
   }
-  localStorage.setItem('ez_user_token', s.userToken)
+  storeUserToken(s.userToken)
   localStorage.setItem('ez_encryption_key', s.encryptionKey)
   return s
 }

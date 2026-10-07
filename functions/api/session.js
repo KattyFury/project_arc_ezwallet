@@ -95,20 +95,27 @@ export async function onRequestPost(ctx) {
 
   const userId = email;
 
-  // 201 = created just now (409 / code 155101 = already existed - verified live 2026-09-29) → security mail #1.
-  const created = await circlePost('/users', { userId }, apiKey);
-  if (!created?.code && created?.data) {
-    let label = 'Arc';
-    try { label = netFrom(ctx).label; } catch {}
-    inBackground(ctx, sendSecurityMail(ctx.env, { kind: 'created', email, netLabel: label }));
-  } else if (created?.code !== 155101) {
-    // Creating the user failed for a reason other than "already exists" - stop here with Circle's own message
-    // instead of going on to /users/token, which would only report "Cannot find the userId".
-    console.error('[session] create user failed:', JSON.stringify(created));
-    return new Response(JSON.stringify({ error: `Could not create the account: ${created?.message || 'unknown error'} (code ${created?.code ?? '?'})` }), { status: 400, headers: JSON_HEADERS_BASE });
+  // Lag fix 2026-10-07: ask for the token FIRST - a returning user (almost every call) now costs ONE Circle call
+  // instead of two (POST /users answered 155101 "already exists" on every sign-in/refresh). Only when Circle does not
+  // know the userId (code 155102 "Cannot find the userId in the system.", measured live 2026-10-07) is the user
+  // created, then the token asked for again.
+  let created = null;
+  let tokenData = await circlePost('/users/token', { userId }, apiKey);
+  if (tokenData.code === 155102) {
+    // 201 = created just now (409 / code 155101 = already existed - verified live 2026-09-29) → security mail #1.
+    created = await circlePost('/users', { userId }, apiKey);
+    if (!created?.code && created?.data) {
+      let label = 'Arc';
+      try { label = netFrom(ctx).label; } catch {}
+      inBackground(ctx, sendSecurityMail(ctx.env, { kind: 'created', email, netLabel: label }));
+    } else if (created?.code !== 155101) {
+      // Creating the user failed for a reason other than "already exists" - stop here with Circle's own message
+      // instead of going on to /users/token, which would only report "Cannot find the userId".
+      console.error('[session] create user failed:', JSON.stringify(created));
+      return new Response(JSON.stringify({ error: `Could not create the account: ${created?.message || 'unknown error'} (code ${created?.code ?? '?'})` }), { status: 400, headers: JSON_HEADERS_BASE });
+    }
+    tokenData = await circlePost('/users/token', { userId }, apiKey);
   }
-
-  const tokenData = await circlePost('/users/token', { userId }, apiKey);
 
   if (tokenData.code) {
     // Evidence for Circle support (2026-10-01 case: a userId that exists on testnet is neither created nor found on
@@ -116,7 +123,7 @@ export async function onRequestPost(ctx) {
     // communicating with Circle support"). Logged only on this failure, so normal sign-ins log nothing.
     console.error('[session] token failed', JSON.stringify({
       network: (() => { try { return netFrom(ctx).key; } catch { return '?'; } })(),
-      createUser: { status: created._status, requestId: created._requestId, code: created.code ?? null, message: created.message ?? null },
+      createUser: created ? { status: created._status, requestId: created._requestId, code: created.code ?? null, message: created.message ?? null } : 'not needed',
       userToken: { status: tokenData._status, requestId: tokenData._requestId, code: tokenData.code, message: tokenData.message },
     }));
     return new Response(JSON.stringify({ error: tokenData.message }), { status: 400 });

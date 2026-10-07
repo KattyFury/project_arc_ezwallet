@@ -68,8 +68,15 @@ export function cachedBalances(addr) {
 }
 export function cachedRates() { return MOCK ? MOCK_RATES : _ratesCache }
 
-async function fetchPrices() {
-  if (Date.now() - lastFetch < 60000) return priceCache
+// Callers that arrive while a fetch is in flight share it (2026-10-07: opening Home fired /api/prices up to 4 times at
+// once - getTokenBalances + getDisplayRates' three lookups - each a server round trip).
+let pricesInFlight = null
+function fetchPrices() {
+  if (Date.now() - lastFetch < 60000) return Promise.resolve(priceCache)
+  if (!pricesInFlight) pricesInFlight = fetchPricesNow().finally(() => { pricesInFlight = null })
+  return pricesInFlight
+}
+async function fetchPricesNow() {
   try {
     // Our own /api/prices (functions/api/prices.js): CoinGecko with the Demo key, cross-checked against Binance,
     // cached 5 min server-side for everyone (owner decision 2026-10-03). The browser no longer calls CoinGecko.

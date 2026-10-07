@@ -17,16 +17,21 @@ export default function PinGate() {
   // One unlock round: get a token → create a challenge signing an empty message → open the Circle PIN. forceFresh=true =
   // FORCE minting a new token (used when the previous round hit 155104 "token expired").
   async function attemptUnlock(forceFresh) {
-    const { userToken, encryptionKey } = forceFresh ? await forceFreshSession() : await refreshSession()
-    const walletId = localStorage.getItem('ez_wallet_id')
+    // Lag fix 2026-10-07: the token, the backup nonce and the ~1MB Circle SDK are independent → fetched IN PARALLEL
+    // (they used to run one after the other, each waiting for the previous network round trip).
+    const sdkP = getSDK()
+    sdkP.catch(() => {})   // its error surfaces at the await below, not as an unhandled rejection
     // Ask for the nonce BEFORE signing: this single PIN round both unlocks the app and opens the contacts backup session
     // (PIN-signature auth - see functions/api/sync.js). The user NEVER has to enter the PIN a second time.
     // No nonce (KV not enabled / slow network / error) → sign the default sentence, the app opens as usual.
-    const sync = await import('../sync')
+    const syncP = import('../sync')
       .then(async s => ({ s, m: await s.prepareUnlockMessage() }))
       .catch(() => null)
+    const { userToken, encryptionKey } = forceFresh ? await forceFreshSession() : await refreshSession()
+    const walletId = localStorage.getItem('ez_wallet_id')
+    const sync = await syncP
     const challengeId = await signMessageChallenge(userToken, walletId, sync?.m?.message)
-    const sdk = await getSDK()
+    const sdk = await sdkP
     // Circle's own "Forgot PIN" button lives INSIDE its PIN iframe (EnterPincode screen) - it does nothing unless
     // a callback is registered (Circle's docs warn: unregistered, the click has no effect). true = close Circle's
     // modal first so ours (ForgotPin.jsx) isn't fighting a leftover iframe on top of it.
