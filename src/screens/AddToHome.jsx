@@ -62,87 +62,81 @@ export default function AddToHome() {
         Skip →
       </button>
 
-      {/* Logo - node 48:352: 81.643x70 at y=172, horizontally centred. The BLUE mark (design/logo-icon.svg);
-          the white variant the user also supplied would be invisible on this screen's white half. */}
-      <img
-        src={logoIcon} alt=""
-        style={{
-          position: 'absolute', left: '50%', top: '20.38dvh', transform: 'translateX(-50%)',
-          width: '20.93%', height: '8.29dvh',
-        }} />
-
-      {/* Title - node 48:356: 20px semibold, line-height 30, centred on (195, 275.5). */}
+      {/* THE CONTENT IS ONE BLOCK, centred on the screen (owner 2026-10-20). Top group (logo, title, sub-title),
+          the steps box and the share sheet sit 24 apart (space-24); inside the top group logo→title 16, title→
+          sub-title 8. The steps box grows with its text (padding 16) instead of a fixed 70px height. Skip and the
+          down arrow stay where they were. */}
       <div style={{
-        position: 'absolute', left: '50%', top: '32.64dvh', transform: 'translate(-50%, -50%)',
-        width: 'var(--cw)', textAlign: 'center',
-        fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)',
+        position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
+        alignItems: 'center', justifyContent: 'center', gap: 'calc(24 * var(--u))', pointerEvents: 'none',
       }}>
-        <Ez /> works best as an app
-      </div>
-
-      {/* Sub-title - node 48:357: 16px regular, line-height 24, centred on (195, 310.5). */}
-      <div style={{
-        position: 'absolute', left: '50%', top: '36.79dvh', transform: 'translate(-50%, -50%)',
-        width: 'var(--cw)', textAlign: 'center',
-        fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-normal)', color: 'var(--color-black)',
-      }}>
-        Add <Ez /> to your home screen:
-      </div>
-
-      {/* The two steps - box node 48:359 (340x70 @ 25,344, radius 8, #ECF0F8) with the list node 48:374
-          sitting on top of it (18px semibold, line-height 32, 324 wide). One element here, not two:
-          the box exists only to hold the list, so the list IS the box's content. */}
-      <ol style={{
-        position: 'absolute', left: 'var(--m)', top: '40.76dvh',
-        width: 'var(--cw)', height: '8.29dvh',
-        background: '#ECF0F8', borderRadius: 16,
-        display: 'flex', flexDirection: 'column', justifyContent: 'center',
-        listStyle: 'decimal', listStylePosition: 'inside',
-        fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)', textAlign: 'center',
-      }}>
-        <li>Tap Options, then tap Share</li>
-        <li>Tap Add to Home Screen</li>
-      </ol>
-
-      {/* The fake iOS share sheet - node 48:358: 274x242 @ (58,430), white, 1px brand border, radius 16.
-          Inside it, five evenly-split rows separated by hairlines - the hairlines are blurred TOO
-          (Figma bakes a gaussian filter into the divider asset itself, `filter0_f_0_4`). The user's
-          rule, 2026-09-23: the blur is deliberate and ONLY the "Add to Home Screen" row and its icon
-          stay sharp. Everything else on this picture - text, icons, rules - is soft.
-          The rows are laid out with flex rather
-          than five absolute coordinates: they are one repeated object, and Figma's own y values for them
-          (29.3 / 76.0 / 121.5 / 167.1 / 212.7 from the box top) are an even 45.6px step. */}
-      <div style={{
-        position: 'absolute', left: '14.87%', top: '50.95dvh',
-        width: '70.26%', height: '28.67dvh',
-        background: 'var(--color-white)', border: '1px solid var(--color-brand)', borderRadius: 16,
-        padding: 'calc(5 * var(--u)) 0', display: 'flex', flexDirection: 'column', overflow: 'hidden',
-      }}>
-        {SHEET_ROWS.map((row, i) => (
-          <div key={row.label} style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-            {/* Hairline ABOVE every row but the first - node 48:368/369/372/373: #8B95A8, and inset to
-                start at the TEXT, not at the icon, exactly as a real iOS menu draws it. */}
-            {i > 0 && (
-              <div style={{
-                height: 0.5, background: 'var(--color-muted)',   // 0.5px muted hairline (app rule 2026-09-27)
-                marginLeft: '18.04%', marginRight: '7.86%',
-                filter: 'blur(2px)',
-              }} />
-            )}
-            <div style={{
-              flex: 1, display: 'flex', alignItems: 'center',
-              paddingLeft: '7.54%', gap: '3.19%',
-              filter: row.blur ? 'blur(2px)' : 'none',
-            }}>
-              {/* Figma draws a flat 20x20 blue SQUARE at each of these (nodes 48:361/363/365/367/371).
-                  The user settled what they mean on 2026-09-23: they are PLACEHOLDERS - "vào thư viện
-                  icon, tìm cái tương tự rồi add vào" - so each one carries the icon iOS actually draws
-                  on that row, matched against the user's screenshot of the real share sheet. */}
-              <Icon name={row.icon} size="calc(20 * var(--u))" color="var(--color-brand)" />
-              <span style={{ fontSize: 'var(--fs-small)', color: 'var(--color-brand)', whiteSpace: 'nowrap' }}>{row.label}</span>
-            </div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: 'var(--cw)', textAlign: 'center' }}>
+          {/* Logo - the BLUE mark (design/logo-icon.svg); the white variant would vanish on the white half. */}
+          <img src={logoIcon} alt="" style={{ width: 'calc(82 * var(--u))', height: 'calc(70 * var(--u))' }} />
+          <div style={{
+            marginTop: 'calc(16 * var(--u))',
+            fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)',
+          }}>
+            <Ez /> works best as an app
           </div>
-        ))}
+          <div style={{
+            marginTop: 'calc(8 * var(--u))',
+            fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-normal)', color: 'var(--color-black)',
+          }}>
+            Add <Ez /> to your home screen:
+          </div>
+        </div>
+
+        {/* The two steps: the grey box holds the list and grows with it. */}
+        <ol style={{
+          width: 'var(--cw)', padding: 'calc(16 * var(--u))', margin: 0,
+          background: 'var(--color-card)', borderRadius: 16,
+          listStyle: 'decimal', listStylePosition: 'inside',
+          fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)', textAlign: 'center',
+        }}>
+          <li>Tap Options, then tap Share</li>
+          <li>Tap Add to Home Screen</li>
+        </ol>
+
+        {/* The fake iOS share sheet - node 48:358: 274x242 @ (58,430), white, 1px brand border, radius 16.
+            Inside it, five evenly-split rows separated by hairlines - the hairlines are blurred TOO
+            (Figma bakes a gaussian filter into the divider asset itself, `filter0_f_0_4`). The user's
+            rule, 2026-09-23: the blur is deliberate and ONLY the "Add to Home Screen" row and its icon
+            stay sharp. Everything else on this picture - text, icons, rules - is soft.
+            The rows are laid out with flex rather
+            than five absolute coordinates: they are one repeated object, and Figma's own y values for them
+            (29.3 / 76.0 / 121.5 / 167.1 / 212.7 from the box top) are an even 45.6px step. */}
+        <div style={{
+          width: '70.26%', height: '28.67dvh', flexShrink: 0,
+          background: 'var(--color-white)', border: '1px solid var(--color-brand)', borderRadius: 16,
+          padding: 'calc(5 * var(--u)) 0', display: 'flex', flexDirection: 'column', overflow: 'hidden',
+        }}>
+          {SHEET_ROWS.map((row, i) => (
+            <div key={row.label} style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+              {/* Hairline ABOVE every row but the first - node 48:368/369/372/373: #8B95A8, and inset to
+                  start at the TEXT, not at the icon, exactly as a real iOS menu draws it. */}
+              {i > 0 && (
+                <div style={{
+                  height: 0.5, background: 'var(--color-muted)',   // 0.5px muted hairline (app rule 2026-09-27)
+                  marginLeft: '18.04%', marginRight: '7.86%',
+                  filter: 'blur(2px)',
+                }} />
+              )}
+              <div style={{
+                flex: 1, display: 'flex', alignItems: 'center',
+                paddingLeft: '7.54%', gap: '3.19%',
+                filter: row.blur ? 'blur(2px)' : 'none',
+              }}>
+                {/* Figma draws a flat 20x20 blue SQUARE at each of these (nodes 48:361/363/365/367/371).
+                    The user settled what they mean on 2026-09-23: they are PLACEHOLDERS - "vào thư viện
+                    icon, tìm cái tương tự rồi add vào" - so each one carries the icon iOS actually draws
+                    on that row, matched against the user's screenshot of the real share sheet. */}
+                <Icon name={row.icon} size="calc(20 * var(--u))" color="var(--color-brand)" />
+                <span style={{ fontSize: 'var(--fs-small)', color: 'var(--color-brand)', whiteSpace: 'nowrap' }}>{row.label}</span>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* The arrow pointing down at the browser's own Share button - node 52:26: 40x45.94, white,
