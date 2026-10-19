@@ -295,7 +295,7 @@ export default function SendAmount() {
 
       {/* Message row - node 1:101/1:103: top 42.57dvh, input 40 tall / radius 8 (Figma-specific overrides
           on the shared .address-input class, which defaults to --color-surface/radius 10). Background
-          overridden to #F1F4FA (var(--color-card)) here - node 58:413 draws this exact colour, matching
+          overridden to #ECF0F8 (var(--color-card)) here - node 58:413 draws this exact colour, matching
           the "You send"/"To" cards above it (user decision 2026-09-24: all 4 grey boxes on this screen
           should read as ONE colour, they were drifting - surface/card/surface-2 are 3 different tokens). */}
       <div style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '42.57dvh', display: 'flex', alignItems: 'center', gap: 'calc(8 * var(--u))', minWidth: 0 }}>

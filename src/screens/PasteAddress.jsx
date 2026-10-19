@@ -43,7 +43,7 @@ export default function PasteAddress() {
       <ScreenSheet />
       <div className="sheet-title">Paste address to send</div>
 
-      {/* Input - node 58:286/58:287: card grey (#F1F4FA), centre 24.4dvh, height 40, radius 8. */}
+      {/* Input - node 58:286/58:287: card grey (#ECF0F8), centre 24.4dvh, height 40, radius 8. */}
       <div style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '24.4dvh', transform: 'translateY(-50%)' }}>
         <input
           className={`address-input${showError ? ' error' : ''}`}

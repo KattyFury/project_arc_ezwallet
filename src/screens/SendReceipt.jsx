@@ -85,7 +85,7 @@ export default function SendReceipt() {
     const row = (label, val) => {
       x.textAlign = 'left'; x.fillStyle = '#4B5568'; x.font = '22px sans-serif'; x.fillText(label, 50, yy)
       x.textAlign = 'right'; x.fillStyle = '#000000'; x.font = '500 22px sans-serif'; x.fillText(val, W - 50, yy)
-      x.strokeStyle = '#F1F4FA'; x.lineWidth = 1; x.beginPath(); x.moveTo(50, yy + 22); x.lineTo(W - 50, yy + 22); x.stroke()
+      x.strokeStyle = '#ECF0F8'; x.lineWidth = 1; x.beginPath(); x.moveTo(50, yy + 22); x.lineTo(W - 50, yy + 22); x.stroke()
       yy += 60
     }
     row('Send to', to)

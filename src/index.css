@@ -26,7 +26,7 @@
 
   /* ── 2026-10-19 REDESIGN (owner, TEST BRANCH ONLY): colours, shadow and buttons follow the nguyen0xhieu design
      system (Figma IPyKVg7ylGw1mjMRyYVrL7 / claude.ai artifact Rvs7H37zwuUdb8uBGf5rtM): 0x Blue #1E6DF7, grey #4B5568,
-     muted #8B95A8, mist #F1F4FA, green/red *-text values for words, yellow #F5B301, ONE shadow (--shadow-y2),
+     muted #8B95A8, mist #ECF0F8, green/red *-text values for words, yellow #F5B301, ONE shadow (--shadow-y2),
      solid buttons. Layout, grid and type scale unchanged. The notes below are older history. */
   --shadow-y2: 0 2px 8px rgba(0, 0, 0, 0.32);
   /* Side margin 16 (nguyen0xhieu system, owner 2026-10-19; was 6.41% = 25px of the 390 Figma). --cw = the card width
@@ -76,7 +76,7 @@
   /* The 2026-09-23 redesign's card fill - DARKER than --color-surface above. Every card on the
      gradient screens (token list, notifications, the Add steps box, the Login PIN cells, the email
      field) is this one value, straight off the Figma frames. */
-  --color-card:         #F1F4FA;
+  --color-card:         #ECF0F8;   /* mist, one step darker (owner 2026-10-20, was #F1F4FA) */
   /* ONE grey app-wide (user decision 2026-09-27: "toàn bộ màu xám trong thiết kế là một"): the old
      recessed-box grey #E1E7ED is retired - --color-surface is now just an alias of --color-card, so every
      input/memo/popup field/Swap card that still says --color-surface renders the same #D2DCE6. */

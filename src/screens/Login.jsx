@@ -199,7 +199,7 @@ export default function Login() {
         <span style={{ color: 'var(--color-muted-2)' }}>That&apos;s the whole wallet.</span>
       </h1>
 
-      {/* THE SIX PIN CELLS - nodes 49:453..49:462 (the 50x70 #F1F4FA boxes, radius 8, at x = 25, 83,
+      {/* THE SIX PIN CELLS - nodes 49:453..49:462 (the 50x70 #ECF0F8 boxes, radius 8, at x = 25, 83,
           141, 199, 257, 315 - an even 58px step, i.e. 50 wide with an 8px gap) and 50:490..50:497 (the
           10px black dots). The dot is drawn INSIDE its cell rather than at its own absolute coordinate:
           Figma puts each dot exactly at the cell's centre, so nesting them is the same geometry with
@@ -208,7 +208,7 @@ export default function Login() {
         <div key={i} aria-hidden="true" style={{
           position: 'absolute', left: `calc(var(--m) + ${i} * ((var(--cw) - 40 * var(--u)) / 6 + 8 * var(--u)))`, top: '30.57dvh',
           width: 'calc((var(--cw) - 40 * var(--u)) / 6)', height: '8.29dvh',
-          background: '#F1F4FA', borderRadius: 16,
+          background: '#ECF0F8', borderRadius: 16,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}>
           <span style={{ width: 'calc(10 * var(--u))', height: 'calc(10 * var(--u))', borderRadius: '50%', background: 'var(--color-black)' }} />

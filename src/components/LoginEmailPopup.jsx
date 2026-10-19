@@ -224,7 +224,7 @@ export default function LoginEmailPopup({ onClose }) {
         {step === 'email' ? 'Log in with email' : 'Enter the code'}
       </div>
 
-      {/* The email field - node 1:200: 307.96x40 centred at x=195, top edge y=186, radius 8, #F1F4FA,
+      {/* The email field - node 1:200: 307.96x40 centred at x=195, top edge y=186, radius 8, #ECF0F8,
           with an 18px #8B95A8 placeholder (node 1:202). */}
       <input
         key={step}
@@ -243,7 +243,7 @@ export default function LoginEmailPopup({ onClose }) {
         style={{
           position: 'absolute', left: '50%', top: '22.04dvh', transform: 'translateX(-50%)',
           width: 'calc(var(--cw) - 32 * var(--u))', height: 'var(--input-h)',
-          background: '#F1F4FA', border: 'none', borderRadius: 16,
+          background: '#ECF0F8', border: 'none', borderRadius: 16,
           // The browser draws a BLACK FOCUS RING on an autofocused input. The design has no such line
           // anywhere, so it read as a drawing mistake rather than as focus. Killed here, not app-wide.
           outline: 'none',

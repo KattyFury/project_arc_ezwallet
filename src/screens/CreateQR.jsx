@@ -78,7 +78,7 @@ export default function CreateQR() {
       <div className="sheet-title">{fromLibrary ? 'Add to QR storage' : 'Create QR'}</div>
 
       {/* "You receive" card - node 18:84: rows 3-4 (340x156, top 20.38dvh, radius 16 - ONE row lower than
-          Send money's "You send" card). Colour #F1F4FA (var(--color-card)), matching every other card in
+          Send money's "You send" card). Colour #ECF0F8 (var(--color-card)), matching every other card in
           this redesign. */}
       <div style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: at(20.38), height: '18.48dvh', background: 'var(--color-card)', borderRadius: 16 }} />
 

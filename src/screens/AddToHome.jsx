@@ -89,13 +89,13 @@ export default function AddToHome() {
         Add <Ez />wallet to your home screen:
       </div>
 
-      {/* The two steps - box node 48:359 (340x70 @ 25,344, radius 8, #F1F4FA) with the list node 48:374
+      {/* The two steps - box node 48:359 (340x70 @ 25,344, radius 8, #ECF0F8) with the list node 48:374
           sitting on top of it (18px semibold, line-height 32, 324 wide). One element here, not two:
           the box exists only to hold the list, so the list IS the box's content. */}
       <ol style={{
         position: 'absolute', left: 'var(--m)', top: '40.76dvh',
         width: 'var(--cw)', height: '8.29dvh',
-        background: '#F1F4FA', borderRadius: 16,
+        background: '#ECF0F8', borderRadius: 16,
         display: 'flex', flexDirection: 'column', justifyContent: 'center',
         listStyle: 'decimal', listStylePosition: 'inside',
         fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', lineHeight: 'calc(32 * var(--u))',

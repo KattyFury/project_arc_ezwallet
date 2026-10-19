@@ -49,6 +49,9 @@
   (`calc(var(--m) + N * var(--u))`); Home's 100|124|100 action row, Menu's two buttons, Login's PIN cells and the email
   popup buttons are recomputed from `--cw`. Send money's arrow circle between the two cards is gone. All screens
   re-shot at 393×852: Desktop `ezwallet-redesign-test	at-ca-man-le-16\` (PinGate/ForgotPin can't render in mock).
+- **2026-10-20: mist one step darker** (owner): `#F1F4FA` → `#ECF0F8` (same hue, lightness 96% → 95%; grey text 6.6:1,
+  disabled Line button still 1.13:1 on it). Light theme only; synced in the design-system artifact + Figma style
+  `Light/Surface/Mist`. Still TEST ONLY.
 - Not changed yet: raster PNGs (icon.png, fav_icon.png, og.png still old blue), numpad `.disabled` still uses opacity,
   Swap's confirm pulse opacity. Screenshots: owner's Desktop `ezwallet-redesign-test\`.
 

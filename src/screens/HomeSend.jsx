@@ -139,7 +139,7 @@ export default function HomeSend() {
   //
   // What changed from the pre-redesign screen, so nobody "restores" it by accident:
   //   - the ground is the brand GRADIENT, not white;
-  //   - the cards are #F1F4FA (--color-card), darker than the old --color-surface;
+  //   - the cards are #ECF0F8 (--color-card), darker than the old --color-surface;
   //   - each token is a 308x40 RADIUS-8 white row on a 48px step, not a 48-tall radius-16 card;
   //   - the action pills are radius-16 rectangles, not the old 28/32 ovals;
   //   - the NavBar has no bar at all any more (see NavBar.jsx).
