@@ -266,15 +266,7 @@ export default function SendAmount() {
         </span>
       </div>
 
-      {/* Connector circle - node 1:100: icon is "down" (down.svg) per the user directly - the raw Figma
-          export shows this node with no icon layer (flattened out of the node list, the same class of
-          miss HANDOFF §2.1 already documents for the Menu dividers/NavBar cell), not actually blank. NOT
-          clickable (2026-09-08 decision: same component slot as Swap's reverse button, but nothing to
-          reverse on a one-way send). Sits at the literal midpoint of the gutter between the two cards
-          (29.62dvh) - the SAME value Swap's own reverse button uses for the identical rule. */}
-      <div aria-hidden style={{ position: 'absolute', left: '50%', top: '29.62dvh', transform: 'translate(-50%, -50%)', zIndex: 3, width: 'calc(50 * var(--u))', height: 'calc(50 * var(--u))', borderRadius: '50%', background: 'var(--grad-brand)', boxShadow: 'var(--shadow-y2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <Icon name="down" size="var(--is-num)" color="var(--color-white)" />
-      </div>
+      {/* No connector circle between "You send" and "To" (owner 2026-10-19: removed). */}
 
       {/* "To" card - node 1:91: row 4 (340x70, top 30.57dvh). "To:" 18px + the name 22px, both semibold. */}
       <div style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '30.57dvh', height: '8.29dvh', background: 'var(--color-card)', borderRadius: 16, display: 'flex', alignItems: 'center', padding: '0 calc(8 * var(--u))', minWidth: 0 }}>
