@@ -22,7 +22,7 @@
   400 "API parameter invalid" (the owner hit it on the phone). `fetchExecution` now sends one.
 - `node tools/verify-borrow.mjs <wallet> [amount]` = read-only dry run. On the owner's wallet: **1 USDC PASS** (needs
   0.00002433 cirBTC at the 50% rule, liquidation ≈ $47.8k); 2 USDC needs 0.00004865 → Circle 380609 (not enough collateral).
-- NEXT: owner borrows 1 USDC on test.ezwallet.cash, alerts on, "Repay all & close". Lag fix e72ff9e still test-only.
+- NEXT: owner borrows 1 USDC on test.ezwallet.cash, alerts on, "Repay all & close". Lag fix e72ff9e pushed to main too (owner 2026-10-19, before testing it) - both branches equal again.
 
 ## ▶ Session 2026-10-07 - docs/images clean-up (no app logic changed)
 - README / SECURITY / `.env.example` brought up to date: auto-convert, unverified tokens sendable, Terms/Privacy +
