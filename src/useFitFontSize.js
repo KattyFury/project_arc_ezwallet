@@ -23,9 +23,14 @@ function designScale() {
   return f > 0 && f <= 1 ? f : 1
 }
 
+// 2026-10-20 (owner): the size STEPS through the design-system scale instead of any pixel value in between, and
+// the paired line height comes back with it (same pairs as the --fs-*/--lh-* tokens in index.css).
+export const FIT_SCALE = [14, 16, 18, 22, 28, 34, 48]
+const FIT_LINE = { 14: 20, 16: 24, 18: 24, 22: 28, 28: 36, 34: 40, 48: 56 }
+
 export function useFitFontSize(text, { max = 52, min = 16, weight = 300, family = 'Barlow, sans-serif', buffer = 4 } = {}) {
   const ref = useRef(null)
-  const [size, setSize] = useState(max)
+  const [fit, setFit] = useState({ step: max, f: 1 })
 
   useLayoutEffect(() => {
     const el = ref.current
@@ -43,14 +48,9 @@ export function useFitFontSize(text, { max = 52, min = 16, weight = 300, family 
       if (!width) return
       // max/min are DESIGN px - scale them with the viewport like every CSS size (--u)
       const f = designScale()
-      const sMin = Math.round(min * f), sMax = Math.round(max * f)
-      let lo = sMin, hi = sMax, best = sMin
-      while (lo <= hi) {
-        const mid = (lo + hi) >> 1
-        const w = measureWidth(text || '', `${weight} ${mid}px ${family}`)
-        if (w <= width) { best = mid; lo = mid + 1 } else { hi = mid - 1 }
-      }
-      setSize(best)
+      const steps = FIT_SCALE.filter(s => s >= min && s <= max).reverse()
+      const best = steps.find(s => measureWidth(text || '', `${weight} ${Math.round(s * f)}px ${family}`) <= width)
+      setFit({ step: best ?? steps[steps.length - 1], f })
     }
     fit()
     const ro = new ResizeObserver(fit)
@@ -65,5 +65,5 @@ export function useFitFontSize(text, { max = 52, min = 16, weight = 300, family 
     return () => { ro.disconnect(); window.removeEventListener('resize', fit) }
   }, [text, max, min, weight, family])
 
-  return [ref, size]
+  return [ref, Math.round(fit.step * fit.f), `${Math.round(FIT_LINE[fit.step] * fit.f)}px`]   // a px string: a bare number would be a multiplier
 }

@@ -192,7 +192,7 @@ export default function Login() {
         position: 'absolute', left: 'var(--m)', top: '19.43dvh', transform: 'translateY(-50%)',
         width: 'var(--cw)', margin: 0,
         fontSize: 'var(--fs-hero)', fontWeight: 700,
-        lineHeight: 'calc(44 * var(--u))', letterSpacing: '-1.6px',
+        letterSpacing: '-1.6px',
         color: 'var(--color-black)',
       }}>
         Six digits.<br />
@@ -221,7 +221,7 @@ export default function Login() {
       <p style={{
         position: 'absolute', left: 'var(--m)', top: '43.19dvh',
         width: 'var(--cw)', margin: 0,
-        fontSize: 'var(--fs-content-1)', lineHeight: 'calc(30 * var(--u))', color: 'var(--color-black)',
+        fontSize: 'var(--fs-content-1)', color: 'var(--color-black)',
         fontWeight: 'var(--fw-normal)',
       }}>
         <span style={{ fontWeight: 'var(--fw-semibold)' }}>Send and receive digital dollars </span>
@@ -253,8 +253,7 @@ export default function Login() {
           width: 'calc(var(--cw) - 66 * var(--u))', height: '8.29dvh',
           background: 'var(--btn-grad-white)', border: 'none', borderRadius: 16,
           boxShadow: 'var(--shadow-y2)',
-          fontSize: 'var(--fs-title)', fontWeight: 'var(--fw-semibold)', lineHeight: 'calc(30 * var(--u))',
-          color: 'var(--color-black)', cursor: 'pointer',
+          fontSize: 'var(--fs-title)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)', cursor: 'pointer',
           WebkitTapHighlightColor: 'transparent',
         }}>
         {restoring ? 'Processing...' : 'Log in with email'}

@@ -210,7 +210,7 @@ export default function SendAmount() {
   // is included in the measurement, otherwise it comes up exactly one caret short and overflows at the longest numbers.
   // max 44 / weight 300 (was 52/600) - node 1:99, RE-VERIFIED 2026-09-10: 44px, and Light per the app's
   // standing "big numbers are always Light" rule (the node itself draws Regular, same override as everywhere else).
-  const [fitRef, fitSize] = useFitFontSize(amountStr + '_', { max: 48, min: 18, weight: 300 })
+  const [fitRef, fitSize, fitLine] = useFitFontSize(amountStr + '_', { max: 48, min: 18, weight: 300 })
 
   return (
     <div className="screen" style={{ background: GRADIENT }}>
@@ -261,7 +261,7 @@ export default function SendAmount() {
           nearly invisible white-on-white - user decision 2026-09-24: "ít ra phải màu đen", the blinking
           caret already signals "not typed yet"). */}
       <div ref={fitRef} style={{ position: 'absolute', left: '51%', right: 'calc(var(--m) + 8 * var(--u))', top: '16.72dvh', textAlign: 'right' }}>
-        <span className="num" style={{ fontSize: fitSize, fontWeight: 'var(--fw-light)', lineHeight: 1, whiteSpace: 'nowrap', color: overBalance ? 'var(--color-error)' : 'var(--color-content)' }}>
+        <span className="num" style={{ fontSize: fitSize, lineHeight: fitLine, fontWeight: 'var(--fw-light)', whiteSpace: 'nowrap', color: overBalance ? 'var(--color-error)' : 'var(--color-content)' }}>
           {amountStr}<span className="caret">_</span>
         </span>
       </div>

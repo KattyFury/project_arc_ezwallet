@@ -89,7 +89,7 @@ export default function MenuScreen() {
         background: 'var(--color-card)', borderRadius: 16,
         display: 'flex', alignItems: 'center', padding: '0 calc(16 * var(--u))',
       }}>
-        <p style={{ margin: 0, fontSize: 'var(--fs-content-1)', lineHeight: 'calc(32 * var(--u))', color: 'var(--color-black)' }}>
+        <p style={{ margin: 0, fontSize: 'var(--fs-content-1)', color: 'var(--color-black)' }}>
           Email: <span style={{ fontWeight: 'var(--fw-semibold)', color: 'var(--color-brand)' }}>{email}</span><br />
           Network: <span style={{ fontWeight: 'var(--fw-semibold)', color: 'var(--color-brand)' }}>{NET.label}</span><br />
           Wallet address: <span style={{ fontWeight: 'var(--fw-semibold)', color: 'var(--color-brand)' }}>{shortAddr}</span>

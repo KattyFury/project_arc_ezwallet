@@ -224,7 +224,7 @@ export default function BorrowAction() {
       <div style={{ ...at('50.95dvh', 'auto'), display: 'flex', flexDirection: 'column', gap: 'calc(8 * var(--u))', padding: '0 calc(11 * var(--u))', fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)' }}>
         {what && <span style={{ color: 'var(--color-black)' }}>{what}</span>}
         <span>Fee: <span className="num" style={{ color: 'var(--color-black)', fontWeight: 'var(--fw-semibold)' }}>{ready ? (info?.feeMax ? (Number(info.feeMax) < 0.01 ? '<$0.01' : `up to $${Number(info.feeMax).toFixed(3)}`) : '…') : '-'}</span>{kind === 'borrow' ? ` · max $${MAX_USD} per loan` : ''}</span>
-        <span style={{ fontSize: 'var(--fs-small)', lineHeight: 1.4 }}>
+        <span style={{ fontSize: 'var(--fs-small)'}}>
           {kind === 'borrow' ? 'Your cirBTC is locked in Morpho until you repay. If BTC falls to the liquidation price, part of it is sold to repay the loan. No app fee.'
             : kind === 'withdrawCollateral' ? 'You can only take out cirBTC while the loan stays at 50% of the collateral or less.'
             : 'Repaying lowers the risk. Interest keeps adding up until the loan is repaid.'}
@@ -237,7 +237,7 @@ export default function BorrowAction() {
           style={{ width: '100%', height: 'var(--btn-h)', minHeight: 0, borderRadius: 38, ...(error ? { color: 'var(--color-error)' } : null) }}
           disabled={alertStep ? loading : ready ? (!can && !error) : (loading || done)}
           onClick={() => error ? setError('') : alertStep ? turnOnAlerts(alertStep) : ready ? run() : setPad(true)}>
-          <span style={{ fontSize: 'var(--fs-content-1)', lineHeight: 1.2, textAlign: 'center', display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2, overflow: 'hidden' }}>{label}</span>
+          <span style={{ fontSize: 'var(--fs-content-1)', textAlign: 'center', display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2, overflow: 'hidden' }}>{label}</span>
         </button>
       </div>
 

@@ -5,8 +5,7 @@ export default function ExitBar({ onClick }) {
   return (
     <button onClick={onClick} style={{
       position: 'absolute', left: 0, right: 0, top: '91.71dvh', height: '8.29dvh',
-      display: 'flex', alignItems: 'center', justifyContent: 'center', lineHeight: 1,
-      border: 'none', background: 'none', cursor: 'pointer', fontFamily: 'inherit',
+      display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', background: 'none', cursor: 'pointer', fontFamily: 'inherit',
       fontSize: 'var(--fs-h2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-error)',
     }}>
       Exit

@@ -67,7 +67,7 @@ export default function ShowQR() {
       <div style={{ position: 'absolute', left: '50%', top: '43.32dvh', transform: 'translateX(-50%)', width: 'calc(340 * var(--u))', fontSize: 'var(--fs-small)', fontWeight: 'var(--fw-semibold)', textAlign: 'center', color: 'var(--color-error)' }}>
         {NETWORK_NOTE}
       </div>
-      <span className="num" style={{ position: 'absolute', left: '50%', top: '50dvh', transform: 'translate(-50%, -50%)', fontSize: 'var(--fs-amount-2)', fontWeight: 'var(--fw-semibold)', lineHeight: 1, color: 'var(--color-brand)', whiteSpace: 'nowrap' }}>{amountText}</span>
+      <span className="num" style={{ position: 'absolute', left: '50%', top: '50dvh', transform: 'translate(-50%, -50%)', fontSize: 'var(--fs-amount-2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-brand)', whiteSpace: 'nowrap' }}>{amountText}</span>
 
       {/* Share/Done - node 58:599/58:598: white "Share" (left, was "Back" pre-2026-09-24 - Figma dropped
           the Back role from this row) + blue "Done" (right). Since the row lost its own Back, the QR

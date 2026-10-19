@@ -126,7 +126,7 @@ export default function QRScanner() {
           notification-type message. Sits 16px below the scan box's bottom edge (10.19 + 38.86 = 49.05dvh) -
           it used to be glued to the old square. */}
       {!error && (
-        <div style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: 'calc(49.05dvh + calc(16 * var(--u)))', fontSize: 'var(--fs-content-2)', lineHeight: 'calc(20 * var(--u))', fontWeight: 'var(--fw-semibold)', textAlign: 'center', color: 'var(--color-error)' }}>
+        <div style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: 'calc(49.05dvh + calc(16 * var(--u)))', fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', textAlign: 'center', color: 'var(--color-error)' }}>
           {NETWORK_NOTE}
         </div>
       )}
@@ -134,7 +134,7 @@ export default function QRScanner() {
       {/* Dynamic scan hint - real, working functionality (updates as the camera reads frames) that the
           static Figma mock has no equivalent for, kept as its own line under the caption, same 16px. */}
       {!error && (
-        <span style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: 'calc(49.05dvh + calc(44 * var(--u)))', fontSize: 'var(--fs-content-2)', lineHeight: 'calc(20 * var(--u))', fontWeight: 'var(--fw-medium)', color: 'var(--color-content)', textAlign: 'center' }}>{hint}</span>
+        <span style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: 'calc(49.05dvh + calc(44 * var(--u)))', fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-medium)', color: 'var(--color-content)', textAlign: 'center' }}>{hint}</span>
       )}
 
       <input ref={fileRef} type="file" accept="image/*" onChange={handlePickImage} style={{ display: 'none' }} />

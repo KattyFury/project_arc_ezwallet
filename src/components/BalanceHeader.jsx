@@ -28,7 +28,7 @@ export default function BalanceHeader({ totalUsd, loading }) {
   // MAX SIZE = 40 (2026-09-23 redesign, node 1:352 on Send/Receive/Menu - down from 50). Still fitted by
   // REAL MEASURED WIDTH on canvas rather than by counting characters: some currencies are twice as long as
   // USD ("1.250.000 ₫" vs "$50.00"), so a long amount has to shrink rather than run off the screen.
-  const [fitRef, fitSize] = useFitFontSize(str, { max: 34, min: 22, weight: 400 })
+  const [fitRef, fitSize, fitLine] = useFitFontSize(str, { max: 34, min: 22, weight: 400 })
   return (
     // ABSOLUTE, not the old `row-1-2` grid cell. Node 1:352 is a 340x70 block whose BOTTOM edge sits on
     // y=70 - the bottom of row 1 - with the number bottom-aligned inside it. A grid cell cannot express
@@ -41,7 +41,7 @@ export default function BalanceHeader({ totalUsd, loading }) {
       <div ref={fitRef} style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'center', width: '100%' }}>
         {/* 40px REGULAR (weight 400), not the old Light 300 - the redesign draws the balance at the same
             weight as ordinary text, just much bigger. */}
-        <span style={{ fontSize: fitSize, fontWeight: 'var(--fw-normal)', color: 'var(--color-content)', lineHeight: 1, whiteSpace: 'nowrap' }}>
+        <span style={{ fontSize: fitSize, lineHeight: fitLine, fontWeight: 'var(--fw-normal)', color: 'var(--color-content)', whiteSpace: 'nowrap' }}>
           {str}
         </span>
       </div>

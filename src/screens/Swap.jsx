@@ -81,7 +81,7 @@ function TwoLineFit({ sizes, children }) {
     if (el && el.scrollHeight > el.clientHeight + 1 && i < sizes.length - 1) setI(i + 1)
   }, [i, sizes.length])
   return (
-    <span ref={ref} style={{ display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2, overflow: 'hidden', lineHeight: 1.2, textAlign: 'center', minWidth: 0, fontSize: fitSize }}>
+    <span ref={ref} style={{ display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2, overflow: 'hidden', textAlign: 'center', minWidth: 0, fontSize: fitSize }}>
       {children}
     </span>
   )
@@ -372,7 +372,7 @@ export default function Swap() {
     // (user decision 07-28: "10.00_" with a caret blinking after a finished number looks nonsensical).
     const showCaret = onAmount && (isTyping || !hasValue)
     {/* 44px max (was 52), node 1:82's "_" caret - measured at 44 on this Figma pull */}
-    const [fitRef, fitSize] = useFitFontSize((showZero ? '' : amtStr) + (showCaret ? '_' : ''), { max: 48, min: 18 })
+    const [fitRef, fitSize, fitLine] = useFitFontSize((showZero ? '' : amtStr) + (showCaret ? '_' : ''), { max: 48, min: 18 })
     return (
       <div style={{ ...CARD, minWidth: 0, height: '100%', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 'calc(10 * var(--u))' }}>
         {/* 2026-09-10: 18px semibold BLACK (was --fs-body 19 medium muted) - nodes 1:70/1:76 */}
@@ -393,7 +393,7 @@ export default function Swap() {
             cursor: onAmount ? 'pointer' : 'default',
             ...(onAmount ? { padding: 'calc(2 * var(--u)) calc(12 * var(--u))', minHeight: 'calc(56 * var(--u))' } : null),
           }}>
-            <span className="num" style={{ fontSize: fitSize, fontWeight: 'var(--fw-light)', lineHeight: 1.05, color: amtColor, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            <span className="num" style={{ fontSize: fitSize, lineHeight: fitLine, fontWeight: 'var(--fw-light)', color: amtColor, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               {showZero ? null : amtStr}
               {showCaret && <span className="caret">_</span>}
             </span>

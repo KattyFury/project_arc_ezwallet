@@ -79,7 +79,7 @@ export default function Memes() {
         <div className="popup-overlay" onClick={() => setMenu(false)}>
           <div className="popup-card" onClick={e => e.stopPropagation()}>
             <div className="popup-title">How Memes works</div>
-            <span style={{ fontSize: 'var(--fs-caption)', lineHeight: 1.4 }}>
+            <span style={{ fontSize: 'var(--fs-caption)'}}>
               Buy and sell tokens launched on Argus (Arc). Before every buy the app checks on the network that the token can
               be sold back. Max $20 per buy. No app fee. The top list is ranked by 24h trading volume from GeckoTerminal - a high
               volume is not a recommendation.
@@ -138,7 +138,7 @@ export default function Memes() {
       </ScrollBox>
 
       {/* Row 9: the risk line (owner 2026-10-06: plain words, what a member must know). */}
-      <div className="warning-badge" style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '81.52dvh', height: '8.29dvh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 calc(12 * var(--u))', fontSize: 'var(--fs-small)', lineHeight: 1.3 }}>
+      <div className="warning-badge" style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '81.52dvh', height: '8.29dvh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 calc(12 * var(--u))', fontSize: 'var(--fs-small)'}}>
         Memes can drop to zero in minutes. Copycat tokens use real names - check the address. Only use money you can lose.
       </div>
 

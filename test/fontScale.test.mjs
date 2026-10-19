@@ -40,3 +40,29 @@ test('every font token is on the design-system scale', () => {
   assert.ok(sizes.length >= 10)
   for (const [name, px] of sizes) assert.ok(SCALE.includes(px), `--fs-${name} is ${px}px - not in ${SCALE.join('/')}`)
 })
+
+// 2026-10-20 (owner): line heights come in pairs with the sizes (14/20 16/24 18/24 22/28 28/36 34/40 48/56) and are
+// never set by hand - only the --lh-* tokens, or the paired value useFitFontSize returns for auto-fit amounts.
+const LINE = { 14: 20, 16: 24, 18: 24, 22: 28, 28: 36, 34: 40, 48: 56 }
+
+test('every --lh-* token is the pair of its --fs-* token', () => {
+  const css = readFileSync('src/index.css', 'utf8')
+  const fs = Object.fromEntries([...css.matchAll(/--fs-([a-z0-9-]+):\s*calc\(([0-9.]+) \* var\(--u\)\)/g)].map(m => [m[1], Number(m[2])]))
+  const lh = Object.fromEntries([...css.matchAll(/--lh-([a-z0-9-]+):\s*calc\(([0-9.]+) \* var\(--u\)\)/g)].map(m => [m[1], Number(m[2])]))
+  for (const [name, px] of Object.entries(fs)) assert.equal(lh[name], LINE[px], `--lh-${name} should be ${LINE[px]} for --fs-${name} ${px}`)
+})
+
+test('no hand-set line heights', () => {
+  const bad = []
+  for (const f of files) {
+    readFileSync(f, 'utf8').split('\n').forEach((line, i) => {
+      if (/^\s*(\/\/|\*|\/\*)/.test(line)) return
+      for (const m of line.matchAll(/(?:lineHeight|line-height)\s*:\s*([^,;}]+)/g)) {
+        const v = m[1].trim()
+        if (/^var\(--lh-[a-z0-9-]+\)/.test(v) || v === 'fitLine') continue
+        bad.push(`${f}:${i + 1}  ${m[0].trim()}`)
+      }
+    })
+  }
+  assert.deepEqual(bad, [], 'use the --lh-* token paired with the font size')
+})

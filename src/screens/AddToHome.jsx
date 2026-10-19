@@ -56,7 +56,7 @@ export default function AddToHome() {
         style={{
           position: 'absolute', left: '83.49%', top: '4.15dvh', transform: 'translate(-50%, -50%)',
           background: 'none', border: 'none', padding: 'calc(8 * var(--u))', cursor: 'pointer',
-          fontSize: 'var(--fs-content-1)', lineHeight: 'calc(22 * var(--u))', fontWeight: 'var(--fw-semibold)', letterSpacing: '-0.64px', color: 'var(--color-muted-2)', whiteSpace: 'nowrap',
+          fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', letterSpacing: '-0.64px', color: 'var(--color-muted-2)', whiteSpace: 'nowrap',
           WebkitTapHighlightColor: 'transparent',
         }}>
         Skip →
@@ -75,7 +75,7 @@ export default function AddToHome() {
       <div style={{
         position: 'absolute', left: '50%', top: '32.64dvh', transform: 'translate(-50%, -50%)',
         width: 'var(--cw)', textAlign: 'center',
-        fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', lineHeight: 'calc(30 * var(--u))', color: 'var(--color-black)',
+        fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)',
       }}>
         <Ez /> works best as an app
       </div>
@@ -84,7 +84,7 @@ export default function AddToHome() {
       <div style={{
         position: 'absolute', left: '50%', top: '36.79dvh', transform: 'translate(-50%, -50%)',
         width: 'var(--cw)', textAlign: 'center',
-        fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-normal)', lineHeight: 'calc(24 * var(--u))', color: 'var(--color-black)',
+        fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-normal)', color: 'var(--color-black)',
       }}>
         Add <Ez /> to your home screen:
       </div>
@@ -98,8 +98,7 @@ export default function AddToHome() {
         background: '#ECF0F8', borderRadius: 16,
         display: 'flex', flexDirection: 'column', justifyContent: 'center',
         listStyle: 'decimal', listStylePosition: 'inside',
-        fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', lineHeight: 'calc(32 * var(--u))',
-        color: 'var(--color-black)', textAlign: 'center',
+        fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)', textAlign: 'center',
       }}>
         <li>Tap Options, then tap Share</li>
         <li>Tap Add to Home Screen</li>

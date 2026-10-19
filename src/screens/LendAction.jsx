@@ -206,7 +206,7 @@ export default function LendAction() {
           <span>Fee: <span className="num" style={{ color: 'var(--color-black)', fontWeight: 'var(--fw-semibold)' }}>{amount > 0 && !over ? (feeUsd === null ? '…' : feeUsd < 0.01 ? '<$0.01' : `up to $${feeUsd.toFixed(3)}`) : '-'}</span></span>
           {deposit && <span>Max ${MAX_USD} per deposit</span>}
         </div>
-        <span style={{ fontSize: 'var(--fs-small)', lineHeight: 1.4 }}>
+        <span style={{ fontSize: 'var(--fs-small)'}}>
           {deposit ? 'Vault funds are lent out. Withdrawals can be delayed. Value can fall in extreme markets. No app fee.'
             : 'You can withdraw up to what the vault has free right now. The rest stays in the vault and keeps earning.'}
         </span>
@@ -218,7 +218,7 @@ export default function LendAction() {
           style={{ width: '100%', height: 'var(--btn-h)', minHeight: 0, borderRadius: 38, ...(error ? { color: 'var(--color-error)' } : null) }}
           disabled={amount > 0 ? !can && !error : loading || done}
           onClick={() => amount > 0 ? (error ? setError('') : run()) : setPad(true)}>
-          <span style={{ fontSize: 'var(--fs-content-1)', lineHeight: 1.2, textAlign: 'center', display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2, overflow: 'hidden' }}>
+          <span style={{ fontSize: 'var(--fs-content-1)', textAlign: 'center', display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2, overflow: 'hidden' }}>
             {over ? `At most ${fmtAmt(max, Math.min(dec, 6))} ${asset}` : label}
           </span>
         </button>

@@ -27,8 +27,7 @@ export const usdRateOf = (asset, rates) => asset === 'USDC' ? 1 : (rates?.[asset
 export function Tabs({ tabs, tab, setTab, onMenu }) {
   const t = (id, label) => (
     <button key={id} onClick={() => setTab(id)} style={{
-      border: 'none', background: 'none', padding: 0, cursor: 'pointer', fontFamily: 'inherit', lineHeight: 1.2,
-      fontSize: 'var(--fs-title)', fontWeight: 'var(--fw-semibold)',
+      border: 'none', background: 'none', padding: 0, cursor: 'pointer', fontFamily: 'inherit', fontSize: 'var(--fs-title)', fontWeight: 'var(--fw-semibold)',
       color: tab === id ? 'var(--color-black)' : 'var(--color-muted)',
     }}>{label}</button>
   )
@@ -49,9 +48,9 @@ export function Card({ title, lines, action }) {
   return (
     <div style={{ border: 'none', borderRadius: 16, background: 'var(--color-white)', display: 'flex', alignItems: 'center', gap: 'calc(12 * var(--u))', padding: 'calc(16 * var(--u))', minWidth: 0, flexShrink: 0 }}>
       <div className="col" style={{ flex: 1, minWidth: 0, gap: 'calc(4 * var(--u))' }}>
-        <span style={{ fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', color: title.color || 'var(--color-black)', lineHeight: 1.2, display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2, overflow: 'hidden' }}>{title.text}</span>
+        <span style={{ fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', color: title.color || 'var(--color-black)', display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2, overflow: 'hidden' }}>{title.text}</span>
         {lines.map((l, i) => (
-          <span key={i} style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)', lineHeight: 1.3 }}>{l}</span>
+          <span key={i} style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)'}}>{l}</span>
         ))}
       </div>
       {action}
@@ -100,7 +99,7 @@ export default function Lending() {
         <div className="popup-overlay" onClick={() => setMenu(false)}>
           <div className="popup-card" onClick={e => e.stopPropagation()}>
             <div className="popup-title">How Lending works</div>
-            <span style={{ fontSize: 'var(--fs-caption)', lineHeight: 1.4 }}>
+            <span style={{ fontSize: 'var(--fs-caption)'}}>
               Your USDC or EURC goes into a Morpho vault run by a known curator. The vault lends it out and pays you
               interest (APY). Withdraw any time the vault has cash free ("Withdrawable now"). No app fee; the network fee is shown before you confirm.
             </span>
@@ -118,7 +117,7 @@ export default function Lending() {
         <div style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '10.19dvh', height: '18.48dvh', ...BOX, display: 'flex', alignItems: 'center', gap: 'calc(12 * var(--u))', padding: 'calc(16 * var(--u))' }}>
           <div className="col" style={{ flex: 1, minWidth: 0, gap: 'calc(6 * var(--u))' }}>
           <span style={{ fontSize: 'var(--fs-content-2)', color: 'var(--color-muted-2)' }}>My deposits</span>
-          <span className="num" style={{ fontSize: 'var(--fs-hero)', fontWeight: 'var(--fw-light)', lineHeight: 1.1, color: 'var(--color-black)' }}>
+          <span className="num" style={{ fontSize: 'var(--fs-hero)', fontWeight: 'var(--fw-light)', color: 'var(--color-black)' }}>
             {positions === null ? '…' : positions.length === 0 ? fmtDisplay(0, cur, rates) : total === null ? '…' : fmtDisplay(total, cur, rates)}
           </span>
           <span style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)' }}>
@@ -153,7 +152,7 @@ export default function Lending() {
         </ScrollBox>
 
         {/* Row 9: the always-visible risk line (plan §7). */}
-        <div className="warning-badge" style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '81.52dvh', height: '8.29dvh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 calc(12 * var(--u))', fontSize: 'var(--fs-small)', lineHeight: 1.3 }}>
+        <div className="warning-badge" style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '81.52dvh', height: '8.29dvh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 calc(12 * var(--u))', fontSize: 'var(--fs-small)'}}>
           Vault funds are lent out. Withdrawals can be delayed. Value can fall in extreme markets.
         </div>
       </>)}

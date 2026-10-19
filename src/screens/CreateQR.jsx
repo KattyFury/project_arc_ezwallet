@@ -53,7 +53,7 @@ export default function CreateQR() {
 
   const amount = parseFloat(digits || '0')
   const amountStr = (cur === 'USD' ? displaySymbol('USDC') : '') + digits
-  const [fitRef, fitSize] = useFitFontSize(amountStr + '_', { max: 48, min: 18, weight: 300 })
+  const [fitRef, fitSize, fitLine] = useFitFontSize(amountStr + '_', { max: 48, min: 18, weight: 300 })
 
   function handleKey(key) {
     if (key === 'BACK') { setDigits(d => d.slice(0, -1)); return }
@@ -107,7 +107,7 @@ export default function CreateQR() {
           user decision 2026-09-24: "ít ra phải màu đen" - the caret already signals "not typed yet",
           the currency symbol/digits don't also need to fade to near-invisible). */}
       <div ref={fitRef} style={{ position: 'absolute', left: '51%', right: 'calc(var(--m) + 8 * var(--u))', top: at(26.92), textAlign: 'right' }}>
-        <span className="num" style={{ fontSize: fitSize, fontWeight: 'var(--fw-light)', lineHeight: 1, whiteSpace: 'nowrap', color: 'var(--color-content)' }}>
+        <span className="num" style={{ fontSize: fitSize, lineHeight: fitLine, fontWeight: 'var(--fw-light)', whiteSpace: 'nowrap', color: 'var(--color-content)' }}>
           {amountStr}<span className="caret">_</span>
         </span>
       </div>

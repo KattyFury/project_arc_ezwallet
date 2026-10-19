@@ -89,7 +89,7 @@ function TxRow({ tx, walletAddr, contacts, onClick, cur, rates, memo, isSwap, sw
       <div style={{ flex: 1, minWidth: 0 }}>
         {/* row 1: who - item size, bold. WRAPS like a notification (owner 2026-10-03: it was cut with "…" and lost
             words); break-word keeps a short address whole on the next line, only breaking one that cannot fit. */}
-        <div style={{ fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-medium)', color: 'var(--color-content)', lineHeight: 1.3, overflowWrap: 'break-word' }}>
+        <div style={{ fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-medium)', color: 'var(--color-content)', overflowWrap: 'break-word' }}>
           {/* A shortened address stays in ONE piece (browsers may break right after its "…"); a contact name wraps freely. */}
           {isSwap ? swapTitle : <>{isSend ? 'Sent to' : 'Received from'} <span style={!name && !isSelf ? { whiteSpace: 'nowrap' } : undefined}>{who}</span></>}
         </div>
@@ -108,7 +108,7 @@ function TxRow({ tx, walletAddr, contacts, onClick, cur, rates, memo, isSwap, sw
         </div>
         {/* rows 3-4: Note (if any) - free to wrap when long */}
         {memo && (
-          <div style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)', marginTop: 'calc(2 * var(--u))', lineHeight: 1.4, wordBreak: 'break-word' }}>
+          <div style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)', marginTop: 'calc(2 * var(--u))', wordBreak: 'break-word' }}>
             Note: {memo}
           </div>
         )}

@@ -294,7 +294,7 @@ export default function SendConfirm() {
         <div className="popup-overlay" onClick={() => setQrCheck(false)}>
           <div className="popup-card" onClick={e => e.stopPropagation()}>
             <div className="popup-title">Check this amount</div>
-            <p style={{ margin: 0, fontSize: 'var(--fs-content-2)', lineHeight: 1.4 }}>
+            <p style={{ margin: 0, fontSize: 'var(--fs-content-2)'}}>
               This QR code asks you to send <b className="num">{mainEl}</b> to <b>{name || shortenAddr(address)}</b>.
               Only continue if you know who this is and you expected to pay this amount.
             </p>

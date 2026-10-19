@@ -72,7 +72,7 @@ export default function SavedQRList() {
                 {/* Name area ALWAYS reserves 2 lines (user decision 2026-09-27) so every tile lines up; a
                     short name is centred vertically inside it, a long one wraps to 2 lines then clamps with "…". */}
                 <span style={{ height: 'calc(42 * var(--u))', width: '100%', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <span style={{ fontSize: 'var(--fs-content-2)', lineHeight: 'calc(21 * var(--u))', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)', textAlign: 'center', overflowWrap: 'anywhere', display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2, overflow: 'hidden' }}>{q.name}</span>
+                  <span style={{ fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)', textAlign: 'center', overflowWrap: 'anywhere', display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2, overflow: 'hidden' }}>{q.name}</span>
                 </span>
                 <span className="num" style={{ fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-brand)' }}>{label}</span>
               </button>

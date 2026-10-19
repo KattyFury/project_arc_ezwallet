@@ -29,7 +29,7 @@ const input = {
   flex: 1, minWidth: 0, height: '100%', border: 'none', outline: 'none', background: 'none', padding: 0,
   fontFamily: 'inherit', fontSize: 'var(--fs-content-1)', color: 'var(--color-black)',
 }
-const note = { margin: 0, fontSize: 'var(--fs-caption)', lineHeight: 1.4, color: 'var(--color-muted-2)' }
+const note = { margin: 0, fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)' }
 const iconBtn = { display: 'inline-flex', flexShrink: 0, padding: 0, border: 'none', background: 'none', cursor: 'pointer' }
 
 // `network` = the label each exchange uses for Arc (Binance + Bitget APIs: "ARC"; OKX: "USDC (Arc)").
@@ -83,7 +83,7 @@ function Deposit() {
     <>
       {/* The FULL address (wrapped), never shortened: people copy it by eye too. */}
       <div style={{ ...field, height: 'auto', padding: 'calc(12 * var(--u))' }}>
-        <span style={{ flex: 1, minWidth: 0, overflowWrap: 'anywhere', fontSize: 'var(--fs-content-2)', lineHeight: 1.4, fontWeight: 'var(--fw-semibold)', color: 'var(--color-brand)' }}>
+        <span style={{ flex: 1, minWidth: 0, overflowWrap: 'anywhere', fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-brand)' }}>
           {addr || '…'}
         </span>
         <button onClick={copy} aria-label="Copy wallet address" style={iconBtn}>
@@ -239,7 +239,7 @@ export default function FundsPopup({ mode, onClose }) {
         <button onClick={onClose} aria-label="Close" style={{ ...iconBtn, position: 'absolute', top: 'calc(14 * var(--u))', right: 'calc(14 * var(--u))' }}>
           <Icon name="x" size="calc(24 * var(--u))" color="var(--color-black)" />
         </button>
-        <div style={{ textAlign: 'center', fontSize: 'var(--fs-h2)', fontWeight: 'var(--fw-semibold)', lineHeight: 'calc(30 * var(--u))', color: 'var(--color-black)' }}>
+        <div style={{ textAlign: 'center', fontSize: 'var(--fs-h2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)' }}>
           {mode === 'deposit' ? 'Deposit' : 'Withdraw'}
         </div>
         {mode === 'deposit' ? <Deposit /> : <Withdraw />}

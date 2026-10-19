@@ -121,6 +121,20 @@
   --fs-caption:   calc(16 * var(--u));   /* Chú thích - notes, toasts, address/memo inputs, Home action tiles (Paste/Contacts/Copy/Share) */
   --fs-small:     calc(14 * var(--u));   /* SMALLEST ALLOWED - notification area, small hints */
 
+  /* LINE HEIGHTS - one per font token, from the design system's App styles (2026-10-20): 14/20 · 16/24 · 18/24 ·
+     22/28 · 28/36 · 34/40 · 48/56. Never set a line height by hand: the [style*="var(--fs-*)"] rules at the end of
+     this file and every CSS rule that sets a --fs-* size apply the paired --lh-* (test/fontScale.test.mjs). */
+  --lh-small:      calc(20 * var(--u));
+  --lh-caption:    calc(24 * var(--u));
+  --lh-content-2:  calc(24 * var(--u));
+  --lh-content-1:  calc(28 * var(--u));
+  --lh-h2:         calc(28 * var(--u));
+  --lh-title:      calc(36 * var(--u));
+  --lh-h1:         calc(36 * var(--u));
+  --lh-numpad:     calc(36 * var(--u));
+  --lh-hero:       calc(40 * var(--u));
+  --lh-amount-2:   calc(56 * var(--u));
+
   /* ── ICON SIZES - ALWAYS TIED TO THE TEXT BESIDE THEM ──
      User decision 2026-07-16: "icons must match the text, big text with a small icon is wrong".
      EVERY icon that sits next to text MUST use the --is-* PAIRED with that text's --fs-* (identical px).
@@ -190,6 +204,7 @@ body {
   -webkit-tap-highlight-color: transparent;
   font-family: var(--font-base);
   font-size: var(--fs-content-1);
+  line-height: var(--lh-content-1);
   color: var(--color-content);
   background: var(--color-white);
   -webkit-font-smoothing: antialiased;
@@ -331,7 +346,7 @@ body {
    above) supplies `display:flex` + horizontal centring; `align-items:flex-end` here OVERRIDES its
    vertical centring (this rule is declared later in the file, so it wins for that one property). Do NOT
    fix titles with ad-hoc absolute positioning per screen - route them through this class instead. */
-.screen-title { font-family: var(--font-display); color: var(--color-black); font-size: var(--fs-h1); align-items: flex-end; }   /* screen titles = system font, BLACK, Header 1 */
+.screen-title { font-family: var(--font-display); color: var(--color-black); font-size: var(--fs-h1); line-height: var(--lh-h1); align-items: flex-end; }   /* screen titles = system font, BLACK, Header 1 */
 
 /* SHEET TITLE - the 2026-09-23 redesign's own title size (24px, not the pre-redesign 28px .screen-title),
    used by every gradient+ScreenSheet screen that shows a title instead of the balance (ServiceHub node
@@ -342,7 +357,7 @@ body {
 .sheet-title {
   position: absolute; left: 0; right: 0; top: 0; height: calc(70 * var(--u));
   display: flex; align-items: flex-end; justify-content: center;
-  font-family: var(--font-display); color: var(--color-black); font-size: var(--fs-title); font-weight: var(--fw-semibold);
+  font-family: var(--font-display); color: var(--color-black); font-size: var(--fs-title); line-height: var(--lh-title); font-weight: var(--fw-semibold);
 }
 
 /* THE LOGO RULE (user, 2026-09-11, applies to EVERY logo-only screen app-wide): the wordmark sits at
@@ -390,12 +405,8 @@ body {
      (15-17-19-22-28) deliberately rounds button text to the same "Nội dung 1" tier as card labels, a
      one-pixel consolidation choice made on purpose, not a fresh measurement. */
   font-size: var(--fs-content-1);
+  line-height: var(--lh-content-1);
   font-weight: var(--fw-semibold);
-  line-height: 1;   /* 2026-09-10: without this, the browser's "normal" line-height adds asymmetric leading
-                        above/below the glyphs - invisible on the standard 48px button (enough headroom to
-                        hide it) but a clearly visible downward shift on LuckyPot's short 34px buttons
-                        (Deposit/Withdraw/Result), which the user caught. line-height:1 makes the text's own
-                        box match its glyphs, so flex align-items:center centers it for real at any height. */
   border-radius: 50px;
   border: none;
   cursor: pointer;
@@ -521,6 +532,7 @@ body {
   font-family: var(--font-display);
   color: var(--color-black);
   font-size: var(--fs-h2);   /* Header 2, not Header 1 - a popup title is a secondary heading, not the page title */
+  line-height: var(--lh-h2);
   font-weight: var(--fw-semibold);   /* the title is BOLD (semibold) - the heavy pole of the contrast */
   text-align: center;
 }
@@ -545,6 +557,7 @@ body {
   justify-content: center;
   font-family: var(--font-condensed);
   font-size: var(--fs-numpad);
+  line-height: var(--lh-numpad);
   font-weight: var(--fw-medium);
   color: var(--color-black);
   background: none;
@@ -656,6 +669,7 @@ body {
   gap: calc(2 * var(--u));   /* was 3px CSS gap + a redundant inline marginBottom:2 on the icon (5px combined) - tightened per the same request */
   font-family: var(--font-condensed);
   font-size: var(--fs-content-2);   /* Nội dung 2 - raw measurement (Send/Receive/Menu) was 16px, rounded up to the new scale's 17 */
+  line-height: var(--lh-content-2);
   font-weight: var(--fw-semibold);
   color: var(--color-muted);   /* UNSELECTED = the guideline's secondary text tone */
   background: none;
@@ -680,6 +694,7 @@ body {
   align-items: center;
   justify-content: center;
   font-size: var(--fs-small);   /* was 11 - 14 is the smallest allowed size (2026-10-03) */
+  line-height: var(--lh-small);
   font-weight: var(--fw-bold);
   color: var(--color-white);
   flex-shrink: 0;
@@ -714,6 +729,7 @@ body {
   color: var(--color-black);
   font-family: var(--font-condensed);
   font-size: var(--fs-caption);      /* raw measurement (Paste/Contacts/QR storage/Share) was 13px, folded into Chú thích */
+  line-height: var(--lh-caption);
   font-weight: var(--fw-semibold);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
@@ -727,6 +743,7 @@ body {
   background: var(--btn-grad-brand);
   color: var(--color-white);
   font-size: var(--fs-content-2);      /* raw measurement ("Scan QR"/"Custom QR") was 16px, rounded up to Nội dung 2 */
+  line-height: var(--lh-content-2);
 }
 
 /* ── Send flow ── */
@@ -749,6 +766,7 @@ body {
   outline: none;
   font-family: var(--font-base);
   font-size: var(--fs-caption);
+  line-height: var(--lh-caption);
   color: var(--color-black);
   background: transparent;
 }
@@ -799,6 +817,7 @@ body {
      label:value row this session) was 16px, rounded up to the new scale. --color-muted-2 (#667085), not
      --color-muted. */
   font-size: var(--fs-content-2);
+  line-height: var(--lh-content-2);
   color: var(--color-muted-2);
   flex-shrink: 0;
 }
@@ -806,6 +825,7 @@ body {
 .confirm-value {
   /* Nội dung 2 (17px) semibold - same reasoning as .confirm-label. */
   font-size: var(--fs-content-2);
+  line-height: var(--lh-content-2);
   font-weight: var(--fw-semibold);
   color: var(--color-content);
   text-align: right;
@@ -824,6 +844,7 @@ body {
   border-radius: 16px;
   padding: calc(10 * var(--u)) calc(12 * var(--u));
   font-size: var(--fs-caption);
+  line-height: var(--lh-caption);
   color: var(--color-content);
   text-align: center;
 }
@@ -840,10 +861,10 @@ body {
   padding: calc(10 * var(--u)) calc(12 * var(--u));
   font-family: var(--font-base);
   font-size: var(--fs-caption);
+  line-height: var(--lh-caption);
   color: var(--color-black);
   resize: none;
   outline: none;
-  line-height: 1.6;
 }
 
 /* An error still MUST be obvious even though ordinary borders are gone → the red border is drawn with an inset shadow (which does not change the field's size) */
@@ -868,3 +889,15 @@ body {
   -webkit-text-fill-color: var(--color-black);
 }
 
+
+/* Inline font tokens get their paired line height (see --lh-* in :root). Last in the file on purpose. */
+[style*="var(--fs-small)"] { line-height: var(--lh-small); }
+[style*="var(--fs-caption)"] { line-height: var(--lh-caption); }
+[style*="var(--fs-content-2)"] { line-height: var(--lh-content-2); }
+[style*="var(--fs-content-1)"] { line-height: var(--lh-content-1); }
+[style*="var(--fs-h2)"] { line-height: var(--lh-h2); }
+[style*="var(--fs-title)"] { line-height: var(--lh-title); }
+[style*="var(--fs-h1)"] { line-height: var(--lh-h1); }
+[style*="var(--fs-numpad)"] { line-height: var(--lh-numpad); }
+[style*="var(--fs-hero)"] { line-height: var(--lh-hero); }
+[style*="var(--fs-amount-2)"] { line-height: var(--lh-amount-2); }

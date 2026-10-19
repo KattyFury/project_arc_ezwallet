@@ -272,7 +272,7 @@ export default function HomeSend() {
             !loading && (tokens.find(tk => tk.symbol === 'USDC')?.amount ?? 0) < GAS_RESERVE_USDC ? (
               <div
                 style={{ width: '100%', background: 'var(--color-white)', borderRadius: 16, padding: 'calc(6 * var(--u)) calc(10 * var(--u))', display: 'flex', flexDirection: 'column', gap: 'calc(2 * var(--u))', fontSize: NOTIF_FS, color: 'var(--color-warning)', fontWeight: 'var(--fw-semibold)' }}>
-                <span style={{ minWidth: 0, lineHeight: 1.35 }}>Out of USDC for transaction fees</span>
+                <span style={{ minWidth: 0}}>Out of USDC for transaction fees</span>
               </div>
             ) : null
           }

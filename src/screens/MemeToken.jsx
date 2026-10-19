@@ -150,7 +150,7 @@ export default function MemeToken() {
       {/* Rows 2-3: the token + the honeypot check. */}
       <div style={{ ...at('10.19dvh', '18.48dvh'), ...BOX, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 'calc(6 * var(--u))', padding: 'calc(16 * var(--u))' }}>
         {info === null ? <span style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)' }}>Checking this token on the network…</span>
-          : !info.supported ? <span style={{ fontSize: 'var(--fs-content-2)', color: 'var(--color-error)', lineHeight: 1.4 }}>Not supported: {info.reason}.</span>
+          : !info.supported ? <span style={{ fontSize: 'var(--fs-content-2)', color: 'var(--color-error)'}}>Not supported: {info.reason}.</span>
           : (<>
             <span style={{ fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{info.symbol}{info.name && info.name !== info.symbol ? ` · ${info.name}` : ''}</span>
             <span style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)' }}>{info.launchpad} · price <span className="num" style={{ color: 'var(--color-black)' }}>{fmtPrice(info.priceUsd)}</span> · tax {info.buyTaxBps / 100}% buy / {info.sellTaxBps / 100}% sell</span>
@@ -183,7 +183,7 @@ export default function MemeToken() {
           <span>You get ≈ <span className="num" style={{ color: 'var(--color-black)', fontWeight: 'var(--fw-semibold)' }}>{outTxt}</span></span>
           <span>Fee: <span className="num" style={{ color: 'var(--color-black)', fontWeight: 'var(--fw-semibold)' }}>{amount > 0 && !over ? (feeUsd === null ? '…' : feeUsd < 0.01 ? '<$0.01' : `up to $${feeUsd.toFixed(3)}`) : '-'}</span></span>
         </div>
-        <span style={{ fontSize: 'var(--fs-small)', lineHeight: 1.4 }}>
+        <span style={{ fontSize: 'var(--fs-small)'}}>
           {buy ? `Max $${MAX_BUY} per buy. You receive at least 3% under the amount shown, or nothing happens. Meme prices swing hard - you can lose most of it. No app fee.`
             : 'You receive at least 3% under the amount shown, or nothing happens. No app fee.'}
         </span>
@@ -195,7 +195,7 @@ export default function MemeToken() {
           style={{ width: '100%', height: 'var(--btn-h)', minHeight: 0, borderRadius: 38, ...(error ? { color: 'var(--color-error)' } : null) }}
           disabled={amount > 0 ? !can && !error : loading || done || !info?.supported || blocked}
           onClick={() => error ? setError('') : amount > 0 ? run() : setPad(true)}>
-          <span style={{ fontSize: 'var(--fs-content-1)', lineHeight: 1.2, textAlign: 'center', display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2, overflow: 'hidden' }}>{label}</span>
+          <span style={{ fontSize: 'var(--fs-content-1)', textAlign: 'center', display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2, overflow: 'hidden' }}>{label}</span>
         </button>
       </div>
 

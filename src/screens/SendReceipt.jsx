@@ -117,10 +117,10 @@ export default function SendReceipt() {
           top every sheet card uses); the 6-row worst case still ends above the buttons. */}
       <div style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '10.19dvh', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <CheckIcon />
-        <span style={{ marginTop: 'calc(8 * var(--u))', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-content)', lineHeight: 1.2 }}>
+        <span style={{ marginTop: 'calc(8 * var(--u))', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-content)'}}>
           Sent successfully
         </span>
-        <span className="num" style={{ fontSize: 'var(--fs-amount-2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-brand)', lineHeight: 1.2 }}>
+        <span className="num" style={{ fontSize: 'var(--fs-amount-2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-brand)'}}>
           {amountText}
         </span>
         <div className="confirm-box" style={{ marginTop: 'calc(16 * var(--u))' }}>

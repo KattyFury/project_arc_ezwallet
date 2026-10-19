@@ -55,7 +55,11 @@
 - **2026-10-20: type scale = the iOS-based set 14 · 16 · 18 · 22 · 28 · 34 · 48** (owner chose it for every future mobile
   app; design system + Figma `App/` styles updated the same day). By role: body/buttons 20 → 22, sheet titles 24 → 28,
   headline + balance 40 → 34, numpad 26 → 28, typed-amount ceiling 44 → 48; unused `--fs-amount` (52) and `--fs-num`
-  removed. `test/fontScale.test.mjs` now fails on any size outside the set. Screens: Desktop `ezwallet-co-chu-ios\`. TEST ONLY.
+  removed. `test/fontScale.test.mjs` now fails on any size outside the set.
+  **Line heights paired too** (14/20 16/24 18/24 22/28 28/36 34/40 48/56): `--lh-*` tokens next to `--fs-*`; every CSS rule
+  with a size carries its `--lh-*`, and `[style*="var(--fs-X)"]` rules at the END of index.css pair inline sizes - never set a
+  line height by hand (test fails). Auto-fit amounts (`useFitFontSize`) now STEP through 48/34/28/22/18 and return the paired
+  line height. AddToHome: the whole word "ezwallet" is the blue accent. Screens: Desktop `ezwallet-co-chu-ios\`. TEST ONLY.
 - Not changed yet: raster PNGs (icon.png, fav_icon.png, og.png still old blue), numpad `.disabled` still uses opacity,
   Swap's confirm pulse opacity. Screenshots: owner's Desktop `ezwallet-redesign-test\`.
 

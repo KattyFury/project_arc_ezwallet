@@ -87,7 +87,7 @@ const STYLE = {
 // minWidth:0 IS STILL REQUIRED: this is a flex item, and min-width:auto means it will not shrink below its text
 // → long text would WIDEN the row, inflate the grid column and skew the whole screen.
 // overflowWrap:anywhere so a long unbroken string (a 0x… address) can break too.
-const ROW_TEXT = { minWidth: 0, lineHeight: 1.3, overflowWrap: 'anywhere' }
+const ROW_TEXT = { minWidth: 0, overflowWrap: 'anywhere' }
 
 // ONE SINGLE FONT SIZE for the whole notification area (hint / warning / real notifications) - hints and warnings
 // used to be --fs-label (15) while notifications used --fs-body (19) → one spot, two sizes.
@@ -125,11 +125,11 @@ function HintBlock({ lines }) {
     // 2026-09-10: WHITE card with NO border, radius 16, 13px, BLACK body text with semibold keywords -
     // node 1:356/1:361. The blue border + all-blue 17px text was the older design.
     <div style={{ background: 'var(--color-white)', border: 'none', borderRadius: 16, padding: 'calc(6 * var(--u)) calc(10 * var(--u))', display: 'flex', flexDirection: 'column', gap: 'calc(2 * var(--u))', fontSize: NOTIF_FS, color: 'var(--color-content)', textAlign: 'left', flexShrink: 0 }}>
-      <div style={{ minWidth: 0, lineHeight: 1.35, color: 'var(--color-error)', fontWeight: 'var(--fw-semibold)' }}>
+      <div style={{ minWidth: 0, color: 'var(--color-error)', fontWeight: 'var(--fw-semibold)' }}>
         {NETWORK_NOTE}
       </div>
       {lines.map((h, i) => (
-        <div key={i} style={{ minWidth: 0, lineHeight: 1.35 }}>
+        <div key={i} style={{ minWidth: 0}}>
           <span
             onClick={h.onClick ? e => { e.stopPropagation(); h.onClick() } : undefined}
             style={{ fontWeight: 'var(--fw-semibold)', cursor: h.onClick ? 'pointer' : 'default' }}

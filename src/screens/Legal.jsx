@@ -19,7 +19,7 @@ export default function Legal() {
           {doc.sections.map(([h, paras]) => (
             <section key={h} className="col" style={{ gap: 'calc(6 * var(--u))', flexShrink: 0 }}>
               <span style={{ fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)' }}>{h}</span>
-              {paras.map((t, i) => <p key={i} style={{ fontSize: 'var(--fs-caption)', lineHeight: 1.45, color: 'var(--color-content)', margin: 0 }}>{t}</p>)}
+              {paras.map((t, i) => <p key={i} style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-content)', margin: 0 }}>{t}</p>)}
             </section>
           ))}
         

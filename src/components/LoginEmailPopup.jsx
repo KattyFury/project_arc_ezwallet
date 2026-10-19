@@ -219,7 +219,7 @@ export default function LoginEmailPopup({ onClose }) {
       <div style={{
         position: 'absolute', left: '50%', top: '14.34dvh', transform: 'translate(-50%, -50%)',
         width: 'var(--cw)', textAlign: 'center',
-        fontSize: 'var(--fs-h2)', fontWeight: 'var(--fw-semibold)', lineHeight: 'calc(30 * var(--u))', color: 'var(--color-black)',
+        fontSize: 'var(--fs-h2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)',
       }}>
         {step === 'email' ? 'Log in with email' : 'Enter the code'}
       </div>
@@ -253,7 +253,7 @@ export default function LoginEmailPopup({ onClose }) {
       {step === 'code' && (
         <div style={{
           position: 'absolute', left: 'calc(var(--m) + 16 * var(--u))', width: 'calc(var(--cw) - 32 * var(--u))', top: 'calc(22.04dvh + var(--input-h) + 16 * var(--u))',   // 16px under the field (owner 2026-10-05)
-          fontSize: 'var(--fs-caption)', lineHeight: 1.4, color: 'var(--color-muted-2)',
+          fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)',
         }}>
           We sent a 6-digit code to <span style={{ color: 'var(--color-black)', fontWeight: 'var(--fw-semibold)', overflowWrap: 'anywhere' }}>{email.trim()}</span>. It expires in 10 minutes.
           <div style={{ marginTop: 'calc(8 * var(--u))' }}>
