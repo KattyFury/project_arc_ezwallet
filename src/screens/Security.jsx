@@ -6,7 +6,6 @@ import ExitBar from '../components/ExitBar'
 import { GRADIENT } from '../brandBg'
 import { getSDK, executeChallenge, resetPinChallenge, refreshSession, circleErrorMessage } from '../circle'
 import { getDisplayCurrency } from '../data'
-import { NET } from '../clientNet'
 
 // SECURITY - Figma node 58:332, rebuilt 2026-09-24 against the 2026-09-23 redesign's gradient+sheet
 // shell (was the pre-redesign plain-white `.screen`/`.row-10` layout). Figma now merges the old separate
@@ -31,10 +30,7 @@ const ROW = { position: 'absolute', left: '9.23%', right: '9.23%', transform: 't
 // First centre 14.34dvh (121px, the middle of grid row 2), step 7.58dvh (64px). About.jsx uses the SAME
 // ROW_TOP so the two screens stay in sync - change both or neither.
 export const ROW_TOP = i => `${(14.34 + i * 7.58).toFixed(2)}dvh`
-// Info rows (Network/Email/Wallet address) use About.jsx's row style (user decision 2026-09-27): bold label
-// on the left, value on the right in 17px --color-muted-2 - same look as PIN/Language/Currency's labels.
 const LABEL = { fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)', flexShrink: 0 }
-const VALUE = { fontSize: 'var(--fs-content-2)', color: 'var(--color-muted-2)', textAlign: 'right', minWidth: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }
 
 function Picker({ title, options, active, onPick, onClose }) {
   return (
@@ -86,46 +82,37 @@ export default function Security() {
 
   function pickCur(code) { setCurrency(code); localStorage.setItem('ez_currency', code); setCurPicker(false) }
 
-  const email = localStorage.getItem('ez_email') || localStorage.getItem('ez_google_email') || '…'
-  const walletAddr = localStorage.getItem('ez_wallet_addr') || '…'
-  const shortAddr = walletAddr !== '…' ? walletAddr.slice(0, 10) + '...' + walletAddr.slice(-6) : '…'
-
   return (
     <div className="screen" style={{ background: GRADIENT }}>
       <ScreenSheet />
       <div className="sheet-title">Security & Region</div>
 
-      {/* Card - node 1:265: 340x586 at (25,86), radius 16. Network/Email/Wallet address are plain
-          "Label: value" lines (brand-blue value, same as MenuScreen's info card); PIN/Language/Default
-          currency are rows with a value chip. */}
+      {/* Card - node 1:265: 340x586 at (25,86), radius 16. Owner 2026-10-19: the Network / Email / Wallet address
+          lines are gone - only PIN / Language / Default currency, rows with a value chip, from the first row step. */}
       <div style={{ position: 'absolute', left: '6.41%', top: '10.19dvh', width: '87.18%', height: '69.43dvh', background: 'var(--color-card)', borderRadius: 16 }} />
 
-      <div style={{ ...ROW, top: ROW_TOP(0) }}><span style={LABEL}>Network</span><span style={VALUE}>{NET.label}</span></div>
-      <div style={{ ...ROW, top: ROW_TOP(1) }}><span style={LABEL}>Email</span><span style={VALUE}>{email}</span></div>
-      <div style={{ ...ROW, top: ROW_TOP(2) }}><span style={LABEL}>Wallet address</span><span style={VALUE}>{shortAddr}</span></div>
-
-      <div style={{ ...ROW, top: ROW_TOP(3) }}>
+      <div style={{ ...ROW, top: ROW_TOP(0) }}>
         <span style={LABEL}>PIN</span>
         <button style={{ ...CHIP, color: pinStatus ? (pinErr ? 'var(--color-error)' : 'var(--color-primary)') : 'var(--color-black)' }} disabled={!!pinStatus} onClick={handleResetPin}>
           {pinStatus || 'Change PIN'}
         </button>
       </div>
-      <div style={{ ...ROW, top: ROW_TOP(4) }}>
+      <div style={{ ...ROW, top: ROW_TOP(1) }}>
         <span style={LABEL}>Language</span>
         <button style={CHIP} onClick={() => setLangPicker(true)}>
           English<Icon name="down2" size="calc(17 * var(--u))" color="var(--color-brand)" />
         </button>
       </div>
-      <div style={{ ...ROW, top: ROW_TOP(5) }}>
+      <div style={{ ...ROW, top: ROW_TOP(2) }}>
         <span style={LABEL}>Default currency</span>
         <button style={CHIP} onClick={() => setCurPicker(true)}>
           {CUR_SHORT[currency] || 'USD'}<Icon name="down2" size="calc(17 * var(--u))" color="var(--color-brand)" />
         </button>
       </div>
 
-      {/* Done - node 58:334/58:337: brand-blue pill, full card width, 48px tall. */}
+      {/* Done - node 58:334/58:337: brand-blue pill, 48px tall; owner 2026-10-19: 2/3 of the card width, centred. */}
       <button className="btn btn-primary" onClick={() => navigate('MenuScreen')}
-        style={{ position: 'absolute', left: '6.41%', width: '87.18%', top: 'calc(85.665dvh - var(--btn-h) / 2)', height: 'var(--btn-h)', minHeight: 0 }}>
+        style={{ position: 'absolute', left: 'calc(6.41% + 87.18% / 6)', width: 'calc(87.18% * 2 / 3)', top: 'calc(85.665dvh - var(--btn-h) / 2)', height: 'var(--btn-h)', minHeight: 0 }}>
         Done
       </button>
 

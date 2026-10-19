@@ -26,6 +26,16 @@
   0.00002433 cirBTC at the 50% rule, liquidation ≈ $47.8k); 2 USDC needs 0.00004865 → Circle 380609 (not enough collateral).
 - NEXT: owner borrows 1 USDC on test.ezwallet.cash, alerts on, "Repay all & close". Lag fix e72ff9e pushed to main too (owner 2026-10-19, before testing it) - both branches equal again.
 
+## ▶ Session 2026-10-19 (4) - History stuck on "Loading..." + Security/About trimmed
+- **Bug (owner):** History sat on "Loading..." forever. Measured with `wrangler pages deployment tail`: Circle answered
+  155105 "userToken is invalid", `/api/wallet` returned it as JSON with status **502**, and Cloudflare's edge REPLACES
+  any 502 body with plain "error code: 502" (503/4xx pass through) → `r.json()` threw → the client never saw the code,
+  never minted a fresh token, retried every 3 s forever. Fix: `functions/api/_middleware.js` turns every 502 from
+  `functions/api/*` into 503 with the JSON intact (not `/api/sync`, where 503 = sync disabled). Affects every API.
+- Security & Region: Network / Email / Wallet address rows removed (PIN, Language, Default currency from row 1).
+  About: only Version, support email, Terms, Privacy (owner's pick). Done = 2/3 width on History, Security, About.
+  Screenshots: Desktop `ezwallet-security-about\`.
+
 ## ▶ Session 2026-10-19 (3) - Transaction history polish (owner: "everything sinks")
 - Each transaction = a WHITE card (radius 16, 8 gap) inside the grey box (owner's pick of 4 options); the date = bold
   black title; time / token amount / note = `--color-muted-2`. Done button = 2/3 of the full width, this screen only.
