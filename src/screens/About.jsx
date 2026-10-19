@@ -28,7 +28,7 @@ export default function About() {
       <ScreenSheet />
       <div className="sheet-title">About</div>
 
-      <ScrollBox style={{ position: 'absolute', left: '6.41%', top: '10.19dvh', width: '87.18%', height: '69.43dvh', background: 'var(--color-card)', borderRadius: 16, overflow: 'hidden' }} listStyle={{ padding: 'calc(8 * var(--u)) calc(16 * var(--u))' }}>
+      <ScrollBox style={{ position: 'absolute', left: 'var(--m)', top: '10.19dvh', width: 'var(--cw)', height: '69.43dvh', background: 'var(--color-card)', borderRadius: 16, overflow: 'hidden' }} listStyle={{ padding: 'calc(8 * var(--u)) calc(16 * var(--u))' }}>
           <div className="col" style={{ flexShrink: 0 }}>
               {ROWS.map(({ label, value, link, screen }) => (
                 value !== undefined ? (
@@ -49,7 +49,7 @@ export default function About() {
 
       {/* Owner 2026-10-19: Done = 2/3 of the card width, centred (same as History / Security). */}
       <button className="btn btn-primary" onClick={() => navigate('MenuScreen')}
-        style={{ position: 'absolute', left: 'calc(6.41% + 87.18% / 6)', width: 'calc(87.18% * 2 / 3)', top: 'calc(85.665dvh - var(--btn-h) / 2)', height: 'var(--btn-h)', minHeight: 0 }}>
+        style={{ position: 'absolute', left: 'calc(var(--m) + var(--cw) / 6)', width: 'calc(var(--cw) * 2 / 3)', top: 'calc(85.665dvh - var(--btn-h) / 2)', height: 'var(--btn-h)', minHeight: 0 }}>
         Done
       </button>
 

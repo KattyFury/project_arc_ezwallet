@@ -13,7 +13,7 @@ import ScrollBox, { BoxHeader } from '../components/ScrollBox'
 // · 5-8 TOP ARGUS MEMES by 24h volume (GeckoTerminal via /api/meme 'top', 5-min cache) · 9 the risk line · 10 Exit.
 // Any row → MemeToken (Buy | Sell, with the honeypot check). LABS only (src/labs.js).
 const isAddr = (a) => /^0x[0-9a-fA-F]{40}$/.test(String(a || '').trim())
-const BOX = { position: 'absolute', left: '6.41%', right: '6.41%' }
+const BOX = { position: 'absolute', left: 'var(--m)', right: 'var(--m)' }
 const LIST = { padding: '0 calc(12 * var(--u)) calc(12 * var(--u))', gap: 'calc(8 * var(--u))' }   // under the fixed BoxHeader
 const muted = { fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)' }
 
@@ -93,7 +93,7 @@ export default function Memes() {
       )}
 
       {/* Row 2: paste a contract address. */}
-      <div style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '10.19dvh', height: '8.29dvh', display: 'flex', alignItems: 'center', gap: 'calc(12 * var(--u))' }}>
+      <div style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '10.19dvh', height: '8.29dvh', display: 'flex', alignItems: 'center', gap: 'calc(12 * var(--u))' }}>
         <input value={ca} onChange={e => { setCa(e.target.value); setError('') }} onKeyDown={e => e.key === 'Enter' && go(ca)}
           placeholder="Token address (CA)" spellCheck={false} autoCapitalize="off" autoCorrect="off"
           className="address-input" style={{ flex: 1, minWidth: 0 }} />
@@ -138,7 +138,7 @@ export default function Memes() {
       </ScrollBox>
 
       {/* Row 9: the risk line (owner 2026-10-06: plain words, what a member must know). */}
-      <div className="warning-badge" style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '81.52dvh', height: '8.29dvh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 calc(12 * var(--u))', fontSize: 'var(--fs-small)', lineHeight: 1.3 }}>
+      <div className="warning-badge" style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '81.52dvh', height: '8.29dvh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 calc(12 * var(--u))', fontSize: 'var(--fs-small)', lineHeight: 1.3 }}>
         Memes can drop to zero in minutes. Copycat tokens use real names - check the address. Only use money you can lose.
       </div>
 

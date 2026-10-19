@@ -114,9 +114,9 @@ export default function QRScanner() {
           10.19dvh, 87.18% x 38.86dvh, radius 16 - rows 2-5, ~4/10 of the screen height), replacing the
           fixed 258x258 square, which read as too small. The camera feed covers the whole box. */}
       {error ? (
-        <span style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '30dvh', fontSize: 'var(--fs-caption)', color: 'var(--color-error)', textAlign: 'center' }}>{error}</span>
+        <span style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '30dvh', fontSize: 'var(--fs-caption)', color: 'var(--color-error)', textAlign: 'center' }}>{error}</span>
       ) : (
-        <div style={{ position: 'absolute', left: '6.41%', top: '10.19dvh', width: '87.18%', height: '38.86dvh', borderRadius: 16, overflow: 'hidden', background: '#000' }}>
+        <div style={{ position: 'absolute', left: 'var(--m)', top: '10.19dvh', width: 'var(--cw)', height: '38.86dvh', borderRadius: 16, overflow: 'hidden', background: '#000' }}>
           <video ref={videoRef} autoPlay playsInline muted
             style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
         </div>
@@ -126,7 +126,7 @@ export default function QRScanner() {
           notification-type message. Sits 16px below the scan box's bottom edge (10.19 + 38.86 = 49.05dvh) -
           it used to be glued to the old square. */}
       {!error && (
-        <div style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: 'calc(49.05dvh + calc(16 * var(--u)))', fontSize: 'var(--fs-content-2)', lineHeight: 'calc(20 * var(--u))', fontWeight: 'var(--fw-semibold)', textAlign: 'center', color: 'var(--color-error)' }}>
+        <div style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: 'calc(49.05dvh + calc(16 * var(--u)))', fontSize: 'var(--fs-content-2)', lineHeight: 'calc(20 * var(--u))', fontWeight: 'var(--fw-semibold)', textAlign: 'center', color: 'var(--color-error)' }}>
           {NETWORK_NOTE}
         </div>
       )}
@@ -134,7 +134,7 @@ export default function QRScanner() {
       {/* Dynamic scan hint - real, working functionality (updates as the camera reads frames) that the
           static Figma mock has no equivalent for, kept as its own line under the caption, same 16px. */}
       {!error && (
-        <span style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: 'calc(49.05dvh + calc(44 * var(--u)))', fontSize: 'var(--fs-content-2)', lineHeight: 'calc(20 * var(--u))', fontWeight: 'var(--fw-medium)', color: 'var(--color-content)', textAlign: 'center' }}>{hint}</span>
+        <span style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: 'calc(49.05dvh + calc(44 * var(--u)))', fontSize: 'var(--fs-content-2)', lineHeight: 'calc(20 * var(--u))', fontWeight: 'var(--fw-medium)', color: 'var(--color-content)', textAlign: 'center' }}>{hint}</span>
       )}
 
       <input ref={fileRef} type="file" accept="image/*" onChange={handlePickImage} style={{ display: 'none' }} />

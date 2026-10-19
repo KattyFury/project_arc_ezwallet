@@ -67,7 +67,7 @@ export default function ForgotPin() {
     <div className="screen" style={{ background: GRADIENT }}>
       <img className="logo-lockup" src={logoLong} alt="ezwallet" />
       {error && (
-        <div style={{ position: 'absolute', top: '34.72dvh', left: '6.41%', right: '6.41%', fontSize: 'var(--fs-content-1)', color: 'var(--color-error)', textAlign: 'center' }}>{error}</div>
+        <div style={{ position: 'absolute', top: '34.72dvh', left: 'var(--m)', right: 'var(--m)', fontSize: 'var(--fs-content-1)', color: 'var(--color-error)', textAlign: 'center' }}>{error}</div>
       )}
       <div className="row-10 row10-dual">
         <button className="btn btn-secondary" onClick={() => navigate('PinGate', { next })}>Cancel</button>

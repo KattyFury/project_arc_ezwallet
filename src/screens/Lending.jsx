@@ -18,7 +18,7 @@ import BorrowTab from './BorrowTab'
 // Deposit only while "Withdrawable now" covers the amount, $200 per deposit.
 // LABS: reachable only where src/labs.js allows it (ServiceHub hides the card elsewhere, /api/earn answers 503).
 
-const ROW1 = { position: 'absolute', left: '6.41%', right: '6.41%', top: 0, height: 'calc(70 * var(--u))' }
+const ROW1 = { position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: 0, height: 'calc(70 * var(--u))' }
 const BOX = { border: 'none', borderRadius: 16, background: 'var(--color-card)' }
 export const fmtAmt = (n) => Number(n || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 export const fmtApy = (a) => typeof a === 'number' ? `${(a * 100).toFixed(2)}%` : '…'
@@ -115,7 +115,7 @@ export default function Lending() {
       {tab === 'borrow' ? <BorrowTab /> : (<>
         {/* MY DEPOSITS - rows 2-3, always first (owner). */}
         {/* Open (owner 2026-10-05) → every position as its own card (LendPositions). Hidden while there is nothing. */}
-        <div style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '10.19dvh', height: '18.48dvh', ...BOX, display: 'flex', alignItems: 'center', gap: 'calc(12 * var(--u))', padding: 'calc(16 * var(--u))' }}>
+        <div style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '10.19dvh', height: '18.48dvh', ...BOX, display: 'flex', alignItems: 'center', gap: 'calc(12 * var(--u))', padding: 'calc(16 * var(--u))' }}>
           <div className="col" style={{ flex: 1, minWidth: 0, gap: 'calc(6 * var(--u))' }}>
           <span style={{ fontSize: 'var(--fs-content-2)', color: 'var(--color-muted-2)' }}>My deposits</span>
           <span className="num" style={{ fontSize: 'var(--fs-hero)', fontWeight: 'var(--fw-light)', lineHeight: 1.1, color: 'var(--color-black)' }}>
@@ -133,7 +133,7 @@ export default function Lending() {
         {/* Rows 4-8: ONE grey box, scrolling inside (owner 2026-10-05). One white card per vault, each with the same
             neutral "Open" button - inside, row 1 switches between Deposit and Withdraw. The vaults I hold come first and
             show my balance on the card. */}
-        <ScrollBox style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '30.57dvh', height: '49.05dvh', ...BOX, overflow: 'hidden' }} listStyle={{ padding: 'calc(16 * var(--u))', gap: 'calc(16 * var(--u))' }}>
+        <ScrollBox style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '30.57dvh', height: '49.05dvh', ...BOX, overflow: 'hidden' }} listStyle={{ padding: 'calc(16 * var(--u))', gap: 'calc(16 * var(--u))' }}>
           {error && <div className="warning-badge" style={{ background: 'var(--color-error-soft)', flexShrink: 0 }}>{error}</div>}
           {vaults === null && <span style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)' }}>Loading vaults…</span>}
           {[...(vaults || [])].sort((a, b) => (posOf(b) ? 1 : 0) - (posOf(a) ? 1 : 0)).map(v => {
@@ -153,7 +153,7 @@ export default function Lending() {
         </ScrollBox>
 
         {/* Row 9: the always-visible risk line (plan §7). */}
-        <div className="warning-badge" style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '81.52dvh', height: '8.29dvh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 calc(12 * var(--u))', fontSize: 'var(--fs-small)', lineHeight: 1.3 }}>
+        <div className="warning-badge" style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '81.52dvh', height: '8.29dvh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 calc(12 * var(--u))', fontSize: 'var(--fs-small)', lineHeight: 1.3 }}>
           Vault funds are lent out. Withdrawals can be delayed. Value can fall in extreme markets.
         </div>
       </>)}

@@ -39,7 +39,7 @@ export default function ServiceHub() {
       <div className="sheet-title">Service hub</div>
 
       {/* The cards stack one gap apart from row 2 down (a 2nd card arrived 2026-10-05 - Lending / Borrow). */}
-      <div style={{ position: 'absolute', left: '6.41%', top: '10.19dvh', width: '87.18%', display: 'flex', flexDirection: 'column', gap: 'calc(16 * var(--u))' }}>
+      <div style={{ position: 'absolute', left: 'var(--m)', top: '10.19dvh', width: 'var(--cw)', display: 'flex', flexDirection: 'column', gap: 'calc(16 * var(--u))' }}>
       {SERVICES.map(({ id, icon, label, desc, screen }) => {
         const soon = !screen
         return (

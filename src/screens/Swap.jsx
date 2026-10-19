@@ -479,7 +479,7 @@ export default function Swap() {
           slider's area" the user flagged; the CTA sits on row 9 at the width of the cards (NOT 3/4 of the
           screen - node 1:85 is 340px wide, edge to edge with the cards). */}
 
-      <div style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '10.19dvh', height: '18.48dvh' }}>
+      <div style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '10.19dvh', height: '18.48dvh' }}>
         <SideCard label={'You pay'} sym={fromSym} onPick={() => setPicker('from')} amount={hasBal ? amountNum : null} disp={amountDisplay}
           onAmount={openPad} typing={pad ? typed : null} balLabel="Available" />
       </div>
@@ -501,14 +501,14 @@ export default function Swap() {
         <Icon name="trade" size="var(--is-num)" color="var(--color-white)" />
       </button>
 
-      <div style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '30.57dvh', height: '18.48dvh' }}>
+      <div style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '30.57dvh', height: '18.48dvh' }}>
         <SideCard label={'You receive'} sym={toSym} onPick={() => setPicker('to')} amount={estNum} disp={estNum !== null ? toDisplay(estNum, toSym) : null} balLabel="Balance" idle={!(amountNum > 0)} />
       </div>
 
       {/* Rate + Fee - node 1:83/10:123: raw Figma reading was 13px, rounded up to Chú thích (15px) - the
           new 5-tier scale (2026-09-10) has no tier below 15, absorbing the old --fs-tiny. Label colour
           --color-muted-2 #4B5568, figures BLACK semibold. Alone in row 6, centred at 51.4dvh. */}
-      <div style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '51.4dvh', transform: 'translateY(-50%)', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', columnGap: 'calc(8 * var(--u))', rowGap: 'calc(2 * var(--u))', padding: '0 calc(11 * var(--u))' }}>
+      <div style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '51.4dvh', transform: 'translateY(-50%)', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', columnGap: 'calc(8 * var(--u))', rowGap: 'calc(2 * var(--u))', padding: '0 calc(11 * var(--u))' }}>
         <span style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)', whiteSpace: 'nowrap' }}>
           Rate: <span className="num" style={{ color: 'var(--color-content)', fontWeight: 'var(--fw-semibold)' }}>{rateTxt}</span>
         </span>
@@ -522,7 +522,7 @@ export default function Swap() {
           ⚠️ The chip row MUST have a FIXED HEIGHT (height 40, never sized by its content): when `hints.map` is
           empty the row collapses to 0, which used to reflow the slider below it (bug reported 07-21) -
           reserving the space keeps the slider still while the chips merely fade in and out. */}
-      <div style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '61.14dvh', height: '18.48dvh', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '1dvh', minWidth: 0 }}>
+      <div style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '61.14dvh', height: '18.48dvh', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '1dvh', minWidth: 0 }}>
         {/* NO amount chosen → the row stays EMPTY (user decision 07-23: the "Slide to adjust…" hint pill was dropped, the
             instruction MOVED ONTO THE SWAP BUTTON as "Slide or tap here to enter", which opens the numpad). */}
         <div style={{ height: 'calc(40 * var(--u))', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'calc(8 * var(--u))', minWidth: 0 }}>
@@ -561,7 +561,7 @@ export default function Swap() {
           SAME 340px as the cards above it (was 3/4 of the screen). The bigger glow
           "0 0 20px rgba(0,0,0,.32)" (was the standard button shadow) is this CTA's own value, not reused
           from elsewhere. Still the only place status is shown; priority error > status > hint/'Swap'. */}
-      <div style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '81.52dvh', height: '8.29dvh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '81.52dvh', height: '8.29dvh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         {(() => {
           const needAmount = !error && !status && !(amountNum > 0)   // no amount chosen → the button becomes the hint that opens the numpad
           // 'Swap submitted' (sent, awaiting confirmation) = PALE green · 'Swap successful' (the received token balance has

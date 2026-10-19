@@ -262,7 +262,7 @@ export default function TxHistory() {
           rows, so the row padding below has no Figma evidence and is left as-is). */}
       {/* ⚠️ ABSOLUTE card (fix 2026-09-27), not className="row-2-8": as a plain grid item it painted UNDER the
           absolutely-positioned ScreenSheet - the same bug SavedQRList had - so the grey box never showed. */}
-      <div style={{ position: 'absolute', left: '6.41%', top: '10.19dvh', width: '87.18%', height: '69.43dvh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'var(--color-card)', borderRadius: 16, padding: 'calc(8 * var(--u)) calc(12 * var(--u)) 0', alignItems: 'stretch', justifyContent: 'flex-start', overflow: 'hidden' }}>
+      <div style={{ position: 'absolute', left: 'var(--m)', top: '10.19dvh', width: 'var(--cw)', height: '69.43dvh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'var(--color-card)', borderRadius: 16, padding: 'calc(8 * var(--u)) calc(12 * var(--u)) 0', alignItems: 'stretch', justifyContent: 'flex-start', overflow: 'hidden' }}>
       <div className="scroll-hidden" style={{
         display: 'flex', flexDirection: 'column', alignItems: 'stretch', justifyContent: 'flex-start', height: '100%', overflowY: 'auto',
         WebkitMaskImage: 'linear-gradient(to top, transparent 0, black calc(100dvh / 30))',

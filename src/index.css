@@ -29,6 +29,10 @@
      muted #8B95A8, mist #F1F4FA, green/red *-text values for words, yellow #F5B301, ONE shadow (--shadow-y2),
      solid buttons. Layout, grid and type scale unchanged. The notes below are older history. */
   --shadow-y2: 0 2px 8px rgba(0, 0, 0, 0.32);
+  /* Side margin 16 (nguyen0xhieu system, owner 2026-10-19; was 6.41% = 25px of the 390 Figma). --cw = the card width
+     between the two margins - use it where the old code said 87.18%. Both resolve against the SCREEN. */
+  --m: 16px;
+  --cw: calc(100% - 2 * var(--m));
   --color-line: #DCE3EE;   /* hairlines, slider tracks, DISABLED button fill (visible on white AND on mist) */
 
   /* ── THE 7 BRAND-GUIDELINE COLOURS ──
@@ -459,8 +463,8 @@ body {
                                    absolute element keeps its grid-row, that GRID CELL becomes its coordinate origin
                                    → top:85dvh counted from row 10 → the button flies off screen (Contacts lost its button).
                                    grid-row:auto → the origin is .screen → it lands correctly on EVERY screen. */
-  left: 6.41%;
-  right: 6.41%;
+  left: var(--m);
+  right: var(--m);
   top: 81.52dvh;
   height: 8.29dvh;
   display: flex;

@@ -35,7 +35,7 @@ export default function BalanceHeader({ totalUsd, loading }) {
     // "bottom edge at exactly 70px" without depending on whatever else lands in the same track.
     <div style={{
       position: 'absolute', left: '50%', top: 0, transform: 'translateX(-50%)',
-      width: '87.18%', height: 'calc(70 * var(--u))',
+      width: 'var(--cw)', height: 'calc(70 * var(--u))',
       display: 'flex', alignItems: 'flex-end', justifyContent: 'center', minWidth: 0,
     }}>
       <div ref={fitRef} style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'center', width: '100%' }}>

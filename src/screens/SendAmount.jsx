@@ -229,21 +229,21 @@ export default function SendAmount() {
           not approximated with flexbox space-between/flex-end like the first pass - that approximation is
           exactly what put the chip/icon/numbers at the wrong y and made them impossible to pixel-diff
           cleanly. Same per-element absolute placement Confirm transaction/Receipt already use. */}
-      <div style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '10.19dvh', height: '18.48dvh', background: 'var(--color-card)', borderRadius: 16 }} />
+      <div style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '10.19dvh', height: '18.48dvh', background: 'var(--color-card)', borderRadius: 16 }} />
 
-      <span style={{ position: 'absolute', left: '8.46%', top: '13.55dvh', transform: 'translateY(-50%)', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)' }}>You send</span>
+      <span style={{ position: 'absolute', left: 'calc(var(--m) + 8 * var(--u))', top: '13.55dvh', transform: 'translateY(-50%)', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)' }}>You send</span>
 
       {/* Chip - node 1:94: centre 19.4dvh. Figma draws a flat 24x24 BLACK SQUARE placeholder (1:95, no
           real icon layer) - replaced with the real token logo for an actual token; USD (a fiat label,
           not a token) shows no logo at all. */}
       <button onClick={() => setShowCur(true)}
-        style={{ position: 'absolute', left: '8.46%', top: '19.4dvh', transform: 'translateY(-50%)', display: 'inline-flex', alignItems: 'center', gap: 'calc(6 * var(--u))', border: 'none', background: 'var(--btn-grad-white)', borderRadius: 999, height: 'calc(42 * var(--u))', padding: '0 calc(14 * var(--u)) 0 calc(8 * var(--u))', boxShadow: 'var(--shadow-y2)', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)', cursor: 'pointer' }}>
+        style={{ position: 'absolute', left: 'calc(var(--m) + 8 * var(--u))', top: '19.4dvh', transform: 'translateY(-50%)', display: 'inline-flex', alignItems: 'center', gap: 'calc(6 * var(--u))', border: 'none', background: 'var(--btn-grad-white)', borderRadius: 999, height: 'calc(42 * var(--u))', padding: '0 calc(14 * var(--u)) 0 calc(8 * var(--u))', boxShadow: 'var(--shadow-y2)', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)', cursor: 'pointer' }}>
         {!isFiatLabel(cur) && <img src={`/tokens/${tokenIconFor(cur)}.png`} alt="" style={{ width: 'calc(24 * var(--u))', height: 'calc(24 * var(--u))', borderRadius: '50%', flexShrink: 0 }} />}
         {isUnv(cur) ? <span style={{ maxWidth: 'calc(150 * var(--u))', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{labelOf(cur)}</span> : cur}
         <Icon name="down2" size="var(--is-content-2)" color="var(--color-brand)" />
       </button>
 
-      <span style={{ position: 'absolute', left: '8.46%', right: '8.46%', top: '25.28dvh', transform: 'translateY(-50%)', fontSize: 'var(--fs-content-2)', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: 'calc(6 * var(--u))', minWidth: 0 }}>
+      <span style={{ position: 'absolute', left: 'calc(var(--m) + 8 * var(--u))', right: 'calc(var(--m) + 8 * var(--u))', top: '25.28dvh', transform: 'translateY(-50%)', fontSize: 'var(--fs-content-2)', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: 'calc(6 * var(--u))', minWidth: 0 }}>
         <span style={{ color: 'var(--color-muted-2)' }}>Available:</span>
         <span className="num" style={{ fontWeight: 'var(--fw-semibold)', color: 'var(--color-brand)', overflow: 'hidden', textOverflow: 'ellipsis', minWidth: 0 }}>{availableStr}</span>
         {/* HINT chips, not buttons (owner 2026-10-05): the outlined flat pill of Exchange's amount hints - no gradient,
@@ -260,7 +260,7 @@ export default function SendAmount() {
           8.46% inset as everything else in this card. Idle colour --color-content (was --color-faint,
           nearly invisible white-on-white - user decision 2026-09-24: "ít ra phải màu đen", the blinking
           caret already signals "not typed yet"). */}
-      <div ref={fitRef} style={{ position: 'absolute', left: '51%', right: '8.46%', top: '16.72dvh', textAlign: 'right' }}>
+      <div ref={fitRef} style={{ position: 'absolute', left: '51%', right: 'calc(var(--m) + 8 * var(--u))', top: '16.72dvh', textAlign: 'right' }}>
         <span className="num" style={{ fontSize: fitSize, fontWeight: 'var(--fw-light)', lineHeight: 1, whiteSpace: 'nowrap', color: overBalance ? 'var(--color-error)' : 'var(--color-content)' }}>
           {amountStr}<span className="caret">_</span>
         </span>
@@ -269,7 +269,7 @@ export default function SendAmount() {
       {/* No connector circle between "You send" and "To" (owner 2026-10-19: removed). */}
 
       {/* "To" card - node 1:91: row 4 (340x70, top 30.57dvh). "To:" 18px + the name 22px, both semibold. */}
-      <div style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '30.57dvh', height: '8.29dvh', background: 'var(--color-card)', borderRadius: 16, display: 'flex', alignItems: 'center', padding: '0 calc(8 * var(--u))', minWidth: 0 }}>
+      <div style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '30.57dvh', height: '8.29dvh', background: 'var(--color-card)', borderRadius: 16, display: 'flex', alignItems: 'center', padding: '0 calc(8 * var(--u))', minWidth: 0 }}>
         <span style={{ fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
           {'To: '}<span style={{ fontSize: 'var(--fs-h2)' }}>{name || shortenAddr(address)}</span>
         </span>
@@ -279,16 +279,16 @@ export default function SendAmount() {
           the "To" card and the message row. VND is unreachable in practice (CURRENCIES above has no
           'VND' - see the file header comment) so this and the error message never actually coincide. */}
       {isVnd && digits && (
-        <span className="num" style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '39.5dvh', fontSize: 'var(--fs-caption)', color: 'var(--color-muted)', textAlign: 'center' }}>
+        <span className="num" style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '39.5dvh', fontSize: 'var(--fs-caption)', color: 'var(--color-muted)', textAlign: 'center' }}>
           {vndRate ? `≈ ${tokenAmount.toFixed(2)} USDC` : 'Getting exchange rate...'}
         </span>
       )}
       {selfSend ? (
-        <span style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '39.5dvh', fontSize: 'var(--fs-caption)', color: 'var(--color-error)', textAlign: 'center' }}>
+        <span style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '39.5dvh', fontSize: 'var(--fs-caption)', color: 'var(--color-error)', textAlign: 'center' }}>
           That's your own wallet – you can't send to yourself
         </span>
       ) : overBalance && (
-        <span style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '39.5dvh', fontSize: 'var(--fs-caption)', color: 'var(--color-error)', textAlign: 'center' }}>
+        <span style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '39.5dvh', fontSize: 'var(--fs-caption)', color: 'var(--color-error)', textAlign: 'center' }}>
           {'Insufficient balance (available:'} {availableStr} {labelOf(cur)})
         </span>
       )}
@@ -298,7 +298,7 @@ export default function SendAmount() {
           overridden to #F1F4FA (var(--color-card)) here - node 58:413 draws this exact colour, matching
           the "You send"/"To" cards above it (user decision 2026-09-24: all 4 grey boxes on this screen
           should read as ONE colour, they were drifting - surface/card/surface-2 are 3 different tokens). */}
-      <div style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '42.57dvh', display: 'flex', alignItems: 'center', gap: 'calc(8 * var(--u))', minWidth: 0 }}>
+      <div style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '42.57dvh', display: 'flex', alignItems: 'center', gap: 'calc(8 * var(--u))', minWidth: 0 }}>
         <input
           className="address-input"
           placeholder={'Message (optional)'}

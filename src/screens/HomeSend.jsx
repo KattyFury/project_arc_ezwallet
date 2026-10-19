@@ -155,7 +155,7 @@ export default function HomeSend() {
           overflow:hidden so the "Hold to show tokens" pill is clipped at the card's bottom edge, which
           is what makes it read as a half-oval sitting on that edge rather than a floating button. */}
       <div style={{
-        position: 'absolute', left: '6.41%', top: '10.19dvh', width: '87.18%', height: '38.86dvh',
+        position: 'absolute', left: 'var(--m)', top: '10.19dvh', width: 'var(--cw)', height: '38.86dvh',
         background: 'var(--color-card)', borderRadius: 16, padding: 'calc(15.94 * var(--u)) calc(16 * var(--u)) 0', minWidth: 0,
         overflow: 'hidden',
       }}>
@@ -256,7 +256,7 @@ export default function HomeSend() {
           0..N live notifications plus the low-USDC warning, so the CONTAINER is matched exactly and its
           contents stay NotifArea, which is what actually knows about them. */}
       <div style={{
-        position: 'absolute', left: '6.41%', top: '50.95dvh', width: '87.18%', height: '28.67dvh',
+        position: 'absolute', left: 'var(--m)', top: '50.95dvh', width: 'var(--cw)', height: '28.67dvh',
         background: 'var(--color-card)', borderRadius: 16, padding: 'calc(16 * var(--u))',
         display: 'flex', flexDirection: 'column', minHeight: 0,
       }}>
@@ -283,7 +283,7 @@ export default function HomeSend() {
           taller (124x70 at y=688) than its siblings (100x48 at y=699) and they share no baseline, so a
           flex row with align-items would only approximate what the node draws. Radius 16 on all three. */}
       <button onClick={() => navigate('PasteAddress')} style={{
-        position: 'absolute', left: '6.41%', top: SIDE_BTN.top, width: '25.64%', height: SIDE_BTN.height,
+        position: 'absolute', left: 'var(--m)', top: SIDE_BTN.top, width: 'calc((var(--cw) - 16 * var(--u)) * 100 / 324)', height: SIDE_BTN.height,
         background: 'var(--btn-grad-white)', border: 'none', borderRadius: 16,
         boxShadow: 'var(--shadow-y2)',
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(2 * var(--u))',
@@ -295,7 +295,7 @@ export default function HomeSend() {
       </button>
 
       <button onClick={() => navigate('QRScanner')} style={{
-        position: 'absolute', left: '34.10%', top: BIG_BTN.top, width: '31.79%', height: BIG_BTN.height,
+        position: 'absolute', left: 'calc(var(--m) + (var(--cw) - 16 * var(--u)) * 100 / 324 + 8 * var(--u))', top: BIG_BTN.top, width: 'calc((var(--cw) - 16 * var(--u)) * 124 / 324)', height: BIG_BTN.height,
         background: 'var(--btn-grad-brand)', border: 'none', borderRadius: 16,
         boxShadow: 'var(--shadow-y2)',
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(2 * var(--u))',
@@ -307,7 +307,7 @@ export default function HomeSend() {
       </button>
 
       <button onClick={() => navigate('Contacts')} style={{
-        position: 'absolute', left: '67.95%', top: SIDE_BTN.top, width: '25.64%', height: SIDE_BTN.height,
+        position: 'absolute', left: 'calc(var(--m) + (var(--cw) - 16 * var(--u)) * 100 / 324 + (var(--cw) - 16 * var(--u)) * 124 / 324 + 16 * var(--u))', top: SIDE_BTN.top, width: 'calc((var(--cw) - 16 * var(--u)) * 100 / 324)', height: SIDE_BTN.height,
         background: 'var(--btn-grad-white)', border: 'none', borderRadius: 16,
         boxShadow: 'var(--shadow-y2)',
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(2 * var(--u))',

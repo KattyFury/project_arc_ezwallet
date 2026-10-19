@@ -147,7 +147,7 @@ export default function Contacts() {
           has no Figma evidence to check against and is left as the prior user-tuned value). */}
       {/* ⚠️ ABSOLUTE card (fix 2026-09-27), not className="row-2-8": as a plain grid item it painted UNDER the
           absolutely-positioned ScreenSheet - the same bug SavedQRList had - so the grey box never showed and the WHOLE contact list was hidden behind the white sheet. */}
-      <div style={{ position: 'absolute', left: '6.41%', top: '10.19dvh', width: '87.18%', height: '69.43dvh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', ...(contacts.length ? { background: 'var(--color-card)', borderRadius: 16, padding: 'calc(4 * var(--u)) calc(16 * var(--u))', alignItems: 'stretch', justifyContent: 'flex-start', overflow: 'hidden' } : {}) }}>
+      <div style={{ position: 'absolute', left: 'var(--m)', top: '10.19dvh', width: 'var(--cw)', height: '69.43dvh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', ...(contacts.length ? { background: 'var(--color-card)', borderRadius: 16, padding: 'calc(4 * var(--u)) calc(16 * var(--u))', alignItems: 'stretch', justifyContent: 'flex-start', overflow: 'hidden' } : {}) }}>
         {contacts.length === 0 ? (
           <span style={{ fontSize: 'var(--fs-content-1)', color: 'var(--color-muted)' }}>No contacts yet</span>
         ) : (

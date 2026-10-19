@@ -29,7 +29,7 @@ const shown = (s) => {
   return `${/[1-9]/.test(f.slice(SHOW_DEC)) ? '≈ ' : ''}${i}.${f.slice(0, SHOW_DEC)}`
 }
 const BOX = { border: 'none', borderRadius: 16, background: 'var(--color-card)' }
-const at = (top, height) => ({ position: 'absolute', left: '6.41%', right: '6.41%', top, height })
+const at = (top, height) => ({ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top, height })
 const fmtAmt = (n, d = 2) => Number(n || 0).toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d })
 const trim = (s) => s.includes('.') ? s.replace(/0+$/, '').replace(/\.$/, '') : s
 

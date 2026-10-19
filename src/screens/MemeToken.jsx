@@ -19,7 +19,7 @@ import { Tabs } from './Lending'
 // the minimum, re-runs the honeypot guard for a buy and simulates the exact batch) → ONE PIN → txTracker (C3).
 const MAX_BUY = 20   // also enforced by the server (functions/api/_memeCore.js MEME_MAX_BUY_USD)
 const BOX = { border: 'none', borderRadius: 16, background: 'var(--color-card)' }
-const at = (top, height) => ({ position: 'absolute', left: '6.41%', right: '6.41%', top, height })
+const at = (top, height) => ({ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top, height })
 const trim = (s) => s.includes('.') ? s.replace(/0+$/, '').replace(/\.$/, '') : s
 // Exact base units → decimal string (never through a float - a meme balance has 18 decimals).
 const rawToDec = (raw, dec) => { const s = BigInt(raw || 0).toString().padStart(dec + 1, '0'); return trim(`${s.slice(0, -dec)}.${s.slice(-dec)}`) }

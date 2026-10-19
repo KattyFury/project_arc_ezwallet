@@ -189,8 +189,8 @@ export default function Login() {
           file stays what it has always been - a stand-in for measuring, never the real render.
           The metrics below ARE the node's own and do stay: 40px / 700 / line-height 44 / tracking -1.6. */}
       <h1 style={{
-        position: 'absolute', left: '6.41%', top: '19.43dvh', transform: 'translateY(-50%)',
-        width: '87.18%', margin: 0,
+        position: 'absolute', left: 'var(--m)', top: '19.43dvh', transform: 'translateY(-50%)',
+        width: 'var(--cw)', margin: 0,
         fontSize: 'var(--fs-hero)', fontWeight: 700,
         lineHeight: 'calc(44 * var(--u))', letterSpacing: '-1.6px',
         color: 'var(--color-black)',
@@ -204,10 +204,10 @@ export default function Login() {
           10px black dots). The dot is drawn INSIDE its cell rather than at its own absolute coordinate:
           Figma puts each dot exactly at the cell's centre, so nesting them is the same geometry with
           six fewer magic numbers. Decorative - this is a picture of a PIN, not an input. */}
-      {[6.41, 21.28, 36.15, 51.03, 65.90, 80.77].map((left, i) => (
+      {[0, 1, 2, 3, 4, 5].map((i) => (
         <div key={i} aria-hidden="true" style={{
-          position: 'absolute', left: `${left}%`, top: '30.57dvh',
-          width: '12.82%', height: '8.29dvh',
+          position: 'absolute', left: `calc(var(--m) + ${i} * ((var(--cw) - 40 * var(--u)) / 6 + 8 * var(--u)))`, top: '30.57dvh',
+          width: 'calc((var(--cw) - 40 * var(--u)) / 6)', height: '8.29dvh',
           background: '#F1F4FA', borderRadius: 16,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}>
@@ -219,8 +219,8 @@ export default function Login() {
           is top-anchored in Figma, not centre-anchored like the headline). The opening clause is
           semibold and the rest regular, which is how the node splits its own runs. */}
       <p style={{
-        position: 'absolute', left: '6.41%', top: '43.19dvh',
-        width: '87.18%', margin: 0,
+        position: 'absolute', left: 'var(--m)', top: '43.19dvh',
+        width: 'var(--cw)', margin: 0,
         fontSize: 'var(--fs-content-1)', lineHeight: 'calc(30 * var(--u))', color: 'var(--color-black)',
         fontWeight: 'var(--fw-normal)',
       }}>
@@ -232,7 +232,7 @@ export default function Login() {
       {/* The arrow pointing at the button - node 54:2: the same 40x45.94 white arrow the Add screen
           uses, turned -90deg so it points right. Its box is 45.938x40 at (29,703). */}
       <div aria-hidden="true" style={{
-        position: 'absolute', left: '7.44%', top: '83.29dvh',
+        position: 'absolute', left: 'calc(var(--m) + 4 * var(--u))', top: '83.29dvh',
         width: 'calc(45.938 * var(--u))', height: 'calc(40 * var(--u))',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}>
@@ -249,8 +249,8 @@ export default function Login() {
       <button
         onClick={() => setEmailOpen(true)}
         style={{
-          position: 'absolute', left: '23.33%', top: '81.52dvh',
-          width: '70.26%', height: '8.29dvh',
+          position: 'absolute', left: 'calc(var(--m) + 66 * var(--u))', top: '81.52dvh',
+          width: 'calc(var(--cw) - 66 * var(--u))', height: '8.29dvh',
           background: 'var(--btn-grad-white)', border: 'none', borderRadius: 16,
           boxShadow: 'var(--shadow-y2)',
           fontSize: 'var(--fs-title)', fontWeight: 'var(--fw-semibold)', lineHeight: 'calc(30 * var(--u))',

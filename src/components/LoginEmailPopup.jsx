@@ -211,14 +211,14 @@ export default function LoginEmailPopup({ onClose }) {
 
       {/* The card - node 51:5: 340x414 at (25,86), radius 16, glow shadow var(--shadow-y2). */}
       <div style={{
-        position: 'absolute', left: '6.41%', top: '10.19dvh', width: '87.18%', height: '49.05dvh',
+        position: 'absolute', left: 'var(--m)', top: '10.19dvh', width: 'var(--cw)', height: '49.05dvh',
         background: 'var(--color-white)', borderRadius: 16, boxShadow: 'var(--shadow-y2)',
       }} />
 
       {/* Title - node 54:4: 24px semibold, line-height 30, centred on (195,121). */}
       <div style={{
         position: 'absolute', left: '50%', top: '14.34dvh', transform: 'translate(-50%, -50%)',
-        width: '87.18%', textAlign: 'center',
+        width: 'var(--cw)', textAlign: 'center',
         fontSize: 'var(--fs-h2)', fontWeight: 'var(--fw-semibold)', lineHeight: 'calc(30 * var(--u))', color: 'var(--color-black)',
       }}>
         {step === 'email' ? 'Log in with email' : 'Enter the code'}
@@ -242,7 +242,7 @@ export default function LoginEmailPopup({ onClose }) {
         autoFocus
         style={{
           position: 'absolute', left: '50%', top: '22.04dvh', transform: 'translateX(-50%)',
-          width: '78.96%', height: 'var(--input-h)',
+          width: 'calc(var(--cw) - 32 * var(--u))', height: 'var(--input-h)',
           background: '#F1F4FA', border: 'none', borderRadius: 16,
           // The browser draws a BLACK FOCUS RING on an autofocused input. The design has no such line
           // anywhere, so it read as a drawing mistake rather than as focus. Killed here, not app-wide.
@@ -252,7 +252,7 @@ export default function LoginEmailPopup({ onClose }) {
 
       {step === 'code' && (
         <div style={{
-          position: 'absolute', left: '10.52%', width: '78.96%', top: 'calc(22.04dvh + var(--input-h) + 16 * var(--u))',   // 16px under the field (owner 2026-10-05)
+          position: 'absolute', left: 'calc(var(--m) + 16 * var(--u))', width: 'calc(var(--cw) - 32 * var(--u))', top: 'calc(22.04dvh + var(--input-h) + 16 * var(--u))',   // 16px under the field (owner 2026-10-05)
           fontSize: 'var(--fs-caption)', lineHeight: 1.4, color: 'var(--color-muted-2)',
         }}>
           We sent a 6-digit code to <span style={{ color: 'var(--color-black)', fontWeight: 'var(--fw-semibold)', overflowWrap: 'anywhere' }}>{email.trim()}</span>. It expires in 10 minutes.
@@ -265,7 +265,7 @@ export default function LoginEmailPopup({ onClose }) {
 
       {chips.length > 0 && (
         <div style={{
-          position: 'absolute', left: '10.52%', width: '78.96%', top: 'calc(22.04dvh + var(--input-h) + 16 * var(--u))',
+          position: 'absolute', left: 'calc(var(--m) + 16 * var(--u))', width: 'calc(var(--cw) - 32 * var(--u))', top: 'calc(22.04dvh + var(--input-h) + 16 * var(--u))',
           display: 'flex', flexWrap: 'wrap', gap: 'calc(8 * var(--u))',
         }}>
           {chips.map(c => <Chip key={c.label} label={c.label} onClick={c.onClick} />)}
@@ -274,7 +274,7 @@ export default function LoginEmailPopup({ onClose }) {
 
       {error && (
         <div style={{
-          position: 'absolute', left: '10.51%', right: '10.51%', top: '46.5dvh',
+          position: 'absolute', left: 'calc(var(--m) + 16 * var(--u))', right: 'calc(var(--m) + 16 * var(--u))', top: '46.5dvh',
           fontSize: 'var(--fs-small)', color: 'var(--color-error)',
         }}>
           {error}
@@ -286,7 +286,7 @@ export default function LoginEmailPopup({ onClose }) {
           rather than navigating anywhere - the popup never was a screen. */}
       <button onClick={back}
         style={{
-          position: 'absolute', left: '10.54%', top: '50.95dvh', width: '38.43%', height: 'var(--btn-h)',
+          position: 'absolute', left: 'calc(var(--m) + 16 * var(--u))', top: '50.95dvh', width: 'calc((var(--cw) - 40 * var(--u)) / 2)', height: 'var(--btn-h)',
           background: 'var(--btn-grad-white)', color: 'var(--color-black)', border: 'none', borderRadius: 16,
           boxShadow: 'var(--shadow-y2)',
           fontFamily: 'inherit', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', cursor: 'pointer',
@@ -295,7 +295,7 @@ export default function LoginEmailPopup({ onClose }) {
       </button>
       <button onClick={handleSubmit} disabled={!valid || loading}
         style={{
-          position: 'absolute', left: '51.03%', top: '50.95dvh', width: '38.46%', height: 'var(--btn-h)',
+          position: 'absolute', left: 'calc(var(--m) + 24 * var(--u) + (var(--cw) - 40 * var(--u)) / 2)', top: '50.95dvh', width: 'calc((var(--cw) - 40 * var(--u)) / 2)', height: 'var(--btn-h)',
           background: valid && !loading ? 'var(--btn-grad-brand)' : 'var(--color-line)', color: valid && !loading ? 'var(--color-white)' : 'var(--color-muted)', border: 'none', borderRadius: 16,
           boxShadow: valid && !loading ? 'var(--shadow-y2)' : 'none',
           fontFamily: 'inherit', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)',

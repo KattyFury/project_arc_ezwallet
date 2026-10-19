@@ -24,7 +24,7 @@ const LANGUAGE_OPTIONS = [{ code: 'en', label: 'English', locked: true }]
 
 // Value chip - node 58:362/58:364/58:366: white pill, glow shadow, no border, 42px tall.
 const CHIP = { border: 'none', background: 'var(--btn-grad-white)', boxShadow: 'var(--shadow-y2)', borderRadius: 999, height: 'calc(42 * var(--u))', padding: '0 calc(14 * var(--u))', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', cursor: 'pointer', flexShrink: 0, display: 'inline-flex', alignItems: 'center', gap: 'calc(6 * var(--u))', fontFamily: 'inherit' }
-const ROW = { position: 'absolute', left: '9.23%', right: '9.23%', transform: 'translateY(-50%)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'calc(12 * var(--u))' }
+const ROW = { position: 'absolute', left: 'calc(var(--m) + 11 * var(--u))', right: 'calc(var(--m) + 11 * var(--u))', transform: 'translateY(-50%)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'calc(12 * var(--u))' }
 // Row centres - user decision 2026-09-27: EVERY item (Network, Email, Wallet address, PIN, Language,
 // Default currency) is its own line on ONE even step, so Network→Email is the same gap as Wallet→PIN.
 // First centre 14.34dvh (121px, the middle of grid row 2), step 7.58dvh (64px). About.jsx uses the SAME
@@ -89,7 +89,7 @@ export default function Security() {
 
       {/* Card - node 1:265: 340x586 at (25,86), radius 16. Owner 2026-10-19: the Network / Email / Wallet address
           lines are gone - only PIN / Language / Default currency, rows with a value chip, from the first row step. */}
-      <div style={{ position: 'absolute', left: '6.41%', top: '10.19dvh', width: '87.18%', height: '69.43dvh', background: 'var(--color-card)', borderRadius: 16 }} />
+      <div style={{ position: 'absolute', left: 'var(--m)', top: '10.19dvh', width: 'var(--cw)', height: '69.43dvh', background: 'var(--color-card)', borderRadius: 16 }} />
 
       <div style={{ ...ROW, top: ROW_TOP(0) }}>
         <span style={LABEL}>PIN</span>
@@ -112,7 +112,7 @@ export default function Security() {
 
       {/* Done - node 58:334/58:337: brand-blue pill, 48px tall; owner 2026-10-19: 2/3 of the card width, centred. */}
       <button className="btn btn-primary" onClick={() => navigate('MenuScreen')}
-        style={{ position: 'absolute', left: 'calc(6.41% + 87.18% / 6)', width: 'calc(87.18% * 2 / 3)', top: 'calc(85.665dvh - var(--btn-h) / 2)', height: 'var(--btn-h)', minHeight: 0 }}>
+        style={{ position: 'absolute', left: 'calc(var(--m) + var(--cw) / 6)', width: 'calc(var(--cw) * 2 / 3)', top: 'calc(85.665dvh - var(--btn-h) / 2)', height: 'var(--btn-h)', minHeight: 0 }}>
         Done
       </button>
 

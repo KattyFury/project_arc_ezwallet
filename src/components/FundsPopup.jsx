@@ -230,7 +230,7 @@ export default function FundsPopup({ mode, onClose }) {
     <div onClick={onClose} style={{ position: 'absolute', inset: 0, zIndex: 100 }}>
       <div onClick={e => e.stopPropagation()} style={{
         // Same top edge / left / width as LoginEmailPopup's card (node 51:5: (25,86), 340 wide); the height follows the content.
-        position: 'absolute', left: '6.41%', width: '87.18%', top: '10.19dvh',
+        position: 'absolute', left: 'var(--m)', width: 'var(--cw)', top: '10.19dvh',
         maxHeight: '85dvh', overflowY: 'auto', boxSizing: 'border-box',
         background: 'var(--color-white)', borderRadius: 16, boxShadow: 'var(--shadow-y2)',
         padding: 'calc(20 * var(--u)) calc(16 * var(--u))',

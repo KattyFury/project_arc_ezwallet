@@ -44,7 +44,7 @@ export default function PasteAddress() {
       <div className="sheet-title">Paste address to send</div>
 
       {/* Input - node 58:286/58:287: card grey (#F1F4FA), centre 24.4dvh, height 40, radius 8. */}
-      <div style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '24.4dvh', transform: 'translateY(-50%)' }}>
+      <div style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '24.4dvh', transform: 'translateY(-50%)' }}>
         <input
           className={`address-input${showError ? ' error' : ''}`}
           placeholder="0x..."
@@ -63,7 +63,7 @@ export default function PasteAddress() {
           own top is 699/82.82dvh, but this row uses translateY(-50%) so it needs the CENTRE, not the top
           edge - fixed 2026-09-24, an earlier pass here used 82.82dvh as if it were the centre, landing the
           row visibly higher than every other screen's button row). */}
-      <div style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '85.66dvh', transform: 'translateY(-50%)', display: 'flex', gap: 'calc(8 * var(--u))' }}>
+      <div style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '85.66dvh', transform: 'translateY(-50%)', display: 'flex', gap: 'calc(8 * var(--u))' }}>
         <button className="btn btn-secondary" style={{ flex: 1, boxShadow: 'var(--shadow-y2)' }} onClick={() => navigate('HomeSend')}>Back</button>
         {/* Field holds a valid EVM address → label flips "Paste" → "Confirm" (user decision 07-23: tapping goes
             straight on without reading the clipboard, so a "Paste" label would be confusing). handleDan covers both. */}

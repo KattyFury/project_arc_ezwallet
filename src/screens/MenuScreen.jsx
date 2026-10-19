@@ -36,7 +36,7 @@ const ITEMS = [
 
 // Row geometry - left/right markers at the standard 6.41% inset (matches every other card's side margin
 // in this file), label filling the space between them with an 8px gap on each side.
-const ROW_STYLE = { position: 'absolute', left: '6.41%', right: '6.41%', transform: 'translateY(-50%)', display: 'flex', alignItems: 'center', gap: 'calc(8 * var(--u))', padding: 0, minHeight: 'calc(44 * var(--u))' }
+const ROW_STYLE = { position: 'absolute', left: 'var(--m)', right: 'var(--m)', transform: 'translateY(-50%)', display: 'flex', alignItems: 'center', gap: 'calc(8 * var(--u))', padding: 0, minHeight: 'calc(44 * var(--u))' }
 
 // The row's leading/trailing marker - nodes 58:215/58:217/58:220/58:223 (left) and 58:232-58:236
 // (right). Figma still draws both as a flat 17.436px SQUARE (no icon layer to read), but the user
@@ -85,7 +85,7 @@ export default function MenuScreen() {
           "$10,000.00" - replaced with the real values, sourced exactly like Security.jsx already does.
           The network is NET.label ("Arc"), the label used everywhere else in the app. */}
       <div style={{
-        position: 'absolute', left: '6.41%', top: '10.19dvh', width: '87.18%', height: '18.48dvh',
+        position: 'absolute', left: 'var(--m)', top: '10.19dvh', width: 'var(--cw)', height: '18.48dvh',
         background: 'var(--color-card)', borderRadius: 16,
         display: 'flex', alignItems: 'center', padding: '0 calc(16 * var(--u))',
       }}>
@@ -111,7 +111,7 @@ export default function MenuScreen() {
           option B 2026-10-03 because the plain `up`/`down` used before were the SAME glyphs as the NavBar's
           Send/Receive, so Withdraw read as Send and Deposit as Receive. Size = 1.2x the label (--ib-content-1). */}
       <button className="btn" onClick={() => setPopup('withdraw')} style={{
-        position: 'absolute', left: '6.41%', top: '30.57dvh', width: '42.56%', height: 'calc(70 * var(--u))',
+        position: 'absolute', left: 'var(--m)', top: '30.57dvh', width: 'calc((var(--cw) - 8 * var(--u)) / 2)', height: 'calc(70 * var(--u))',
         background: 'var(--btn-grad-white)', border: 'none', borderRadius: 16,
         boxShadow: 'var(--shadow-y2)', cursor: 'pointer',
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(2 * var(--u))',
@@ -123,7 +123,7 @@ export default function MenuScreen() {
       {/* Deposit / Withdraw open FundsPopup (owner spec 2026-10-03): Deposit = this wallet's Arc address, Withdraw =
           a send to another Arc address. No fiat on/off-ramp (Onramp Kit needs a KYB the owner does not have). */}
       <button className="btn" onClick={() => setPopup('deposit')} style={{
-        position: 'absolute', left: '51.03%', top: '30.57dvh', width: '42.56%', height: 'calc(70 * var(--u))',
+        position: 'absolute', left: 'calc(var(--m) + (var(--cw) - 8 * var(--u)) / 2 + 8 * var(--u))', top: '30.57dvh', width: 'calc((var(--cw) - 8 * var(--u)) / 2)', height: 'calc(70 * var(--u))',
         background: 'var(--btn-grad-brand)', border: 'none', borderRadius: 16,
         boxShadow: 'var(--shadow-y2)', cursor: 'pointer',
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(2 * var(--u))',
@@ -146,7 +146,7 @@ export default function MenuScreen() {
               `var(--color-gray)` (#E3E3E3, a different pre-redesign token) - the user approved having a
               divider here at all (it isn't in the Figma node, inferred - see the comment on ITEMS above)
               but corrected the colour to match the other one this redesign already draws. */}
-          <div style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: rule, height: 0.5, background: 'var(--color-muted)' }} />
+          <div style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: rule, height: 0.5, background: 'var(--color-muted)' }} />
         </div>
       ))}
 

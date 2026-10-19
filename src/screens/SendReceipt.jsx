@@ -115,7 +115,7 @@ export default function SendReceipt() {
           SendConfirm's (same .confirm-box/.confirm-row, same row ORDER: Send to, Address, Amount, Note, Network fee,
           + Time), and the header sits above it, so nothing can overlap. Starts at row 2 (86px = 10.19dvh, the same
           top every sheet card uses); the 6-row worst case still ends above the buttons. */}
-      <div style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '10.19dvh', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <div style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '10.19dvh', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <CheckIcon />
         <span style={{ marginTop: 'calc(8 * var(--u))', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-content)', lineHeight: 1.2 }}>
           Sent successfully
@@ -158,7 +158,7 @@ export default function SendReceipt() {
 
       {/* Save receipt/Done - node 1:230-1:233: both exactly 166px, i.e. (340 − 8) / 2 - flex:1 with an
           8px gap. Centre 85.63dvh, glow shadow. */}
-      <div style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '85.66dvh', transform: 'translateY(-50%)', display: 'flex', gap: 'calc(8 * var(--u))' }}>
+      <div style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '85.66dvh', transform: 'translateY(-50%)', display: 'flex', gap: 'calc(8 * var(--u))' }}>
         <button className="btn btn-secondary" style={{ flex: 1, boxShadow: 'var(--shadow-y2)' }} onClick={saveReceipt}>Save receipt</button>
         <button className="btn btn-primary" style={{ flex: 1, boxShadow: 'var(--shadow-y2)' }} onClick={() => navigate('HomeSend')}>Done</button>
       </div>

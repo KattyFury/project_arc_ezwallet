@@ -44,6 +44,11 @@
   dividers, slider tracks, DISABLED button fill) · green `#0B7A45` · red `#C42B3F` · yellow `#F5B301` + their soft tints ·
   ONE shadow `--shadow-y2` (0 2px 8px black 32%) replaces every 0.48/0.5 glow · buttons SOLID (`--btn-grad-*` = flat colours) ·
   `.btn:disabled` = Line fill + Muted text, no opacity · logo SVGs + manifest theme colour `#1E6DF7` · shell GRADIENT ends in `#1E6DF7`.
+- **Side margin 16 (owner, same evening):** `--m: 16px` + `--cw: calc(100% - 2 * var(--m))` in `src/index.css` replace the
+  old 6.41% / 87.18% (25px / 340 of the 390 Figma) on every screen-level element; inner offsets keep their design px
+  (`calc(var(--m) + N * var(--u))`); Home's 100|124|100 action row, Menu's two buttons, Login's PIN cells and the email
+  popup buttons are recomputed from `--cw`. Send money's arrow circle between the two cards is gone. All screens
+  re-shot at 393×852: Desktop `ezwallet-redesign-test	at-ca-man-le-16\` (PinGate/ForgotPin can't render in mock).
 - Not changed yet: raster PNGs (icon.png, fav_icon.png, og.png still old blue), numpad `.disabled` still uses opacity,
   Swap's confirm pulse opacity. Screenshots: owner's Desktop `ezwallet-redesign-test\`.
 

@@ -26,11 +26,11 @@ export default function LendPositions() {
   return (
     <div className="screen" style={{ background: GRADIENT }}>
       <ScreenSheet />
-      <div style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: 0, height: 'calc(70 * var(--u))', display: 'flex', alignItems: 'flex-end', fontSize: 'var(--fs-title)', fontWeight: 'var(--fw-semibold)' }}>
+      <div style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: 0, height: 'calc(70 * var(--u))', display: 'flex', alignItems: 'flex-end', fontSize: 'var(--fs-title)', fontWeight: 'var(--fw-semibold)' }}>
         My deposits
       </div>
 
-      <ScrollBox style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '10.19dvh', height: '69.43dvh', border: 'none', borderRadius: 16, background: 'var(--color-card)', overflow: 'hidden' }} listStyle={{ padding: 'calc(16 * var(--u))', gap: 'calc(16 * var(--u))' }}>
+      <ScrollBox style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '10.19dvh', height: '69.43dvh', border: 'none', borderRadius: 16, background: 'var(--color-card)', overflow: 'hidden' }} listStyle={{ padding: 'calc(16 * var(--u))', gap: 'calc(16 * var(--u))' }}>
         {positions.length === 0 && <span style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)' }}>No deposit yet</span>}
         {positions.map(p => {
           const v = vaults.find(x => x.address === p.vault) || { address: p.vault, name: p.name, asset: p.asset, apy: p.apy }

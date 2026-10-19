@@ -41,7 +41,7 @@ export default function SavedQRList() {
           ⚠️ ABSOLUTE, not gridRow '2 / 9' (fixed 2026-09-27): as a plain grid item it painted UNDER the
           absolutely-positioned ScreenSheet, so the grey box was invisible (user report). Same 340x586
           card at (25,86) as Security/About. padding 8 = QR tiles sit 8px from the box edge (user decision 2026-09-27). */}
-      <div style={{ position: 'absolute', left: '6.41%', top: '10.19dvh', width: '87.18%', height: '69.43dvh', background: 'var(--color-card)', borderRadius: 16, padding: 'calc(8 * var(--u))', overflow: 'hidden' }}>
+      <div style={{ position: 'absolute', left: 'var(--m)', top: '10.19dvh', width: 'var(--cw)', height: '69.43dvh', background: 'var(--color-card)', borderRadius: 16, padding: 'calc(8 * var(--u))', overflow: 'hidden' }}>
       <div className="scroll-hidden" style={{ height: '100%' }}>
         {/* ⚠️ RIGHT COLUMN minmax(0,1fr) - with a bare '1fr' the content dictates min-width, and one big box blows the column
             open (the same lesson as .screen, section 6). Bug the user screenshotted 07-23c: 3 QRs → row 2 = [Blend | + button],

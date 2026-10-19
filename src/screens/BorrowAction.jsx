@@ -21,7 +21,7 @@ import { Tabs, fmtAmt, fmtApy } from './Lending'
 // 6 what happens + fee + note · 9 the button · 10 Exit (back to the Borrow tab).
 const MAX_USD = 200, MAX_LTV = 0.5
 const BOX = { border: 'none', borderRadius: 16, background: 'var(--color-card)' }
-const at = (top, height) => ({ position: 'absolute', left: '6.41%', right: '6.41%', top, height })
+const at = (top, height) => ({ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top, height })
 const fmtBtc = (n) => typeof n === 'number' ? n.toFixed(8).replace(/0+$/, '').replace(/\.$/, '') : '…'
 // Display only: USDC shows 2 decimals ("≈" when digits are hidden); cirBTC up to 8. The exact string is what is sent.
 const shown = (s, d) => { const [i, f = ''] = s.split('.'); return f.length <= d ? s : `${/[1-9]/.test(f.slice(d)) ? '≈ ' : ''}${i}.${f.slice(0, d)}` }

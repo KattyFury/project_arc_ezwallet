@@ -74,7 +74,7 @@ export default function AddToHome() {
       {/* Title - node 48:356: 20px semibold, line-height 30, centred on (195, 275.5). */}
       <div style={{
         position: 'absolute', left: '50%', top: '32.64dvh', transform: 'translate(-50%, -50%)',
-        width: '87.18%', textAlign: 'center',
+        width: 'var(--cw)', textAlign: 'center',
         fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', lineHeight: 'calc(30 * var(--u))', color: 'var(--color-black)',
       }}>
         <Ez />wallet works best as an app
@@ -83,7 +83,7 @@ export default function AddToHome() {
       {/* Sub-title - node 48:357: 16px regular, line-height 24, centred on (195, 310.5). */}
       <div style={{
         position: 'absolute', left: '50%', top: '36.79dvh', transform: 'translate(-50%, -50%)',
-        width: '87.18%', textAlign: 'center',
+        width: 'var(--cw)', textAlign: 'center',
         fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-normal)', lineHeight: 'calc(24 * var(--u))', color: 'var(--color-black)',
       }}>
         Add <Ez />wallet to your home screen:
@@ -93,8 +93,8 @@ export default function AddToHome() {
           sitting on top of it (18px semibold, line-height 32, 324 wide). One element here, not two:
           the box exists only to hold the list, so the list IS the box's content. */}
       <ol style={{
-        position: 'absolute', left: '6.41%', top: '40.76dvh',
-        width: '87.18%', height: '8.29dvh',
+        position: 'absolute', left: 'var(--m)', top: '40.76dvh',
+        width: 'var(--cw)', height: '8.29dvh',
         background: '#F1F4FA', borderRadius: 16,
         display: 'flex', flexDirection: 'column', justifyContent: 'center',
         listStyle: 'decimal', listStylePosition: 'inside',

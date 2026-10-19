@@ -84,7 +84,7 @@ export default function HomeReceive() {
 
       {/* TOP CARD - node 56:72: 340x328 at (25,86). */}
       <div style={{
-        position: 'absolute', left: '6.41%', top: '10.19dvh', width: '87.18%', height: '38.86dvh',
+        position: 'absolute', left: 'var(--m)', top: '10.19dvh', width: 'var(--cw)', height: '38.86dvh',
         background: 'var(--color-card)', borderRadius: 16, overflow: 'hidden',
       }}>
         {/* THE QR - node 56:110 draws a flat 258x258 BLACK SQUARE, the placeholder this file uses for
@@ -130,7 +130,7 @@ export default function HomeReceive() {
           hint box and one example notification; the live screen has 0..N of them, so the container is
           matched exactly and NotifArea keeps owning what goes inside it. */}
       <div style={{
-        position: 'absolute', left: '6.41%', top: '50.95dvh', width: '87.18%', height: '28.67dvh',
+        position: 'absolute', left: 'var(--m)', top: '50.95dvh', width: 'var(--cw)', height: '28.67dvh',
         background: 'var(--color-card)', borderRadius: 16, padding: 'calc(16 * var(--u))',
         display: 'flex', flexDirection: 'column', minHeight: 0,
       }}>
@@ -146,7 +146,7 @@ export default function HomeReceive() {
       {/* ACTION ROW - nodes 56:76-56:78, the same three boxes as Send at the same coordinates: the centre
           pill 124x70 at y=688, the two side pills 100x48 at y=699, radius 16 on all three. */}
       <button onClick={() => navigate('SavedQRList')} style={{
-        position: 'absolute', left: '6.41%', top: SIDE_BTN.top, width: '25.64%', height: SIDE_BTN.height,
+        position: 'absolute', left: 'var(--m)', top: SIDE_BTN.top, width: 'calc((var(--cw) - 16 * var(--u)) * 100 / 324)', height: SIDE_BTN.height,
         background: 'var(--btn-grad-white)', border: 'none', borderRadius: 16,
         boxShadow: 'var(--shadow-y2)',
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(2 * var(--u))',
@@ -158,7 +158,7 @@ export default function HomeReceive() {
       </button>
 
       <button onClick={() => navigate('CreateQR')} style={{
-        position: 'absolute', left: '34.10%', top: BIG_BTN.top, width: '31.79%', height: BIG_BTN.height,
+        position: 'absolute', left: 'calc(var(--m) + (var(--cw) - 16 * var(--u)) * 100 / 324 + 8 * var(--u))', top: BIG_BTN.top, width: 'calc((var(--cw) - 16 * var(--u)) * 124 / 324)', height: BIG_BTN.height,
         background: 'var(--btn-grad-brand)', border: 'none', borderRadius: 16,
         boxShadow: 'var(--shadow-y2)',
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(2 * var(--u))',
@@ -170,7 +170,7 @@ export default function HomeReceive() {
       </button>
 
       <button onClick={handleShare} style={{
-        position: 'absolute', left: '67.95%', top: SIDE_BTN.top, width: '25.64%', height: SIDE_BTN.height,
+        position: 'absolute', left: 'calc(var(--m) + (var(--cw) - 16 * var(--u)) * 100 / 324 + (var(--cw) - 16 * var(--u)) * 124 / 324 + 16 * var(--u))', top: SIDE_BTN.top, width: 'calc((var(--cw) - 16 * var(--u)) * 100 / 324)', height: SIDE_BTN.height,
         background: 'var(--btn-grad-white)', border: 'none', borderRadius: 16,
         boxShadow: 'var(--shadow-y2)',
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(2 * var(--u))',
