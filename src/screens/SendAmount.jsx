@@ -237,7 +237,7 @@ export default function SendAmount() {
           real icon layer) - replaced with the real token logo for an actual token; USD (a fiat label,
           not a token) shows no logo at all. */}
       <button onClick={() => setShowCur(true)}
-        style={{ position: 'absolute', left: '8.46%', top: '19.4dvh', transform: 'translateY(-50%)', display: 'inline-flex', alignItems: 'center', gap: 'calc(6 * var(--u))', border: 'none', background: 'var(--btn-grad-white)', borderRadius: 999, height: 'calc(42 * var(--u))', padding: '0 calc(14 * var(--u)) 0 calc(8 * var(--u))', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.5)', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)', cursor: 'pointer' }}>
+        style={{ position: 'absolute', left: '8.46%', top: '19.4dvh', transform: 'translateY(-50%)', display: 'inline-flex', alignItems: 'center', gap: 'calc(6 * var(--u))', border: 'none', background: 'var(--btn-grad-white)', borderRadius: 999, height: 'calc(42 * var(--u))', padding: '0 calc(14 * var(--u)) 0 calc(8 * var(--u))', boxShadow: 'var(--shadow-y2)', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)', cursor: 'pointer' }}>
         {!isFiatLabel(cur) && <img src={`/tokens/${tokenIconFor(cur)}.png`} alt="" style={{ width: 'calc(24 * var(--u))', height: 'calc(24 * var(--u))', borderRadius: '50%', flexShrink: 0 }} />}
         {isUnv(cur) ? <span style={{ maxWidth: 'calc(150 * var(--u))', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{labelOf(cur)}</span> : cur}
         <Icon name="down2" size="var(--is-content-2)" color="var(--color-brand)" />
@@ -272,7 +272,7 @@ export default function SendAmount() {
           clickable (2026-09-08 decision: same component slot as Swap's reverse button, but nothing to
           reverse on a one-way send). Sits at the literal midpoint of the gutter between the two cards
           (29.62dvh) - the SAME value Swap's own reverse button uses for the identical rule. */}
-      <div aria-hidden style={{ position: 'absolute', left: '50%', top: '29.62dvh', transform: 'translate(-50%, -50%)', zIndex: 3, width: 'calc(50 * var(--u))', height: 'calc(50 * var(--u))', borderRadius: '50%', background: 'var(--grad-brand)', boxShadow: '0 0 8px rgba(0, 0, 0, 0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div aria-hidden style={{ position: 'absolute', left: '50%', top: '29.62dvh', transform: 'translate(-50%, -50%)', zIndex: 3, width: 'calc(50 * var(--u))', height: 'calc(50 * var(--u))', borderRadius: '50%', background: 'var(--grad-brand)', boxShadow: 'var(--shadow-y2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <Icon name="down" size="var(--is-num)" color="var(--color-white)" />
       </div>
 
@@ -303,7 +303,7 @@ export default function SendAmount() {
 
       {/* Message row - node 1:101/1:103: top 42.57dvh, input 40 tall / radius 8 (Figma-specific overrides
           on the shared .address-input class, which defaults to --color-surface/radius 10). Background
-          overridden to #D2DCE6 (var(--color-card)) here - node 58:413 draws this exact colour, matching
+          overridden to #F1F4FA (var(--color-card)) here - node 58:413 draws this exact colour, matching
           the "You send"/"To" cards above it (user decision 2026-09-24: all 4 grey boxes on this screen
           should read as ONE colour, they were drifting - surface/card/surface-2 are 3 different tokens). */}
       <div style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '42.57dvh', display: 'flex', alignItems: 'center', gap: 'calc(8 * var(--u))', minWidth: 0 }}>
@@ -318,7 +318,7 @@ export default function SendAmount() {
           style={{ flex: 1, minWidth: 0, height: 'var(--input-h)', borderRadius: 16, fontSize: 'var(--fs-content-1)', background: 'var(--color-card)' }}
         />
         <button onClick={openNotePopup} aria-label={'Set your default note'}
-          style={{ flexShrink: 0, width: 'calc(33 * var(--u))', height: 'var(--input-h)', borderRadius: 16, border: 'none', background: 'var(--btn-grad-white)', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.5)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          style={{ flexShrink: 0, width: 'calc(33 * var(--u))', height: 'var(--input-h)', borderRadius: 16, border: 'none', background: 'var(--btn-grad-white)', boxShadow: 'var(--shadow-y2)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <Icon name="option" size="var(--is-caption)" color="var(--color-muted)" />
         </button>
       </div>

@@ -113,7 +113,7 @@ export default function MenuScreen() {
       <button className="btn" onClick={() => setPopup('withdraw')} style={{
         position: 'absolute', left: '6.41%', top: '30.57dvh', width: '42.56%', height: 'calc(70 * var(--u))',
         background: 'var(--btn-grad-white)', border: 'none', borderRadius: 16,
-        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.48)', cursor: 'pointer',
+        boxShadow: 'var(--shadow-y2)', cursor: 'pointer',
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(2 * var(--u))',
         fontFamily: 'inherit', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)',
       }}>
@@ -125,7 +125,7 @@ export default function MenuScreen() {
       <button className="btn" onClick={() => setPopup('deposit')} style={{
         position: 'absolute', left: '51.03%', top: '30.57dvh', width: '42.56%', height: 'calc(70 * var(--u))',
         background: 'var(--btn-grad-brand)', border: 'none', borderRadius: 16,
-        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.48)', cursor: 'pointer',
+        boxShadow: 'var(--shadow-y2)', cursor: 'pointer',
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(2 * var(--u))',
         fontFamily: 'inherit', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-white)',
       }}>
@@ -141,8 +141,8 @@ export default function MenuScreen() {
             <span style={{ flex: 1, fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)', textAlign: 'left' }}>{label}</span>
             <RowIcon name="right2" color="var(--color-black)" />
           </button>
-          {/* 0.5px, #94A3B8 - the SAME hairline spec as AddToHome's share-sheet dividers (Figma bakes
-              this exact stroke into that screen's own asset: stroke="#94A3B8" stroke-width="0.5"). Was
+          {/* 0.5px, #8B95A8 - the SAME hairline spec as AddToHome's share-sheet dividers (Figma bakes
+              this exact stroke into that screen's own asset: stroke="#8B95A8" stroke-width="0.5"). Was
               `var(--color-gray)` (#E3E3E3, a different pre-redesign token) - the user approved having a
               divider here at all (it isn't in the Figma node, inferred - see the comment on ITEMS above)
               but corrected the colour to match the other one this redesign already draws. */}

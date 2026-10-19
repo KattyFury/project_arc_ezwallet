@@ -4,4 +4,4 @@
 //
 // ⚠️ The old BRAND-GUIDELINE.md forbids gradients ("tất cả là màu SOLID"). That file is superseded -
 // the user settled it directly: "Figma là nguồn sự thật, guideline cũ rồi." Do not flatten this.
-export const GRADIENT = 'linear-gradient(204.80096509205717deg, #FFFFFF 50%, #0B53BF 100%)'
+export const GRADIENT = 'linear-gradient(204.80096509205717deg, #FFFFFF 50%, #1E6DF7 100%)'

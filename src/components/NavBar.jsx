@@ -12,7 +12,7 @@ import Icon from '../components/Icon'
 // semibold label at y=809.
 // ICON ONLY since 2026-09-27 (user decision: "ICON + TEXT thành ICON") - the label is gone from view but
 // kept as aria-label for screen readers; the icon is centred in row 10 at 30px (up from 24, filling the
-// space the label left). Active = black, inactive = the card grey #D2DCE6 (NOT the app's --color-muted:
+// space the label left). Active = black, inactive = the card grey #F1F4FA (NOT the app's --color-muted:
 // on this gradient a muted slate would disappear into the blue).
 const TABS = [
   { id: 'ServiceHub',  label: 'Services', icon: 'hub',  left: '12.5%' },

@@ -24,6 +24,13 @@
      the email-login field, FundsPopup's fields. */
   --input-h: var(--btn-h);
 
+  /* ── 2026-10-19 REDESIGN (owner, TEST BRANCH ONLY): colours, shadow and buttons follow the nguyen0xhieu design
+     system (Figma IPyKVg7ylGw1mjMRyYVrL7 / claude.ai artifact Rvs7H37zwuUdb8uBGf5rtM): 0x Blue #1E6DF7, grey #4B5568,
+     muted #8B95A8, mist #F1F4FA, green/red *-text values for words, yellow #F5B301, ONE shadow (--shadow-y2),
+     solid buttons. Layout, grid and type scale unchanged. The notes below are older history. */
+  --shadow-y2: 0 2px 8px rgba(0, 0, 0, 0.32);
+  --color-line: #DCE3EE;   /* hairlines, slider tracks, DISABLED button fill (visible on white AND on mist) */
+
   /* ── THE 7 BRAND-GUIDELINE COLOURS ──
      Brand #0B53BF · white · black · text phụ #757575 · box/input #E3E3E3 · danger #EC221F ·
      warning #E8B931 · tích cực #14AE5C. NO GRADIENTS anywhere (guideline: "tất cả là màu SOLID"). */
@@ -33,16 +40,16 @@
      the user declared the Figma file `iQxFGA890VhyXkEKipCC9C` (Send money/Exchange/Service hub/...) to
      BE the new brand guideline's colour source, and that file uses two distinct greys for two distinct
      jobs - do not re-merge them without asking. */
-  --color-muted:      #94A3B8;   /* general secondary text: nav-inactive labels/icons, input placeholders */
-  --color-muted-2:    #667085;   /* the "Label:" PREFIX word only, inside a meta/value line (e.g. "Available:", "Fee:", "Balance:", "Rate:" - the value itself after it is --color-brand, semibold). */
+  --color-muted:      #8B95A8;   /* general secondary text: nav-inactive labels/icons, input placeholders */
+  --color-muted-2:    #4B5568;   /* the "Label:" PREFIX word only, inside a meta/value line (e.g. "Available:", "Fee:", "Balance:", "Rate:" - the value itself after it is --color-brand, semibold). */
   --color-faint:      var(--color-card);   /* was #F1F5F9 - merged into the ONE app grey (user decision 2026-09-27) */   /* hidden icons / placeholders - consolidated into the box/input grey (see --color-surface below) */
 
   /* ── FUNCTIONAL COLOURS ── */
-  --color-primary:      #14AE5C; /* guideline "tích cực" - active, money RECEIVED / positive */
-  --color-primary-soft: #DDF4E7; /* pale tint of --color-primary (15% mixed into white) - background only, not in the guideline's 7 but derived FROM it rather than a leftover unrelated green */
-  --color-info:         #0B53BF; /* = brand blue - money SENT (notifications). Already equals the guideline's brand colour, unchanged. */
-  --color-info-soft:    #E2EAF7; /* pale tint of the brand blue - unchanged, already derived from #0B53BF */
-  --color-brand:        #0B53BF; /* THE BRAND COLOUR (solid) - brand TEXT/BORDERS (nav active, filters, options) */
+  --color-primary:      #0B7A45; /* guideline "tích cực" - active, money RECEIVED / positive */
+  --color-primary-soft: #E3F5EC; /* pale tint of --color-primary (15% mixed into white) - background only, not in the guideline's 7 but derived FROM it rather than a leftover unrelated green */
+  --color-info:         #1E6DF7; /* = brand blue - money SENT (notifications). Already equals the guideline's brand colour, unchanged. */
+  --color-info-soft:    #E8F0FE; /* pale tint of the brand blue - unchanged, already derived from #0B53BF */
+  --color-brand:        #1E6DF7; /* THE BRAND COLOUR (solid) - brand TEXT/BORDERS (nav active, filters, options) */
   --grad-brand: var(--color-brand); /* ⚠️ NO LONGER A GRADIENT (2026-09-07) - solid brand blue per guideline. Kept as an alias, not a fresh variable, so every existing `background: var(--grad-brand)` call site turns solid with zero JSX edits. */
 
   /* ── STATUS COLOURS - SOLID (2026-09-07, guideline: no gradient on any of the 7 colours).
@@ -51,12 +58,12 @@
   --grad-primary: var(--color-primary); /* was a green gradient - now solid #14AE5C */
   --grad-warning: var(--color-warning); /* was a yellow gradient - now solid #E8B931 */
   --grad-error:   var(--color-error);   /* was a red gradient - now solid, see --color-error below */
-  --color-error:        #FF383C; /* guideline "danger" - updated 2026-09-08 from #EC221F to match the Figma file's Exit/Sign-out red exactly (the user declared that file the new colour source) */
-  --color-error-soft:   #FFE1E2; /* pale tint of --color-error (15% mixed into white, recomputed for the new red) */
-  --color-warning:      #E8B931; /* guideline "warning" */
-  --color-warning-soft: #FBF4E0; /* pale tint of --color-warning (15% mixed into white) */
+  --color-error:        #C42B3F; /* guideline "danger" - updated 2026-09-08 from #EC221F to match the Figma file's Exit/Sign-out red exactly (the user declared that file the new colour source) */
+  --color-error-soft:   #FDE8EB; /* pale tint of --color-error (15% mixed into white, recomputed for the new red) */
+  --color-warning:      #F5B301; /* guideline "warning" */
+  --color-warning-soft: #FEF5D9; /* pale tint of --color-warning (15% mixed into white) */
   --color-white:        #FFFFFF;
-  --color-gray:         var(--color-card);   /* was #E3E3E3 - merged into the ONE app grey (user decision 2026-09-27) */ /* borders / dividers / NavBar's flat inactive background - NOT the recessed-box colour below, kept grey on purpose */
+  --color-gray:         var(--color-line);   /* 2026-10-19 redesign: = line (borders, dividers, tracks) */   /* was #E3E3E3 - merged into the ONE app grey (user decision 2026-09-27) */ /* borders / dividers / NavBar's flat inactive background - NOT the recessed-box colour below, kept grey on purpose */
   /* RECESSED ("lõm xuống") BOX FILL - UPDATED 2026-09-10 to #E1E7ED, matching BRAND-GUIDELINE.md's
      "Surface / input / card" value (rewritten 2026-09-09) and confirmed pixel-for-pixel against the
      "Sign in with email" input box in the current Figma file (`GxgsMU6HAYqolckzvPWXp1`). This is the
@@ -65,7 +72,7 @@
   /* The 2026-09-23 redesign's card fill - DARKER than --color-surface above. Every card on the
      gradient screens (token list, notifications, the Add steps box, the Login PIN cells, the email
      field) is this one value, straight off the Figma frames. */
-  --color-card:         #D2DCE6;
+  --color-card:         #F1F4FA;
   /* ONE grey app-wide (user decision 2026-09-27: "toàn bộ màu xám trong thiết kế là một"): the old
      recessed-box grey #E1E7ED is retired - --color-surface is now just an alias of --color-card, so every
      input/memo/popup field/Swap card that still says --color-surface renders the same #D2DCE6. */
@@ -398,12 +405,13 @@ body {
   transition: opacity 0.15s;
 }
 
-.btn:disabled { opacity: 0.4; cursor: default; }
+/* Disabled = Line fill + Muted text (Line stays visible on white and on Mist panels), no shadow, NEVER lower opacity (nguyen0xhieu system, 2026-10-19). !important beats the inline background/opacity many buttons carry. */
+.btn:disabled { opacity: 1 !important; background: var(--color-line) !important; color: var(--color-muted) !important; box-shadow: none !important; cursor: default; }
 
 /* A CENTRED GLOW, no offset - 2026-09-10 CORRECTION: this was still the pre-redesign 07-22d straight-down
    drop shadow (`0 4px 6px`) at the SHARED class level, even though BRAND-GUIDELINE.md's Shadow rule
    ("chỉ phần tử bấm được, glow đều quanh, không offset") and every button measured across today's full
-   rebuild agree on a centred `0 0 8px rgba(0,0,0,.48)` glow - dozens of screens got an INLINE override to
+   rebuild agree on a centred `var(--shadow-y2)` glow - dozens of screens got an INLINE override to
    the right value this session, but the shared class itself, the actual DEFAULT every untouched button
    falls back to, was never fixed - so any button without its own inline override still rendered the old
    drop shadow. Fixed here once, for every .btn-primary/secondary/success/error app-wide. */
@@ -411,30 +419,30 @@ body {
    Blue = the brand a little darker at the bottom → a little lighter at the top. White = a light grey (the card grey
    mixed into white - no 4th grey, HANDOFF §2) at the bottom → white at the top. Text colours are unchanged. */
 :root {
-  --btn-grad-brand: linear-gradient(to top, color-mix(in srgb, var(--color-brand) 88%, black), color-mix(in srgb, var(--color-brand) 88%, white));
-  --btn-grad-white: linear-gradient(to top, color-mix(in srgb, var(--color-card) 45%, white), var(--color-white));
+  --btn-grad-brand: var(--color-brand);   /* solid since the 2026-10-19 redesign */
+  --btn-grad-white: var(--color-white);
   /* EVERY button (owner 2026-10-05) - the green/red ones use the same recipe as the blue. */
-  --btn-grad-success: linear-gradient(to top, color-mix(in srgb, var(--color-primary) 88%, black), color-mix(in srgb, var(--color-primary) 88%, white));
-  --btn-grad-error: linear-gradient(to top, color-mix(in srgb, var(--color-error) 88%, black), color-mix(in srgb, var(--color-error) 88%, white));
+  --btn-grad-success: var(--color-primary);
+  --btn-grad-error: var(--color-error);
 }
 .btn-primary {
   background: var(--btn-grad-brand);
   color: var(--color-white);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.48);
+  box-shadow: var(--shadow-y2);
 }
 
 .btn-secondary {
   background: var(--btn-grad-white);
   color: var(--color-black);
   border: 1.5px solid var(--color-gray);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.48);
+  box-shadow: var(--shadow-y2);
 }
 
 /* STATUS buttons - use this class, stop inlining `background: var(--color-primary)` yourself
    (a flat button looks out of place among gradient ones). Colours follow the semantic system: success/received = green,
    warning = yellow, error/delete = red. The gradient formulas are in :root --grad-*. */
-.btn-success { background: var(--btn-grad-success); color: var(--color-white); border: none; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.48); }
-.btn-error   { background: var(--btn-grad-error);   color: var(--color-white); border: none; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.48); }
+.btn-success { background: var(--btn-grad-success); color: var(--color-white); border: none; box-shadow: var(--shadow-y2); }
+.btn-error   { background: var(--btn-grad-error);   color: var(--color-white); border: none; box-shadow: var(--shadow-y2); }
 /* (No screen needs the yellow warning button yet - when one does: background var(--grad-warning) + BLACK text is MANDATORY,
    white on yellow is only 2.15:1 and older users cannot read it.) */
 
@@ -584,11 +592,11 @@ body {
    8px gap so each key reads as raised. SHARED by the Swap sheet + the numpad panel on Send (SendAmount) +
    Custom QR (CreateQR) - just add the "numpad-gray" class to the container.
    Radius 16 + glow shadow (was 12/no shadow) - 2026-09-10: Send money's own key nodes (18:16 etc, part of
-   the same numpad component) draw radius 16 and the app's standard `0 0 8px rgba(0,0,0,.48)` clickable-glow,
+   the same numpad component) draw radius 16 and the app's standard `var(--shadow-y2)` clickable-glow,
    fixing all three screens' numpad at once per the "one shared definition" rule. */
 .numpad-gray .numpad { gap: calc(8 * var(--u)); }
 .numpad-gray .numpad-row { gap: calc(8 * var(--u)); }
-.numpad-gray .numpad-key { background: var(--btn-grad-white); border-radius: 16px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.48); }
+.numpad-gray .numpad-key { background: var(--btn-grad-white); border-radius: 16px; box-shadow: var(--shadow-y2); }
 .numpad-gray .numpad-key:active { background: rgba(0,0,0,0.06); }
 .numpad-gray .numpad-key.empty { background: transparent; box-shadow: none; }
 
@@ -654,7 +662,7 @@ body {
 
 .navbar-btn.active {
   background: var(--color-white);
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);   /* blur ~15px matches the measured fringe: 225,231,237 → 182,187,190 over ~12px */
+  box-shadow: var(--shadow-y2);   /* blur ~15px matches the measured fringe: 225,231,237 → 182,187,190 over ~12px */
   color: var(--color-black);
 }
 
@@ -704,7 +712,7 @@ body {
   font-weight: var(--fw-semibold);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.48);   /* glow, not the old straight-down shadow - matches every other button rebuilt 2026-09-10 */
+  box-shadow: var(--shadow-y2);   /* glow, not the old straight-down shadow - matches every other button rebuilt 2026-09-10 */
 }
 
 .action-card.primary {
@@ -806,7 +814,7 @@ body {
      --color-warning-soft (#FBF4E0, visibly paler) - and radius 16 (was 10). Using the literal value here
      rather than changing the shared token, which HomeSend's low-USDC warning also uses and was not
      re-verified today. */
-  background: rgba(232, 185, 49, 0.25);
+  background: var(--color-warning-soft);
   border: none;
   border-radius: 16px;
   padding: calc(10 * var(--u)) calc(12 * var(--u));

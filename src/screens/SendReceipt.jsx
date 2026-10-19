@@ -74,18 +74,18 @@ export default function SendReceipt() {
     const x = cv.getContext('2d')
     x.fillStyle = '#FFFFFF'; x.fillRect(0, 0, W, H)
     // Big GREEN check icon (outlined circle + tick, same style as check.svg) - success
-    x.strokeStyle = '#16A34A'; x.lineWidth = 8; x.lineCap = 'round'; x.lineJoin = 'round'
+    x.strokeStyle = '#0F9D58'; x.lineWidth = 8; x.lineCap = 'round'; x.lineJoin = 'round'
     x.beginPath(); x.arc(W / 2, 90, 44, 0, Math.PI * 2); x.stroke()
     x.beginPath(); x.moveTo(W / 2 - 20, 90); x.lineTo(W / 2 - 6, 105); x.lineTo(W / 2 + 22, 73); x.stroke()
     x.textAlign = 'center'
     x.fillStyle = '#000000'; x.font = '600 32px sans-serif'; x.fillText('Sent successfully', W / 2, 180)
-    x.fillStyle = '#0B53BF'; x.font = '700 52px sans-serif'; x.fillText(amountText, W / 2, 245)
+    x.fillStyle = '#1E6DF7'; x.font = '700 52px sans-serif'; x.fillText(amountText, W / 2, 245)
     // the rows
     let yy = 320
     const row = (label, val) => {
-      x.textAlign = 'left'; x.fillStyle = '#667085'; x.font = '22px sans-serif'; x.fillText(label, 50, yy)
+      x.textAlign = 'left'; x.fillStyle = '#4B5568'; x.font = '22px sans-serif'; x.fillText(label, 50, yy)
       x.textAlign = 'right'; x.fillStyle = '#000000'; x.font = '500 22px sans-serif'; x.fillText(val, W - 50, yy)
-      x.strokeStyle = '#D2DCE6'; x.lineWidth = 1; x.beginPath(); x.moveTo(50, yy + 22); x.lineTo(W - 50, yy + 22); x.stroke()
+      x.strokeStyle = '#F1F4FA'; x.lineWidth = 1; x.beginPath(); x.moveTo(50, yy + 22); x.lineTo(W - 50, yy + 22); x.stroke()
       yy += 60
     }
     row('Send to', to)
@@ -159,8 +159,8 @@ export default function SendReceipt() {
       {/* Save receipt/Done - node 1:230-1:233: both exactly 166px, i.e. (340 − 8) / 2 - flex:1 with an
           8px gap. Centre 85.63dvh, glow shadow. */}
       <div style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '85.66dvh', transform: 'translateY(-50%)', display: 'flex', gap: 'calc(8 * var(--u))' }}>
-        <button className="btn btn-secondary" style={{ flex: 1, boxShadow: '0 2px 8px rgba(0, 0, 0, 0.48)' }} onClick={saveReceipt}>Save receipt</button>
-        <button className="btn btn-primary" style={{ flex: 1, boxShadow: '0 2px 8px rgba(0, 0, 0, 0.48)' }} onClick={() => navigate('HomeSend')}>Done</button>
+        <button className="btn btn-secondary" style={{ flex: 1, boxShadow: 'var(--shadow-y2)' }} onClick={saveReceipt}>Save receipt</button>
+        <button className="btn btn-primary" style={{ flex: 1, boxShadow: 'var(--shadow-y2)' }} onClick={() => navigate('HomeSend')}>Done</button>
       </div>
 
       <ExitBar onClick={() => navigate('HomeSend')} />

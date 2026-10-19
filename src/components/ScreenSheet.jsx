@@ -54,7 +54,7 @@ export default function ScreenSheet({ active }) {
         position: 'absolute', inset: 0, width: '100%', height: '100%',
         // Figma's filter is feOffset 0,0 + stdDeviation 8 at 48% black. CSS drop-shadow's blur argument
         // is twice the standard deviation, hence 16px.
-        filter: 'drop-shadow(0 0 16px rgba(0, 0, 0, 0.48))',
+        filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.32))',   // = --shadow-y2 (2026-10-19 redesign)
         pointerEvents: 'none',
       }}>
       <path d={sheetPath(ORDER.indexOf(active))} fill="var(--color-white)" />

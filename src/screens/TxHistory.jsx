@@ -257,7 +257,7 @@ export default function TxHistory() {
 
       {/* SHARED GREY BOX around the whole history (user decision 07-17f "mark the boundary"). The bottom fade mask lives on the
           INNER DIV - putting it on the box would fade the grey background too and smear it into the white.
-          Card radius 16, colour #D2DCE6 (var(--color-card), was --color-surface) - node 58:445, RE-VERIFIED
+          Card radius 16, colour #F1F4FA (var(--color-card), was --color-surface) - node 58:445, RE-VERIFIED
           2026-09-24 against the redesign's own gradient+sheet shell (blank 340x586 placeholder, no example
           rows, so the row padding below has no Figma evidence and is left as-is). */}
       {/* ⚠️ ABSOLUTE card (fix 2026-09-27), not className="row-2-8": as a plain grid item it painted UNDER the

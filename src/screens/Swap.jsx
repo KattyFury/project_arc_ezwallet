@@ -41,7 +41,7 @@ const decimalsFor = sym => (sym === 'cirBTC' ? 6 : 2)
 function TokenRow({ sym, onClick }) {
   return (
     <button onClick={onClick}
-      style={{ display: 'flex', alignItems: 'center', gap: 'calc(8 * var(--u))', border: 'none', borderRadius: 999, height: 'calc(42 * var(--u))', background: 'var(--btn-grad-white)', cursor: 'pointer', fontFamily: 'inherit', padding: '0 calc(12 * var(--u)) 0 calc(8 * var(--u))', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.5)', flexShrink: 0 }}>
+      style={{ display: 'flex', alignItems: 'center', gap: 'calc(8 * var(--u))', border: 'none', borderRadius: 999, height: 'calc(42 * var(--u))', background: 'var(--btn-grad-white)', cursor: 'pointer', fontFamily: 'inherit', padding: '0 calc(12 * var(--u)) 0 calc(8 * var(--u))', boxShadow: 'var(--shadow-y2)', flexShrink: 0 }}>
       <img src={`/tokens/${sym.toLowerCase()}.png`} alt={sym} style={{ width: 'calc(24 * var(--u))', height: 'calc(24 * var(--u))', borderRadius: '50%' }} />
       <span className="num" style={{ fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-content)' }}>{sym}</span>
       <Icon name="down2" size="calc(15 * var(--u))" color="var(--color-brand)" />
@@ -399,7 +399,7 @@ export default function Swap() {
             </span>
           </div>
         </div>
-        {/* 2026-09-10: 16px (was --fs-item 17), label colour --color-muted-2 #667085 (was --color-muted) -
+        {/* 2026-09-10: 16px (was --fs-item 17), label colour --color-muted-2 #4B5568 (was --color-muted) -
             node 1:71's "Available:" span. Available and ~$ share the same size. */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'calc(8 * var(--u))', minWidth: 0 }}>
           <span style={{ fontSize: 'var(--fs-content-2)', color: 'var(--color-muted-2)', whiteSpace: 'nowrap', minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis' }}>
@@ -486,7 +486,7 @@ export default function Swap() {
 
       {/* Reverse button - node 1:87: 50×50 (was 44), SOLID brand fill (the guideline forbids gradients -
           --grad-brand already aliases to the solid colour, so this needed no value change), glow shadow
-          "0 0 8px rgba(0,0,0,.5)" (was a straight-down .35). 2026-09-10 CORRECTION: the previous pass
+          "var(--shadow-y2)" (was a straight-down .35). 2026-09-10 CORRECTION: the previous pass
           used the raw Figma pixel (26.71dvh), which sits mostly INSIDE the "You pay" card rather than
           bridging the gap - the user's explicit call: this button belongs EXACTLY IN THE MIDDLE of the 2
           cards. Centre = the midpoint of the 16px gutter between them: card 1 bottom (10.19+18.48=28.67dvh)
@@ -495,7 +495,7 @@ export default function Swap() {
         style={{
           position: 'absolute', left: '50%', top: '29.62dvh', transform: `translate(-50%, -50%) rotate(${flip}deg)`, zIndex: 3,
           width: 'calc(50 * var(--u))', height: 'calc(50 * var(--u))', borderRadius: '50%', border: 'none', background: 'var(--btn-grad-brand)',
-          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          boxShadow: 'var(--shadow-y2)', display: 'flex', alignItems: 'center', justifyContent: 'center',
           cursor: 'pointer', transition: 'transform .3s ease',
         }}>
         <Icon name="trade" size="var(--is-num)" color="var(--color-white)" />
@@ -507,7 +507,7 @@ export default function Swap() {
 
       {/* Rate + Fee - node 1:83/10:123: raw Figma reading was 13px, rounded up to Chú thích (15px) - the
           new 5-tier scale (2026-09-10) has no tier below 15, absorbing the old --fs-tiny. Label colour
-          --color-muted-2 #667085, figures BLACK semibold. Alone in row 6, centred at 51.4dvh. */}
+          --color-muted-2 #4B5568, figures BLACK semibold. Alone in row 6, centred at 51.4dvh. */}
       <div style={{ position: 'absolute', left: '6.41%', right: '6.41%', top: '51.4dvh', transform: 'translateY(-50%)', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', columnGap: 'calc(8 * var(--u))', rowGap: 'calc(2 * var(--u))', padding: '0 calc(11 * var(--u))' }}>
         <span style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)', whiteSpace: 'nowrap' }}>
           Rate: <span className="num" style={{ color: 'var(--color-content)', fontWeight: 'var(--fw-semibold)' }}>{rateTxt}</span>

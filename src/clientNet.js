@@ -35,6 +35,6 @@ export async function assertNetworkReady() {
 }
 
 // THE NETWORK WARNING - one sentence, the SAME everywhere it appears (owner 2026-10-06), always red (--color-error /
-// #FF383C on images): Home notification card, QR scanner, ShowQR, and every shared QR image. It is the most important
+// #C42B3F on images): Home notification card, QR scanner, ShowQR, and every shared QR image. It is the most important
 // line on those screens: money sent on another chain is lost.
 export const NETWORK_NOTE = `Only available network: ${NET.label}`

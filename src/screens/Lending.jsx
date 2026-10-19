@@ -59,7 +59,7 @@ export function Card({ title, lines, action }) {
   )
 }
 
-export const smallBtn = (cls) => ({ className: `btn ${cls}`, style: { height: 'calc(40 * var(--u))', minHeight: 0, flexShrink: 0, fontSize: 'var(--fs-content-2)', padding: '0 calc(16 * var(--u))', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.48)' } })
+export const smallBtn = (cls) => ({ className: `btn ${cls}`, style: { height: 'calc(40 * var(--u))', minHeight: 0, flexShrink: 0, fontSize: 'var(--fs-content-2)', padding: '0 calc(16 * var(--u))', boxShadow: 'var(--shadow-y2)' } })
 
 export default function Lending() {
   const { navigate, params } = useNav()

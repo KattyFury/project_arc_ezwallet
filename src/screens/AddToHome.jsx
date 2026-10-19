@@ -13,7 +13,7 @@ import arrowDown from '../../design/arrow-down.svg'
 // ⚠️ The background is a GRADIENT, which the old BRAND-GUIDELINE.md forbids ("tất cả là màu SOLID").
 // The user settled this directly on 2026-09-23: "Figma là nguồn sự thật, guideline cũ rồi." Do not
 // "fix" this back to a solid fill.
-const GRADIENT = 'linear-gradient(204.80096509205717deg, #FFFFFF 50%, #0B53BF 100%)'
+const GRADIENT = 'linear-gradient(204.80096509205717deg, #FFFFFF 50%, #1E6DF7 100%)'
 
 // The five rows of the fake iOS share sheet (node 48:358). Only the LAST one is legible - the four
 // above it are blurred, because the point of the picture is to show the user which line to look for,
@@ -89,13 +89,13 @@ export default function AddToHome() {
         Add <Ez />wallet to your home screen:
       </div>
 
-      {/* The two steps - box node 48:359 (340x70 @ 25,344, radius 8, #D2DCE6) with the list node 48:374
+      {/* The two steps - box node 48:359 (340x70 @ 25,344, radius 8, #F1F4FA) with the list node 48:374
           sitting on top of it (18px semibold, line-height 32, 324 wide). One element here, not two:
           the box exists only to hold the list, so the list IS the box's content. */}
       <ol style={{
         position: 'absolute', left: '6.41%', top: '40.76dvh',
         width: '87.18%', height: '8.29dvh',
-        background: '#D2DCE6', borderRadius: 16,
+        background: '#F1F4FA', borderRadius: 16,
         display: 'flex', flexDirection: 'column', justifyContent: 'center',
         listStyle: 'decimal', listStylePosition: 'inside',
         fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', lineHeight: 'calc(32 * var(--u))',
@@ -121,7 +121,7 @@ export default function AddToHome() {
       }}>
         {SHEET_ROWS.map((row, i) => (
           <div key={row.label} style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-            {/* Hairline ABOVE every row but the first - node 48:368/369/372/373: #94A3B8, and inset to
+            {/* Hairline ABOVE every row but the first - node 48:368/369/372/373: #8B95A8, and inset to
                 start at the TEXT, not at the icon, exactly as a real iOS menu draws it. */}
             {i > 0 && (
               <div style={{

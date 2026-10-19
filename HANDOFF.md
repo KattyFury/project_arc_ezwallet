@@ -26,6 +26,18 @@
   0.00002433 cirBTC at the 50% rule, liquidation ≈ $47.8k); 2 USDC needs 0.00004865 → Circle 380609 (not enough collateral).
 - NEXT: owner borrows 1 USDC on test.ezwallet.cash, alerts on, "Repay all & close". Lag fix e72ff9e pushed to main too (owner 2026-10-19, before testing it) - both branches equal again.
 
+## ▶ Session 2026-10-19 (5) - REDESIGN on the nguyen0xhieu system - TEST BRANCH ONLY ⚠️
+- **`test` is now AHEAD of `main` on purpose** (owner: "sửa bản test thôi"). Do NOT `merge --ff-only` test → main until the
+  owner approves the redesign. Until then a fix that must go live = commit on `main` too (cherry-pick), not a merge.
+- Source of the new look: Figma `IPyKVg7ylGw1mjMRyYVrL7` (file "hieu") + artifact `Rvs7H37zwuUdb8uBGf5rtM`.
+- Changed (tokens only - layout, grid, type scale untouched): brand/info `#0B53BF` → `#1E6DF7` · muted `#94A3B8` → `#8B95A8` ·
+  muted-2 `#667085` → `#4B5568` · card/surface `#D2DCE6` → mist `#F1F4FA` · new `--color-line #DCE3EE` (= `--color-gray`:
+  dividers, slider tracks, DISABLED button fill) · green `#0B7A45` · red `#C42B3F` · yellow `#F5B301` + their soft tints ·
+  ONE shadow `--shadow-y2` (0 2px 8px black 32%) replaces every 0.48/0.5 glow · buttons SOLID (`--btn-grad-*` = flat colours) ·
+  `.btn:disabled` = Line fill + Muted text, no opacity · logo SVGs + manifest theme colour `#1E6DF7` · shell GRADIENT ends in `#1E6DF7`.
+- Not changed yet: raster PNGs (icon.png, fav_icon.png, og.png still old blue), numpad `.disabled` still uses opacity,
+  Swap's confirm pulse opacity. Screenshots: owner's Desktop `ezwallet-redesign-test\`.
+
 ## ▶ Session 2026-10-19 (4) - History stuck on "Loading..." + Security/About trimmed
 - **Bug (owner):** History sat on "Loading..." forever. Measured with `wrangler pages deployment tail`: Circle answered
   155105 "userToken is invalid", `/api/wallet` returned it as JSON with status **502**, and Cloudflare's edge REPLACES

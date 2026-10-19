@@ -11,7 +11,7 @@
   "orientation": "portrait",
   "categories": ["finance", "utilities"],
   "background_color": "#FFFFFF",
-  "theme_color": "#0B53BF",
+  "theme_color": "#1E6DF7",
   "icons": [
     { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
     { "src": "/icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }

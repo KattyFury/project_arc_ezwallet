@@ -29,9 +29,9 @@ export async function brandedQrCanvas(qrCanvas, { name = '', amount = '' } = {})
     x.fillText(t, W / 2, PAD + 40)
   }
   x.drawImage(qrCanvas, (W - QR) / 2, PAD + TOP, QR, QR)
-  if (amount) { x.fillStyle = '#0B53BF'; x.font = '700 48px sans-serif'; x.fillText(amount, W / 2, PAD + TOP + QR + 62) }
+  if (amount) { x.fillStyle = '#1E6DF7'; x.font = '700 48px sans-serif'; x.fillText(amount, W / 2, PAD + TOP + QR + 62) }
 
-  x.fillStyle = '#FF383C'; x.font = '600 30px sans-serif'   // --color-error: the network warning is red everywhere
+  x.fillStyle = '#C42B3F'; x.font = '600 30px sans-serif'   // --color-error: the network warning is red everywhere
   x.fillText(NETWORK_NOTE, W / 2, PAD + TOP + QR + AMT + 58)
 
   const lw = 168, lh = lw * 71 / 201   // logo.svg aspect ratio (viewBox 201×71), same as the receipt image

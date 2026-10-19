@@ -209,10 +209,10 @@ export default function LoginEmailPopup({ onClose }) {
     // instruction). This layer only has to sit above that blurred content and catch its own taps.
     <div style={{ position: 'absolute', inset: 0, zIndex: 100 }}>
 
-      {/* The card - node 51:5: 340x414 at (25,86), radius 16, glow shadow 0 0 10px rgba(0,0,0,.5). */}
+      {/* The card - node 51:5: 340x414 at (25,86), radius 16, glow shadow var(--shadow-y2). */}
       <div style={{
         position: 'absolute', left: '6.41%', top: '10.19dvh', width: '87.18%', height: '49.05dvh',
-        background: 'var(--color-white)', borderRadius: 16, boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)',
+        background: 'var(--color-white)', borderRadius: 16, boxShadow: 'var(--shadow-y2)',
       }} />
 
       {/* Title - node 54:4: 24px semibold, line-height 30, centred on (195,121). */}
@@ -224,8 +224,8 @@ export default function LoginEmailPopup({ onClose }) {
         {step === 'email' ? 'Log in with email' : 'Enter the code'}
       </div>
 
-      {/* The email field - node 1:200: 307.96x40 centred at x=195, top edge y=186, radius 8, #D2DCE6,
-          with an 18px #94A3B8 placeholder (node 1:202). */}
+      {/* The email field - node 1:200: 307.96x40 centred at x=195, top edge y=186, radius 8, #F1F4FA,
+          with an 18px #8B95A8 placeholder (node 1:202). */}
       <input
         key={step}
         type={step === 'email' ? 'email' : 'text'}
@@ -243,7 +243,7 @@ export default function LoginEmailPopup({ onClose }) {
         style={{
           position: 'absolute', left: '50%', top: '22.04dvh', transform: 'translateX(-50%)',
           width: '78.96%', height: 'var(--input-h)',
-          background: '#D2DCE6', border: 'none', borderRadius: 16,
+          background: '#F1F4FA', border: 'none', borderRadius: 16,
           // The browser draws a BLACK FOCUS RING on an autofocused input. The design has no such line
           // anywhere, so it read as a drawing mistake rather than as focus. Killed here, not app-wide.
           outline: 'none',
@@ -282,13 +282,13 @@ export default function LoginEmailPopup({ onClose }) {
       )}
 
       {/* Back / Continue - nodes 1:197 and 1:196: both 48 tall at y=430, RADIUS 16 (not pills), glow
-          0 0 8px rgba(0,0,0,.48), labels 18px semibold. Back closes the popup and returns to Login
+          var(--shadow-y2), labels 18px semibold. Back closes the popup and returns to Login
           rather than navigating anywhere - the popup never was a screen. */}
       <button onClick={back}
         style={{
           position: 'absolute', left: '10.54%', top: '50.95dvh', width: '38.43%', height: 'var(--btn-h)',
           background: 'var(--btn-grad-white)', color: 'var(--color-black)', border: 'none', borderRadius: 16,
-          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.48)',
+          boxShadow: 'var(--shadow-y2)',
           fontFamily: 'inherit', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', cursor: 'pointer',
         }}>
         Back
@@ -296,11 +296,10 @@ export default function LoginEmailPopup({ onClose }) {
       <button onClick={handleSubmit} disabled={!valid || loading}
         style={{
           position: 'absolute', left: '51.03%', top: '50.95dvh', width: '38.46%', height: 'var(--btn-h)',
-          background: 'var(--btn-grad-brand)', color: 'var(--color-white)', border: 'none', borderRadius: 16,
-          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.48)',
+          background: valid && !loading ? 'var(--btn-grad-brand)' : 'var(--color-line)', color: valid && !loading ? 'var(--color-white)' : 'var(--color-muted)', border: 'none', borderRadius: 16,
+          boxShadow: valid && !loading ? 'var(--shadow-y2)' : 'none',
           fontFamily: 'inherit', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)',
           cursor: valid && !loading ? 'pointer' : 'not-allowed',
-          opacity: valid && !loading ? 1 : 0.5,
         }}>
         {loading ? 'Processing...' : 'Continue'}
       </button>

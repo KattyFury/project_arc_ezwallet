@@ -180,7 +180,7 @@ export default function Login() {
       }}>
 
       {/* HEADLINE - node 48:452: bold 40px, line-height 44, tracking -1.6px,
-          340 wide at x=25, centred on y=164. The second line is --color-muted-2 (#667085), which is
+          340 wide at x=25, centred on y=164. The second line is --color-muted-2 (#4B5568), which is
           what makes the claim read as one sentence with its own echo rather than two shouts.
           ⚠️ NO DISPLAY FACE - AND THE NODE NAMING ONE IS NOT A REASON TO ADD IT BACK. The Figma layer
           declares Bricolage Grotesque; it was wired up on 2026-09-23 and removed the same day:
@@ -199,7 +199,7 @@ export default function Login() {
         <span style={{ color: 'var(--color-muted-2)' }}>That&apos;s the whole wallet.</span>
       </h1>
 
-      {/* THE SIX PIN CELLS - nodes 49:453..49:462 (the 50x70 #D2DCE6 boxes, radius 8, at x = 25, 83,
+      {/* THE SIX PIN CELLS - nodes 49:453..49:462 (the 50x70 #F1F4FA boxes, radius 8, at x = 25, 83,
           141, 199, 257, 315 - an even 58px step, i.e. 50 wide with an 8px gap) and 50:490..50:497 (the
           10px black dots). The dot is drawn INSIDE its cell rather than at its own absolute coordinate:
           Figma puts each dot exactly at the cell's centre, so nesting them is the same geometry with
@@ -208,7 +208,7 @@ export default function Login() {
         <div key={i} aria-hidden="true" style={{
           position: 'absolute', left: `${left}%`, top: '30.57dvh',
           width: '12.82%', height: '8.29dvh',
-          background: '#D2DCE6', borderRadius: 16,
+          background: '#F1F4FA', borderRadius: 16,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}>
           <span style={{ width: 'calc(10 * var(--u))', height: 'calc(10 * var(--u))', borderRadius: '50%', background: 'var(--color-black)' }} />
@@ -241,7 +241,7 @@ export default function Login() {
 
       {/* THE ONLY CONTROL - nodes 50:472 (the white pill: 274x70 at x=91, radius 16, and a GLOW rather
           than a drop shadow - Figma's filter is feOffset 0,0 + stdDeviation 5 at 50% black, i.e.
-          `0 0 10px rgba(0,0,0,.5)`) and 50:479 (the 24px semibold label centred inside it).
+          `var(--shadow-y2)`) and 50:479 (the 24px semibold label centred inside it).
           y 688-758 is row 9 of the guideline grid, where every screen puts its action row.
           ⚠️ This still NAVIGATES to the EnterEmail screen. The user's flow of 2026-09-23 says node
           1:193 "Log in with email" should open as a POPUP over this screen rather than replace it -
@@ -252,7 +252,7 @@ export default function Login() {
           position: 'absolute', left: '23.33%', top: '81.52dvh',
           width: '70.26%', height: '8.29dvh',
           background: 'var(--btn-grad-white)', border: 'none', borderRadius: 16,
-          boxShadow: '0 2px 10px rgba(0, 0, 0, 0.5)',
+          boxShadow: 'var(--shadow-y2)',
           fontSize: 'var(--fs-title)', fontWeight: 'var(--fw-semibold)', lineHeight: 'calc(30 * var(--u))',
           color: 'var(--color-black)', cursor: 'pointer',
           WebkitTapHighlightColor: 'transparent',

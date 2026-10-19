@@ -51,7 +51,7 @@ function ExchangeTabs({ cex, setCex }) {
         return (
           <button key={x.id} onClick={() => setCex(on ? null : x)} className="btn" style={{
             flex: 1, minWidth: 0, height: 'var(--input-h)', border: 'none', borderRadius: 16, cursor: 'pointer',
-            background: on ? 'var(--btn-grad-brand)' : 'var(--btn-grad-white)', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.48)',
+            background: on ? 'var(--btn-grad-brand)' : 'var(--btn-grad-white)', boxShadow: 'var(--shadow-y2)',
             color: on ? 'var(--color-white)' : 'var(--color-brand)',
             fontFamily: 'inherit', fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)',
           }}>{x.name}</button>
@@ -214,7 +214,7 @@ function Withdraw() {
       <button onClick={go} disabled={!ok} className="btn"
         style={{
           height: 'var(--btn-h)', flexShrink: 0, border: 'none', borderRadius: 16,
-          background: 'var(--btn-grad-brand)', color: 'var(--color-white)', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.48)',
+          background: 'var(--btn-grad-brand)', color: 'var(--color-white)', boxShadow: 'var(--shadow-y2)',
           fontFamily: 'inherit', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)',
           opacity: ok ? 1 : 0.5, cursor: ok ? 'pointer' : 'not-allowed',
         }}>
@@ -232,7 +232,7 @@ export default function FundsPopup({ mode, onClose }) {
         // Same top edge / left / width as LoginEmailPopup's card (node 51:5: (25,86), 340 wide); the height follows the content.
         position: 'absolute', left: '6.41%', width: '87.18%', top: '10.19dvh',
         maxHeight: '85dvh', overflowY: 'auto', boxSizing: 'border-box',
-        background: 'var(--color-white)', borderRadius: 16, boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)',
+        background: 'var(--color-white)', borderRadius: 16, boxShadow: 'var(--shadow-y2)',
         padding: 'calc(20 * var(--u)) calc(16 * var(--u))',
         display: 'flex', flexDirection: 'column', gap: 'max(8px, calc(12 * var(--u)))',
       }}>
