@@ -15,6 +15,8 @@
 2. For each bug: measure read-only first, find the rule in the official docs, offer options - the owner picks.
 3. **Every change goes to BOTH branches** (owner, 2026-10-03): commit on `test`, then
    `git checkout main && git merge --ff-only test`, push both. Both Pages projects auto-deploy.
+   **Until the mainnet launch is announced, test = main (owner 2026-10-19):** nothing waits on `test` for the owner to
+   try first - push every change to both branches right away.
 
 ## ▶ Session 2026-10-19 - Borrow B0
 - Owner's wallet `0xdfe251e8178f428a15c0d21688b9adb8dbd3b0ab` holds 0.00002462 cirBTC, 12.30 USDC.
