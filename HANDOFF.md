@@ -1,6 +1,6 @@
 # HANDOFF – ezwallet
 
-**Updated:** 2026-10-07 (docs + images refreshed to the current app; 2026-10-06: Service hub Lending live-tested, Memes + Borrow built LABS-only) · **Repo:** `KattyFury/project_arc_ezwallet` (public; renamed from
+**Updated:** 2026-10-19 (redesign on the nguyen0xhieu design system - TEST ONLY; Deposit/Withdraw via exchanges; Borrow idempotencyKey fix; History 502 fix) · **Repo:** `KattyFury/project_arc_ezwallet` (public; renamed from
 `KattyFury/ezwallet` 2026-10-03 - Pages track it by repo id) · **Local:** `D:\Files\Claude\project_arc_ezwallet`
 **Status:** ezwallet.cash serves **Arc MAINNET** (real money). Target: public launch within October 2026.
 
@@ -17,14 +17,23 @@
    `git checkout main && git merge --ff-only test`, push both. Both Pages projects auto-deploy.
    **Until the mainnet launch is announced, test = main (owner 2026-10-19):** nothing waits on `test` for the owner to
    try first - push every change to both branches right away.
+   **⚠️ EXCEPTION NOW (2026-10-19 evening): `test` carries the REDESIGN and is ahead of `main` on purpose** - do not merge
+   test → main until the owner approves it; a fix that must reach ezwallet.cash meanwhile = commit on `test` AND
+   cherry-pick onto `main` (see Session (5)).
 
-## ▶ Session 2026-10-19 - Borrow B0
-- Owner's wallet `0xdfe251e8178f428a15c0d21688b9adb8dbd3b0ab` holds 0.00002462 cirBTC, 12.30 USDC.
-- Bug fixed (BOTH branches, `684c5cd` on main): every Borrow Service write needs a fresh `idempotencyKey` uuid, else
-  400 "API parameter invalid" (the owner hit it on the phone). `fetchExecution` now sends one.
-- `node tools/verify-borrow.mjs <wallet> [amount]` = read-only dry run. On the owner's wallet: **1 USDC PASS** (needs
-  0.00002433 cirBTC at the 50% rule, liquidation ≈ $47.8k); 2 USDC needs 0.00004865 → Circle 380609 (not enough collateral).
-- NEXT: owner borrows 1 USDC on test.ezwallet.cash, alerts on, "Repay all & close". Lag fix e72ff9e pushed to main too (owner 2026-10-19, before testing it) - both branches equal again.
+## ▶ WHERE WE STOPPED - 2026-10-19 (READ THIS FIRST)
+- **Branches:** `main` = `a1f2783` (ezwallet.cash, old look, all fixes of the day) · `test` = redesign on top (test.ezwallet.cash).
+- **Owner to do next:**
+  1. Review the redesign on test.ezwallet.cash (screenshots on the Desktop `ezwallet-redesign-test\`). If approved:
+     `git checkout main && git merge --ff-only test`, push, then rebuild the PNGs that still carry the old blue
+     (`public/icon.png`, `fav_icon.png`, `og.png` via `tools/build-og.mjs`) and the numpad's opacity-disabled state.
+  2. Borrow 1 USDC on the test site, alerts on, "Repay all & close" (`tools/verify-borrow.mjs` dry run PASSES for 1 USDC).
+  3. A real Deposit/Withdraw round trip through Binance (USDC, network ARC) using the new exchange tabs.
+  4. If History ever sits on "Loading..." again or Circle says 155105 often: measure (wrangler tail) - suspect the
+     50-minute token reuse of the lag fix (`refreshSession`, `ez_user_token_at`).
+- **Design source for any new UI:** the nguyen0xhieu design system - Figma `IPyKVg7ylGw1mjMRyYVrL7` (file "hieu",
+  owner nguyen0xhieu@gmail.com; the Figma MCP is logged in as that account) + claude.ai artifact `Rvs7H37zwuUdb8uBGf5rtM`.
+- Open items table below is unchanged (Kit key revoke, Circle 155101 bug, Admin lookup, CSP beacon, …).
 
 ## ▶ Session 2026-10-19 (5) - REDESIGN on the nguyen0xhieu system - TEST BRANCH ONLY ⚠️
 - **`test` is now AHEAD of `main` on purpose** (owner: "sửa bản test thôi"). Do NOT `merge --ff-only` test → main until the
@@ -62,6 +71,14 @@
   only, remember the deposit address per exchange). Deposit tab = 4 steps. Withdraw tab = steps + USDC locked + the
   exchange's saved address prefilled; Continue saves it (`ez_cex_<addr>`) and SendConfirm shows the exchange name.
 - Screenshots: owner's Desktop `ezwallet-nap-rut-san\`. Not yet: a real round trip by the owner.
+
+## ▶ Session 2026-10-19 - Borrow B0
+- Owner's wallet `0xdfe251e8178f428a15c0d21688b9adb8dbd3b0ab` holds 0.00002462 cirBTC, 12.30 USDC.
+- Bug fixed (BOTH branches, `684c5cd` on main): every Borrow Service write needs a fresh `idempotencyKey` uuid, else
+  400 "API parameter invalid" (the owner hit it on the phone). `fetchExecution` now sends one.
+- `node tools/verify-borrow.mjs <wallet> [amount]` = read-only dry run. On the owner's wallet: **1 USDC PASS** (needs
+  0.00002433 cirBTC at the 50% rule, liquidation ≈ $47.8k); 2 USDC needs 0.00004865 → Circle 380609 (not enough collateral).
+- NEXT: owner borrows 1 USDC on test.ezwallet.cash, alerts on, "Repay all & close". Lag fix e72ff9e pushed to main too (owner 2026-10-19, before testing it) - both branches equal again.
 
 ## ▶ Session 2026-10-07 - docs/images clean-up (no app logic changed)
 - README / SECURITY / `.env.example` brought up to date: auto-convert, unverified tokens sendable, Terms/Privacy +
