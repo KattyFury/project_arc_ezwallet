@@ -372,7 +372,7 @@ export default function Swap() {
     // (user decision 07-28: "10.00_" with a caret blinking after a finished number looks nonsensical).
     const showCaret = onAmount && (isTyping || !hasValue)
     {/* 44px max (was 52), node 1:82's "_" caret - measured at 44 on this Figma pull */}
-    const [fitRef, fitSize] = useFitFontSize((showZero ? '' : amtStr) + (showCaret ? '_' : ''), { max: 44, min: 18 })
+    const [fitRef, fitSize] = useFitFontSize((showZero ? '' : amtStr) + (showCaret ? '_' : ''), { max: 48, min: 18 })
     return (
       <div style={{ ...CARD, minWidth: 0, height: '100%', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 'calc(10 * var(--u))' }}>
         {/* 2026-09-10: 18px semibold BLACK (was --fs-body 19 medium muted) - nodes 1:70/1:76 */}

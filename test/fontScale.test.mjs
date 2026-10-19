@@ -31,12 +31,12 @@ test('every font size uses a --fs-* token', () => {
   assert.deepEqual(bad, [], 'literal font sizes found - use a --fs-* token from src/index.css')
 })
 
-test('no font token below 14px, all multiples of 2', () => {
+// 2026-10-20 (owner): the iOS-based scale of the nguyen0xhieu design system - no other size allowed.
+const SCALE = [14, 16, 18, 22, 28, 34, 48]
+
+test('every font token is on the design-system scale', () => {
   const css = readFileSync('src/index.css', 'utf8')
   const sizes = [...css.matchAll(/--fs-([a-z0-9-]+):\s*calc\(([0-9.]+) \* var\(--u\)\)/g)].map(m => [m[1], Number(m[2])])
-  assert.ok(sizes.length >= 12)
-  for (const [name, px] of sizes) {
-    assert.ok(px >= 14, `--fs-${name} is ${px}px`)
-    assert.ok(px % 2 === 0, `--fs-${name} is ${px}px - sizes are multiples of 2 (owner 2026-10-03)`)
-  }
+  assert.ok(sizes.length >= 10)
+  for (const [name, px] of sizes) assert.ok(SCALE.includes(px), `--fs-${name} is ${px}px - not in ${SCALE.join('/')}`)
 })

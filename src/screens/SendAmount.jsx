@@ -210,7 +210,7 @@ export default function SendAmount() {
   // is included in the measurement, otherwise it comes up exactly one caret short and overflows at the longest numbers.
   // max 44 / weight 300 (was 52/600) - node 1:99, RE-VERIFIED 2026-09-10: 44px, and Light per the app's
   // standing "big numbers are always Light" rule (the node itself draws Regular, same override as everywhere else).
-  const [fitRef, fitSize] = useFitFontSize(amountStr + '_', { max: 44, min: 18, weight: 300 })
+  const [fitRef, fitSize] = useFitFontSize(amountStr + '_', { max: 48, min: 18, weight: 300 })
 
   return (
     <div className="screen" style={{ background: GRADIENT }}>

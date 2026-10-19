@@ -106,16 +106,17 @@
      layout (spacing, button heights, radii) is on multiples of 8, but 8-steps make text far too big, so TEXT
      alone uses multiples of 2. Do not "fix" font sizes to the 8-grid.
      px = on a 390x844 iPhone, where 1u = 1px. Only auto-fitting amounts (useFitFontSize) compute their own
-     size: typed amount 44→18, balance header 40→24. */
-  --fs-amount:    calc(52 * var(--u));   /* big money amount */
+     size: typed amount 48→18, balance header 34→22. */
+  /* 2026-10-20 (owner): the scale is now the iOS-based set of the nguyen0xhieu design system - 14 · 16 · 18 · 22 · 28 ·
+     34 · 48, nothing else (test/fontScale.test.mjs). Mapped by ROLE: 20 → 22 body, 24 → 28 titles, 40 → 34 headline,
+     26 → 28 numpad, typed-amount ceiling 44 → 48; the unused 52 (--fs-amount) and --fs-num were dropped. */
   --fs-amount-2:  calc(48 * var(--u));   /* medium money amount - SendReceipt, ShowQR */
-  --fs-hero:      calc(40 * var(--u));   /* the Login headline */
+  --fs-hero:      calc(34 * var(--u));   /* the Login headline (App/Large Title) */
   --fs-h1:        calc(28 * var(--u));   /* Header 1 - Adjust photo, error screen */
-  --fs-numpad:    calc(26 * var(--u));   /* numpad keys */
-  --fs-title:     calc(24 * var(--u));   /* screen titles (.sheet-title) + the big Login button */
-  --fs-num:       calc(24 * var(--u));   /* numbers in lists (token amounts) */
+  --fs-numpad:    calc(28 * var(--u));   /* numpad keys */
+  --fs-title:     calc(28 * var(--u));   /* screen titles (.sheet-title) + the big Login button */
   --fs-h2:        calc(22 * var(--u));   /* Header 2 - popup titles, emphasis inside a row, the Exit bar */
-  --fs-content-1: calc(20 * var(--u));   /* Nội dung 1 - default text, buttons, labels, menu rows */
+  --fs-content-1: calc(22 * var(--u));   /* Nội dung 1 - default text, buttons, labels, menu rows */
   --fs-content-2: calc(18 * var(--u));   /* Nội dung 2 - nav bar, "Label: value" lines */
   --fs-caption:   calc(16 * var(--u));   /* Chú thích - notes, toasts, address/memo inputs, Home action tiles (Paste/Contacts/Copy/Share) */
   --fs-small:     calc(14 * var(--u));   /* SMALLEST ALLOWED - notification area, small hints */
@@ -126,9 +127,9 @@
      Stop writing one-off size={14}/{18}/{20} - the moment a font size changes, the icon is out of step (bug 07-16).
      Only icons STANDING ALONE (with no text to match) keep a hardcoded number: the SendReceipt
      check at 76, the Contacts avatar, the QR delete button, the Swap reverse button, the numpad erase key. */
-  --is-num:       calc(24 * var(--u));   /* pairs with --fs-num       24 */
+  --is-num:       calc(24 * var(--u));   /* the Swap button icon (its text token --fs-num was dropped 2026-10-20) */
   --is-h2:        calc(22 * var(--u));   /* pairs with --fs-h2        22 */
-  --is-content-1: calc(20 * var(--u));   /* pairs with --fs-content-1 20 */
+  --is-content-1: calc(22 * var(--u));   /* pairs with --fs-content-1 22 */
   --is-content-2: calc(18 * var(--u));   /* pairs with --fs-content-2 18 */
   --is-caption:   calc(16 * var(--u));   /* pairs with --fs-caption   16 */
   /* ICON INSIDE A BUTTON, NEXT TO ITS LABEL = 1.2 × the label's font size (owner 2026-10-03, "to hơn chữ 1.2 lần").

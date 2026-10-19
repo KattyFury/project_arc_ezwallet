@@ -52,6 +52,10 @@
 - **2026-10-20: mist one step darker** (owner): `#F1F4FA` → `#ECF0F8` (same hue, lightness 96% → 95%; grey text 6.6:1,
   disabled Line button still 1.13:1 on it). Light theme only; synced in the design-system artifact + Figma style
   `Light/Surface/Mist`. Still TEST ONLY.
+- **2026-10-20: type scale = the iOS-based set 14 · 16 · 18 · 22 · 28 · 34 · 48** (owner chose it for every future mobile
+  app; design system + Figma `App/` styles updated the same day). By role: body/buttons 20 → 22, sheet titles 24 → 28,
+  headline + balance 40 → 34, numpad 26 → 28, typed-amount ceiling 44 → 48; unused `--fs-amount` (52) and `--fs-num`
+  removed. `test/fontScale.test.mjs` now fails on any size outside the set. Screens: Desktop `ezwallet-co-chu-ios\`. TEST ONLY.
 - Not changed yet: raster PNGs (icon.png, fav_icon.png, og.png still old blue), numpad `.disabled` still uses opacity,
   Swap's confirm pulse opacity. Screenshots: owner's Desktop `ezwallet-redesign-test\`.
 

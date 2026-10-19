@@ -53,7 +53,7 @@ export default function CreateQR() {
 
   const amount = parseFloat(digits || '0')
   const amountStr = (cur === 'USD' ? displaySymbol('USDC') : '') + digits
-  const [fitRef, fitSize] = useFitFontSize(amountStr + '_', { max: 44, min: 18, weight: 300 })
+  const [fitRef, fitSize] = useFitFontSize(amountStr + '_', { max: 48, min: 18, weight: 300 })
 
   function handleKey(key) {
     if (key === 'BACK') { setDigits(d => d.slice(0, -1)); return }
