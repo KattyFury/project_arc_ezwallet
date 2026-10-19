@@ -98,7 +98,7 @@
   /api/prices promises. Not done yet (ideas): each tab switch re-reads balances/history (remount), Circle `balances`
   for unverified tokens on every Home open.
 
-## ▶ Session 2026-10-06 - where we stopped (READ THIS FIRST)
+## ▶ Session 2026-10-06 - where we stopped then
 **State of the Service hub (all LABS = test.ezwallet.cash + localhost only, `src/labs.js`):**
 | Feature | Built | Real-money test | Next |
 |---|---|---|---|
