@@ -30,7 +30,8 @@ function timeLabel(ts) {
 // The date boundary between transaction groups (user decision: the boundary shows day, month and year).
 function DateHeader({ date, first }) {
   return (
-    <div style={{ fontSize: 'var(--fs-caption)', fontWeight: 'var(--fw-medium)', color: 'var(--color-muted)', padding: first ? '2px 2px 8px' : '18px 2px 8px' }}>
+    // Owner 2026-10-19 ("everything sinks"): the date is a bold black title above its white cards.
+    <div style={{ fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)', padding: first ? 'calc(4 * var(--u)) 2px calc(8 * var(--u))' : 'calc(12 * var(--u)) 2px calc(8 * var(--u))' }}>
       {date}
     </div>
   )
@@ -70,8 +71,10 @@ function TxRow({ tx, walletAddr, contacts, onClick, cur, rates, memo, isSwap, sw
   // fs-num 24→fs-md-lg 21, the secondary token fs-label→fs-tiny, vertical padding 14→11, gap 12→10.
   return (
     <button onClick={onClick} style={{
-      display: 'flex', alignItems: 'flex-start', gap: 'calc(10 * var(--u))', width: '100%',
-      padding: 'calc(11 * var(--u)) 0', border: 'none', background: 'none', cursor: 'pointer',
+      // Owner 2026-10-19: each transaction = a WHITE card (radius 16) inside the grey box, like Lending's vault cards.
+      display: 'flex', alignItems: 'flex-start', gap: 'calc(10 * var(--u))', width: '100%', flexShrink: 0,
+      padding: 'calc(12 * var(--u))', marginBottom: 'calc(8 * var(--u))', border: 'none', borderRadius: 16,
+      background: 'var(--color-white)', cursor: 'pointer',
       fontFamily: 'inherit', textAlign: 'left',
     }}>
       {/* Sent/received icon - anchored to rows 1-2 (top-aligned) */}
@@ -93,7 +96,7 @@ function TxRow({ tx, walletAddr, contacts, onClick, cur, rates, memo, isSwap, sw
         {/* row 2: status/time + the [Add contacts] button. Swap → "Swap completed · <time>" (user decision 07-20d;
             "At" dropped 2026-10-03 - with the bigger type it wrapped the time onto 2 lines) */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 'calc(8 * var(--u))', marginTop: 'calc(2 * var(--u))' }}>
-          <span style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted)', whiteSpace: 'nowrap' }}>
+          <span style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)', whiteSpace: 'nowrap' }}>
             {isSwap ? 'Swap completed · ' : ''}<span className="num">{timeLabel(tx.timeStamp)}</span>
           </span>
           {!isSwap && !name && counter && (
@@ -105,7 +108,7 @@ function TxRow({ tx, walletAddr, contacts, onClick, cur, rates, memo, isSwap, sw
         </div>
         {/* rows 3-4: Note (if any) - free to wrap when long */}
         {memo && (
-          <div style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted)', marginTop: 'calc(2 * var(--u))', lineHeight: 1.4, wordBreak: 'break-word' }}>
+          <div style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)', marginTop: 'calc(2 * var(--u))', lineHeight: 1.4, wordBreak: 'break-word' }}>
             Note: {memo}
           </div>
         )}
@@ -116,7 +119,7 @@ function TxRow({ tx, walletAddr, contacts, onClick, cur, rates, memo, isSwap, sw
         <div className="num" style={{ fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: isSend ? 'var(--color-error)' : 'var(--color-primary)', whiteSpace: 'nowrap' }}>
           {isSend ? '-' : '+'}{rates ? `${displaySymbol(cur)}${displayNum(usd, cur, rates)}` : '…'}
         </div>
-        <div className="num" style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted)', marginTop: 'calc(2 * var(--u))', whiteSpace: 'nowrap' }}>
+        <div className="num" style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)', marginTop: 'calc(2 * var(--u))', whiteSpace: 'nowrap' }}>
           {amount.toFixed(amount < 0.01 ? 6 : 2)} {symbol}
         </div>
       </div>
@@ -259,7 +262,7 @@ export default function TxHistory() {
           rows, so the row padding below has no Figma evidence and is left as-is). */}
       {/* ⚠️ ABSOLUTE card (fix 2026-09-27), not className="row-2-8": as a plain grid item it painted UNDER the
           absolutely-positioned ScreenSheet - the same bug SavedQRList had - so the grey box never showed. */}
-      <div style={{ position: 'absolute', left: '6.41%', top: '10.19dvh', width: '87.18%', height: '69.43dvh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'var(--color-card)', borderRadius: 16, padding: 'calc(4 * var(--u)) calc(14 * var(--u))', alignItems: 'stretch', justifyContent: 'flex-start', overflow: 'hidden' }}>
+      <div style={{ position: 'absolute', left: '6.41%', top: '10.19dvh', width: '87.18%', height: '69.43dvh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'var(--color-card)', borderRadius: 16, padding: 'calc(8 * var(--u)) calc(12 * var(--u)) 0', alignItems: 'stretch', justifyContent: 'flex-start', overflow: 'hidden' }}>
       <div className="scroll-hidden" style={{
         display: 'flex', flexDirection: 'column', alignItems: 'stretch', justifyContent: 'flex-start', height: '100%', overflowY: 'auto',
         WebkitMaskImage: 'linear-gradient(to top, transparent 0, black calc(100dvh / 30))',
@@ -291,8 +294,9 @@ export default function TxHistory() {
 
       {/* ONE full-width Done button (user decision 2026-09-24: the 3-button Send/Receive/Done row looked
           cluttered - the Send/Receive filter feature is removed entirely, not just visually). */}
+      {/* Owner 2026-10-19: Done = 2/3 of the full-width button, centred (this screen only). */}
       <div className="row10-single">
-        <button className="btn btn-primary" onClick={() => navigate('MenuScreen')}>Done</button>
+        <button className="btn btn-primary" style={{ width: 'calc(100% * 2 / 3)' }} onClick={() => navigate('MenuScreen')}>Done</button>
       </div>
 
       <ExitBar onClick={() => navigate('MenuScreen')} />

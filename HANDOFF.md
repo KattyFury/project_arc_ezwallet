@@ -26,6 +26,11 @@
   0.00002433 cirBTC at the 50% rule, liquidation ≈ $47.8k); 2 USDC needs 0.00004865 → Circle 380609 (not enough collateral).
 - NEXT: owner borrows 1 USDC on test.ezwallet.cash, alerts on, "Repay all & close". Lag fix e72ff9e pushed to main too (owner 2026-10-19, before testing it) - both branches equal again.
 
+## ▶ Session 2026-10-19 (3) - Transaction history polish (owner: "everything sinks")
+- Each transaction = a WHITE card (radius 16, 8 gap) inside the grey box (owner's pick of 4 options); the date = bold
+  black title; time / token amount / note = `--color-muted-2`. Done button = 2/3 of the full width, this screen only.
+  Screenshots: owner's Desktop `ezwallet-history\`.
+
 ## ▶ Session 2026-10-19 (2) - Deposit / Withdraw through an exchange
 - Fiat in/out = through an exchange, not an on-ramp (Onramp Kit cards still need KYB; bank transfer only US/EU).
   Measured 2026-10-19: USDC on Arc deposit+withdraw OPEN on **Binance** (fee 0.02, min 0.1 - capital config) and
