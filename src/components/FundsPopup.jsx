@@ -5,6 +5,7 @@ import { getTokenBalances, cachedBalances } from '../chain'
 import { isOwnAddress } from '../data'
 import { amountProblem, isValidAddress, normalizeTyped, fmtAmountShort } from '../money'
 import { NET } from '../clientNet'
+import { acct } from '../store'
 
 // DEPOSIT / WITHDRAW popups over the Menu (owner spec 2026-10-03). Same pattern as LoginEmailPopup: a white
 // card, glow shadow, NO dark scrim - MenuScreen blurs itself behind it. Smaller than the login card (owner:
@@ -13,11 +14,16 @@ import { NET } from '../clientNet'
 // No fiat on/off-ramp (owner decision 2026-10-03: no KYB → Onramp Kit dropped). Deposit = this wallet's own
 // address; Withdraw = an ordinary send to another Arc address, handed to the existing SendConfirm (fee, PIN,
 // tracking, receipt) exactly like the Send flow.
+// Fiat goes through an exchange instead (owner 2026-10-19): tabs Binance | OKX | Bitget under each popup show the
+// steps. All three list USDC on Arc for deposit + withdraw (measured 2026-10-19: Binance capital config + Bitget
+// public coins API; OKX announcement 2026-09-16). No fee/minimum numbers in the app (owner): the exchange shows its own.
+// Withdraw with an exchange picked = USDC only (the exchanges take nothing else on Arc) and the deposit address is
+// remembered per exchange in `ez_cex_<addr>`.
 
 const field = {
   display: 'flex', alignItems: 'center', gap: 'calc(8 * var(--u))',
   height: 'var(--input-h)', padding: '0 calc(12 * var(--u))',
-  background: 'var(--color-card)', borderRadius: 16,
+  background: 'var(--color-card)', borderRadius: 16, flexShrink: 0,   // a tall popup scrolls; boxes never squash
 }
 const input = {
   flex: 1, minWidth: 0, height: '100%', border: 'none', outline: 'none', background: 'none', padding: 0,
@@ -26,9 +32,48 @@ const input = {
 const note = { margin: 0, fontSize: 'var(--fs-caption)', lineHeight: 1.4, color: 'var(--color-muted-2)' }
 const iconBtn = { display: 'inline-flex', flexShrink: 0, padding: 0, border: 'none', background: 'none', cursor: 'pointer' }
 
+// `network` = the label each exchange uses for Arc (Binance + Bitget APIs: "ARC"; OKX: "USDC (Arc)").
+const EXCHANGES = [
+  { id: 'binance', name: 'Binance', network: 'ARC' },
+  { id: 'okx', name: 'OKX', network: 'Arc' },
+  { id: 'bitget', name: 'Bitget', network: 'ARC' },
+]
+const cexKey = () => `ez_cex_${acct()}`
+function savedCex() { try { return JSON.parse(localStorage.getItem(cexKey()) || '{}') } catch { return {} } }
+function saveCex(id, address) { try { localStorage.setItem(cexKey(), JSON.stringify({ ...savedCex(), [id]: address })) } catch { /* storage refused */ } }
+
+// One row of three equal buttons; tapping the picked one again un-picks it.
+function ExchangeTabs({ cex, setCex }) {
+  return (
+    <div style={{ display: 'flex', gap: 'calc(8 * var(--u))', flexShrink: 0 }}>
+      {EXCHANGES.map(x => {
+        const on = cex?.id === x.id
+        return (
+          <button key={x.id} onClick={() => setCex(on ? null : x)} className="btn" style={{
+            flex: 1, minWidth: 0, height: 'var(--input-h)', border: 'none', borderRadius: 16, cursor: 'pointer',
+            background: on ? 'var(--btn-grad-brand)' : 'var(--btn-grad-white)', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.48)',
+            color: on ? 'var(--color-white)' : 'var(--color-brand)',
+            fontFamily: 'inherit', fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)',
+          }}>{x.name}</button>
+        )
+      })}
+    </div>
+  )
+}
+
+function Steps({ items }) {
+  return (
+    <ol style={{ ...note, paddingLeft: 'calc(20 * var(--u))', display: 'flex', flexDirection: 'column', gap: 'calc(4 * var(--u))' }}>
+      {items.map((s, i) => <li key={i}>{s}</li>)}
+    </ol>
+  )
+}
+const sectionTitle = { margin: 0, fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)' }
+
 function Deposit() {
   const addr = localStorage.getItem('ez_wallet_addr') || ''
   const [copied, setCopied] = useState(false)
+  const [cex, setCex] = useState(null)
   function copy() {
     if (!addr) return
     navigator.clipboard?.writeText(addr).catch(() => {})
@@ -49,6 +94,17 @@ function Deposit() {
         Send USDC, EURC or cirBTC on the <b>Arc network</b> to this address to add money to your wallet.
         Money sent from another network (Ethereum, Base…) will not arrive.
       </p>
+
+      <p style={sectionTitle}>Buy with your local money on an exchange</p>
+      <ExchangeTabs cex={cex} setCex={setCex} />
+      {cex ? (
+        <Steps items={[
+          <>Buy USDC on {cex.name} (P2P with your local currency, or Buy Crypto).</>,
+          <>Open Assets → Withdraw → USDC, and choose the on-chain withdrawal.</>,
+          <>Paste your address above and pick the network <b>{cex.network}</b>.</>,
+          <>Check the fee and minimum {cex.name} shows, then confirm.</>,
+        ]} />
+      ) : <p style={note}>Tap your exchange to see the steps.</p>}
     </>
   )
 }
@@ -61,11 +117,20 @@ function Withdraw() {
 
   // Only tokens actually held; USDC alone when the wallet is empty (balance 0 → Continue stays off).
   const held = (tokens || []).filter(t => t.amount > 0)
-  const choices = held.length ? held : [{ symbol: 'USDC', amount: tokens ? 0 : null }]
+  const [cex, setCexState] = useState(null)
+  const usdc = (tokens || []).find(t => t.symbol === 'USDC') || { symbol: 'USDC', amount: tokens ? 0 : null }
+  // An exchange takes only USDC on Arc → the choice is locked to USDC while one is picked.
+  const choices = cex ? [usdc] : held.length ? held : [usdc]
   const [sym, setSym] = useState(null)
   const cur = choices.find(t => t.symbol === sym) || choices[0]
 
   const [address, setAddress] = useState('')
+  // Picking an exchange fills its remembered deposit address (if any).
+  function setCex(x) {
+    setCexState(x)
+    const saved = x && savedCex()[x.id]
+    if (saved) setAddress(saved)
+  }
   const [amountStr, setAmountStr] = useState('')
   const addr = address.trim()
   const amt = normalizeTyped(amountStr.trim())
@@ -82,13 +147,25 @@ function Withdraw() {
   }
   function go() {
     if (!ok) return
-    navigate('SendConfirm', { address: addr, name: null, amount: Number(amt), amountStr: amt, memo: '', currency: cur.symbol, back: 'MenuScreen' })
+    if (cex) saveCex(cex.id, addr)
+    navigate('SendConfirm', { address: addr, name: cex ? cex.name : null, amount: Number(amt), amountStr: amt, memo: '', currency: cur.symbol, back: 'MenuScreen' })
   }
 
   return (
     <>
+      <p style={sectionTitle}>Sell for your local money on an exchange</p>
+      <ExchangeTabs cex={cex} setCex={setCex} />
+      {cex && (
+        <Steps items={[
+          <>On {cex.name}: Assets → Deposit → USDC, network <b>{cex.network}</b>. Copy the deposit address.</>,
+          <>Paste it below - ezwallet remembers it as your {cex.name} address.</>,
+          <>Send <b>USDC only</b>. Check {cex.name}'s minimum deposit first.</>,
+          <>When it arrives, sell USDC for your currency on {cex.name} (P2P).</>,
+        ]} />
+      )}
+
       <div style={field}>
-        <input value={address} onChange={e => setAddress(e.target.value)} placeholder="Wallet address (0x…)"
+        <input value={address} onChange={e => setAddress(e.target.value)} placeholder={cex ? `${cex.name} deposit address (0x…)` : 'Wallet address (0x…)'}
           autoComplete="off" autoCapitalize="off" spellCheck={false} style={input} />
         <button onClick={paste} aria-label="Paste wallet address" style={{ ...iconBtn, fontFamily: 'inherit', fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-brand)' }}>
           Paste
@@ -127,14 +204,16 @@ function Withdraw() {
         <p style={{ ...note, color: 'var(--color-error)' }}>{addrError || amtError}</p>
       )}
 
-      <p style={note}>
-        Paste the wallet you want to send your money to, enter the amount, then tap the token to switch between the ones you hold.
-        The wallet must be on the <b>Arc network</b>.
-      </p>
+      {!cex && (
+        <p style={note}>
+          Paste the wallet you want to send your money to, enter the amount, then tap the token to switch between the ones you hold.
+          The wallet must be on the <b>Arc network</b>.
+        </p>
+      )}
 
       <button onClick={go} disabled={!ok} className="btn"
         style={{
-          height: 'var(--btn-h)', border: 'none', borderRadius: 16,
+          height: 'var(--btn-h)', flexShrink: 0, border: 'none', borderRadius: 16,
           background: 'var(--btn-grad-brand)', color: 'var(--color-white)', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.48)',
           fontFamily: 'inherit', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)',
           opacity: ok ? 1 : 0.5, cursor: ok ? 'pointer' : 'not-allowed',

@@ -26,6 +26,16 @@
   0.00002433 cirBTC at the 50% rule, liquidation ≈ $47.8k); 2 USDC needs 0.00004865 → Circle 380609 (not enough collateral).
 - NEXT: owner borrows 1 USDC on test.ezwallet.cash, alerts on, "Repay all & close". Lag fix e72ff9e pushed to main too (owner 2026-10-19, before testing it) - both branches equal again.
 
+## ▶ Session 2026-10-19 (2) - Deposit / Withdraw through an exchange
+- Fiat in/out = through an exchange, not an on-ramp (Onramp Kit cards still need KYB; bank transfer only US/EU).
+  Measured 2026-10-19: USDC on Arc deposit+withdraw OPEN on **Binance** (fee 0.02, min 0.1 - capital config) and
+  **Bitget** (fee 0.02, min withdraw ~5 - public coins API), **OKX** "USDC (Arc)" since 2026-09-16 (announcement; its
+  API needs a key). Binance P2P has USDC/VND (~26,000 VND).
+- `FundsPopup.jsx`: tabs Binance | OKX | Bitget (owner picks: tabs under the old content, NO fee/min numbers, text
+  only, remember the deposit address per exchange). Deposit tab = 4 steps. Withdraw tab = steps + USDC locked + the
+  exchange's saved address prefilled; Continue saves it (`ez_cex_<addr>`) and SendConfirm shows the exchange name.
+- Screenshots: owner's Desktop `ezwallet-nap-rut-san\`. Not yet: a real round trip by the owner.
+
 ## ▶ Session 2026-10-07 - docs/images clean-up (no app logic changed)
 - README / SECURITY / `.env.example` brought up to date: auto-convert, unverified tokens sendable, Terms/Privacy +
   support@ezwallet.cash, the Service hub as "in testing (test site only)", `COINGECKO_API`.
@@ -322,7 +332,7 @@ poisoning). Silence on a money screen is a serious bug for this audience - never
 Session: `ez_user_token`, `ez_encryption_key`, `ez_wallet_addr`, `ez_wallet_id`, `ez_email`, `ez_notifs_<addr>`,
 `ez_last_recv_ts_<addr>`, `ez_notified_hashes_<addr>`; `sessionStorage.ez_pin_ok`, `sessionStorage.ez_sync_token`.
 Persistent: `ez_contacts_<addr>`, `ez_saved_qrs_<addr>`, `ez_currency`, `ez_default_note`, `ez_sync_at_<addr>`,
-`ez_a2hs_done`, `ez_tx_transfers_v2` (receipt cache), `ez_memos`, `ez_token_meta` (unverified token symbol/decimals).
+`ez_a2hs_done`, `ez_cex_<addr>` (exchange deposit addresses, this device only), `ez_tx_transfers_v2` (receipt cache), `ez_memos`, `ez_token_meta` (unverified token symbol/decimals).
 Sign-out clears only the session keys.
 
 ## 11. Lessons
