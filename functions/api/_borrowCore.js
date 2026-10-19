@@ -69,14 +69,17 @@ export const publicLoan = (l) => ({
 
 // The signed intent for a write. `amount` is a decimal string in the token the action moves (USDC for borrow/repay,
 // cirBTC for add/withdraw collateral; ignored for close).
+// Every write needs a fresh `idempotencyKey` (uuid) in the body - the service answers 400 without it (measured 2026-10-19;
+// provider-borrow-service 1.0.0 postBorrowService: `idempotent: true` → `idempotencyKey ?? createUuidV4()`).
 export async function fetchExecution(net, apiKey, kind, { wallet, marketId, loanId, amount }) {
+  const idempotencyKey = crypto.randomUUID()
   if (kind === 'borrow') {
-    return kit('POST', '/loans/borrow', loanId ? { amount, loanId } : { amount, walletAddress: wallet, chain: net.circleBlockchain, marketId }, apiKey)
+    return kit('POST', '/loans/borrow', { ...(loanId ? { amount, loanId } : { amount, walletAddress: wallet, chain: net.circleBlockchain, marketId }), idempotencyKey }, apiKey)
   }
   const path = { repay: 'repay', addCollateral: 'addCollateral', withdrawCollateral: 'withdrawCollateral', close: 'closeLoan' }[kind]
   const body = kind === 'repay' ? { repayAmount: amount } : kind === 'addCollateral' ? { collateralAmount: amount }
     : kind === 'withdrawCollateral' ? { collateralAmount: amount, slippageBps: 50 } : {}
-  return kit('POST', `/loans/${encodeURIComponent(loanId)}/${path}`, body)
+  return kit('POST', `/loans/${encodeURIComponent(loanId)}/${path}`, { ...body, idempotencyKey })
 }
 
 // C5 for Borrow: sign only what the user asked. → null or the reason.
