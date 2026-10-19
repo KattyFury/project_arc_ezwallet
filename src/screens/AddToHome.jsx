@@ -30,9 +30,9 @@ const SHEET_ROWS = [
   { label: 'Add to Home Screen', icon: 'addSquare', blur: false },
 ]
 
-// "ez" is always brand blue inside a run of black text - the wordmark rule, applied in running copy.
+// The whole word "ezwallet" is the blue accent inside a run of black text (owner 2026-10-20: was "ez" blue + "wallet" black).
 function Ez() {
-  return <span style={{ color: 'var(--color-brand)' }}>ez</span>
+  return <span style={{ color: 'var(--color-brand)' }}>ezwallet</span>
 }
 
 export default function AddToHome() {
@@ -77,7 +77,7 @@ export default function AddToHome() {
         width: 'var(--cw)', textAlign: 'center',
         fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', lineHeight: 'calc(30 * var(--u))', color: 'var(--color-black)',
       }}>
-        <Ez />wallet works best as an app
+        <Ez /> works best as an app
       </div>
 
       {/* Sub-title - node 48:357: 16px regular, line-height 24, centred on (195, 310.5). */}
@@ -86,7 +86,7 @@ export default function AddToHome() {
         width: 'var(--cw)', textAlign: 'center',
         fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-normal)', lineHeight: 'calc(24 * var(--u))', color: 'var(--color-black)',
       }}>
-        Add <Ez />wallet to your home screen:
+        Add <Ez /> to your home screen:
       </div>
 
       {/* The two steps - box node 48:359 (340x70 @ 25,344, radius 8, #ECF0F8) with the list node 48:374
