@@ -16,6 +16,14 @@
 3. **Every change goes to BOTH branches** (owner, 2026-10-03): commit on `test`, then
    `git checkout main && git merge --ff-only test`, push both. Both Pages projects auto-deploy.
 
+## ▶ Session 2026-10-19 - Borrow B0
+- Owner's wallet `0xdfe251e8178f428a15c0d21688b9adb8dbd3b0ab` holds 0.00002462 cirBTC, 12.30 USDC.
+- Bug fixed (BOTH branches, `684c5cd` on main): every Borrow Service write needs a fresh `idempotencyKey` uuid, else
+  400 "API parameter invalid" (the owner hit it on the phone). `fetchExecution` now sends one.
+- `node tools/verify-borrow.mjs <wallet> [amount]` = read-only dry run. On the owner's wallet: **1 USDC PASS** (needs
+  0.00002433 cirBTC at the 50% rule, liquidation ≈ $47.8k); 2 USDC needs 0.00004865 → Circle 380609 (not enough collateral).
+- NEXT: owner borrows 1 USDC on test.ezwallet.cash, alerts on, "Repay all & close". Lag fix e72ff9e still test-only.
+
 ## ▶ Session 2026-10-07 - docs/images clean-up (no app logic changed)
 - README / SECURITY / `.env.example` brought up to date: auto-convert, unverified tokens sendable, Terms/Privacy +
   support@ezwallet.cash, the Service hub as "in testing (test site only)", `COINGECKO_API`.
