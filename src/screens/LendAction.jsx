@@ -206,7 +206,7 @@ export default function LendAction() {
           <span>Fee: <span className="num" style={{ color: 'var(--color-black)', fontWeight: 'var(--fw-semibold)' }}>{amount > 0 && !over ? (feeUsd === null ? '…' : feeUsd < 0.01 ? '<$0.01' : `up to $${feeUsd.toFixed(3)}`) : '-'}</span></span>
           {deposit && <span>Max ${MAX_USD} per deposit</span>}
         </div>
-        <span style={{ fontSize: 'var(--fs-small)'}}>
+        <span style={{ fontSize: 'var(--fs-caption)'}}>
           {deposit ? 'Vault funds are lent out. Withdrawals can be delayed. Value can fall in extreme markets. No app fee.'
             : 'You can withdraw up to what the vault has free right now. The rest stays in the vault and keeps earning.'}
         </span>

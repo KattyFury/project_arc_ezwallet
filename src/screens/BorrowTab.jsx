@@ -64,7 +64,7 @@ export default function BorrowTab() {
     </ScrollBox>
 
     {/* Row 9: the risk line. */}
-    <div className="warning-badge" style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '81.52dvh', height: '8.29dvh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 calc(16 * var(--u))', fontSize: 'var(--fs-small)'}}>
+    <div className="warning-badge" style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '81.52dvh', height: '8.29dvh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 calc(16 * var(--u))', fontSize: 'var(--fs-caption)'}}>
       If BTC falls far enough, part of your cirBTC is sold to repay the loan. Turn on alerts and repay early.
     </div>
   </>)

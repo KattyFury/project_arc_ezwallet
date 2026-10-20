@@ -116,7 +116,7 @@ export default function HomeReceive() {
         }}>
           {walletAddr
             ? <QRCodeSVG value={buildQR(walletAddr)} size={256} level="M" style={{ width: '94%', height: '94%' }} />
-            : <span style={{ fontSize: 'var(--fs-small)', color: 'var(--color-muted-2)' }}>Loading...</span>}
+            : <span style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)' }}>Loading...</span>}
         </div>
         </div>
 

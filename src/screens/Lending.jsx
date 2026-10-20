@@ -152,7 +152,7 @@ export default function Lending() {
         </ScrollBox>
 
         {/* Row 9: the always-visible risk line (plan §7). */}
-        <div className="warning-badge" style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '81.52dvh', height: '8.29dvh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 calc(16 * var(--u))', fontSize: 'var(--fs-small)'}}>
+        <div className="warning-badge" style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '81.52dvh', height: '8.29dvh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 calc(16 * var(--u))', fontSize: 'var(--fs-caption)'}}>
           Vault funds are lent out. Withdrawals can be delayed. Value can fall in extreme markets.
         </div>
       </>)}

@@ -123,7 +123,7 @@
   --fs-content-1: calc(22 * var(--u));   /* Nội dung 1 - default text, buttons, labels, menu rows */
   --fs-content-2: calc(18 * var(--u));   /* Nội dung 2 - nav bar, "Label: value" lines */
   --fs-caption:   calc(16 * var(--u));   /* Chú thích - notes, toasts, address/memo inputs, Home action tiles (Paste/Contacts/Copy/Share) */
-  --fs-small:     calc(14 * var(--u));   /* SMALLEST ALLOWED - notification area, small hints */
+  --fs-small:     calc(14 * var(--u));   /* SMALLEST ALLOWED - labels, chips, badges only. Hints / notes / errors use --fs-caption 16 (owner 2026-10-20) */
 
   /* LINE HEIGHTS - one per font token, from the design system's App styles (2026-10-20): 14/20 · 16/24 · 18/24 ·
      22/28 · 28/36 · 34/40 · 48/56. Never set a line height by hand: the [style*="var(--fs-*)"] rules at the end of

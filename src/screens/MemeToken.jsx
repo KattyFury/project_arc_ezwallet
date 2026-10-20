@@ -183,7 +183,7 @@ export default function MemeToken() {
           <span>You get ≈ <span className="num" style={{ color: 'var(--color-black)', fontWeight: 'var(--fw-semibold)' }}>{outTxt}</span></span>
           <span>Fee: <span className="num" style={{ color: 'var(--color-black)', fontWeight: 'var(--fw-semibold)' }}>{amount > 0 && !over ? (feeUsd === null ? '…' : feeUsd < 0.01 ? '<$0.01' : `up to $${feeUsd.toFixed(3)}`) : '-'}</span></span>
         </div>
-        <span style={{ fontSize: 'var(--fs-small)'}}>
+        <span style={{ fontSize: 'var(--fs-caption)'}}>
           {buy ? `Max $${MAX_BUY} per buy. You receive at least 3% under the amount shown, or nothing happens. Meme prices swing hard - you can lose most of it. No app fee.`
             : 'You receive at least 3% under the amount shown, or nothing happens. No app fee.'}
         </span>

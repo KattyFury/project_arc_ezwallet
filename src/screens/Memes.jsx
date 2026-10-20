@@ -138,7 +138,7 @@ export default function Memes() {
       </ScrollBox>
 
       {/* Row 9: the risk line (owner 2026-10-06: plain words, what a member must know). */}
-      <div className="warning-badge" style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '81.52dvh', height: '8.29dvh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 calc(16 * var(--u))', fontSize: 'var(--fs-small)'}}>
+      <div className="warning-badge" style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '81.52dvh', height: '8.29dvh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 calc(16 * var(--u))', fontSize: 'var(--fs-caption)'}}>
         Memes can drop to zero in minutes. Copycat tokens use real names - check the address. Only use money you can lose.
       </div>
 

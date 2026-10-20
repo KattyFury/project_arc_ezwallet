@@ -264,7 +264,7 @@ export default function LoginEmailPopup({ onClose }) {
         <div style={{ flex: 1 }} />
 
         {error && (
-          <div style={{ marginBottom: 'calc(16 * var(--u))', fontSize: 'var(--fs-small)', color: 'var(--color-error)' }}>
+          <div style={{ marginBottom: 'calc(16 * var(--u))', fontSize: 'var(--fs-caption)', color: 'var(--color-error)' }}>
             {error}
           </div>
         )}

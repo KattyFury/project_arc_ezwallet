@@ -64,7 +64,7 @@ export default function ShowQR() {
       {/* Caption THEN amount, node 1:136/1:135 (RE-VERIFIED 2026-09-24, order swapped from the previous
           pass, ONE line only - "Have the sender scan this code" is gone, Figma draws just the network
           line): caption top-anchored 43.32dvh, amount centred 50dvh, 48px semibold brand blue. */}
-      <div style={{ position: 'absolute', left: '50%', top: '43.32dvh', transform: 'translateX(-50%)', width: 'calc(340 * var(--u))', fontSize: 'var(--fs-small)', fontWeight: 'var(--fw-semibold)', textAlign: 'center', color: 'var(--color-error)' }}>
+      <div style={{ position: 'absolute', left: '50%', top: '43.32dvh', transform: 'translateX(-50%)', width: 'calc(340 * var(--u))', fontSize: 'var(--fs-caption)', fontWeight: 'var(--fw-semibold)', textAlign: 'center', color: 'var(--color-error)' }}>
         {NETWORK_NOTE}
       </div>
       <span className="num" style={{ position: 'absolute', left: '50%', top: '50dvh', transform: 'translate(-50%, -50%)', fontSize: 'var(--fs-amount-2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-brand)', whiteSpace: 'nowrap' }}>{amountText}</span>
