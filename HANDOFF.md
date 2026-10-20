@@ -60,6 +60,13 @@
   with a size carries its `--lh-*`, and `[style*="var(--fs-X)"]` rules at the END of index.css pair inline sizes - never set a
   line height by hand (test fails). Auto-fit amounts (`useFitFontSize`) now STEP through 48/34/28/22/18 and return the paired
   line height. AddToHome: the whole word "ezwallet" is the blue accent. Screens: Desktop `ezwallet-co-chu-ios\`. TEST ONLY.
+- **2026-10-20: whole-app guideline pass** (owner: "design lại all"): every padding/margin/gap on the 8-grid (test
+  enforces it; PctSlider internals + negative hit-area margins excepted) · side-by-side buttons 16 apart everywhere
+  (.row10-dual, .popup-actions, Home/Receive/Menu rows, Paste/Confirm/Receipt) · every popup = 24 top/bottom, 16
+  sides, 16 between blocks · every standard button radius 16 (.btn was a 50px pill; small pills/chips stay pills) ·
+  `--color-warning-text` #8A5F00 for yellow WORDS on white · receipt canvas reads the colour tokens · Security inner
+  margin 16 · currency popup centred so long lists stay on screen. Button types: plain 22 / icon tile 18 + icon 24 /
+  small pill 18; Home row = three equal big buttons. Screens: Desktop `ezwallet-redesign-all\`.
 - Not changed yet: raster PNGs (icon.png, fav_icon.png, og.png still old blue), numpad `.disabled` still uses opacity,
   Swap's confirm pulse opacity. Screenshots: owner's Desktop `ezwallet-redesign-test\`.
 

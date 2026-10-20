@@ -14,7 +14,7 @@ import ScrollBox, { BoxHeader } from '../components/ScrollBox'
 // Any row → MemeToken (Buy | Sell, with the honeypot check). LABS only (src/labs.js).
 const isAddr = (a) => /^0x[0-9a-fA-F]{40}$/.test(String(a || '').trim())
 const BOX = { position: 'absolute', left: 'var(--m)', right: 'var(--m)' }
-const LIST = { padding: '0 calc(12 * var(--u)) calc(12 * var(--u))', gap: 'calc(8 * var(--u))' }   // under the fixed BoxHeader
+const LIST = { padding: '0 calc(16 * var(--u)) calc(16 * var(--u))', gap: 'calc(8 * var(--u))' }   // under the fixed BoxHeader
 const muted = { fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)' }
 
 // One compact white row: name on the left, two short lines; a value block on the right. Tap = open the token.
@@ -22,14 +22,14 @@ function Row({ title, sub, right, rightSub, rightColor, onClick, faded }) {
   return (
     <button onClick={onClick} disabled={!onClick} style={{
       flexShrink: 0, display: 'flex', alignItems: 'center', gap: 'calc(8 * var(--u))', width: '100%', border: 'none', borderRadius: 16,
-      background: 'var(--color-white)', padding: 'calc(10 * var(--u)) calc(12 * var(--u))', fontFamily: 'inherit', textAlign: 'left', cursor: onClick ? 'pointer' : 'default',
+      background: 'var(--color-white)', padding: 'calc(8 * var(--u)) calc(16 * var(--u))', fontFamily: 'inherit', textAlign: 'left', cursor: onClick ? 'pointer' : 'default',
     }}>
-      <span className="col" style={{ flex: 1, minWidth: 0, gap: 'calc(2 * var(--u))' }}>
+      <span className="col" style={{ flex: 1, minWidth: 0, gap: 'calc(8 * var(--u))' }}>
         <span style={{ fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', color: faded ? 'var(--color-muted)' : 'var(--color-black)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{title}</span>
         <span style={{ ...muted, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{sub}</span>
       </span>
       {right != null && (
-        <span className="col" style={{ alignItems: 'flex-end', flexShrink: 0, gap: 'calc(2 * var(--u))' }}>
+        <span className="col" style={{ alignItems: 'flex-end', flexShrink: 0, gap: 'calc(8 * var(--u))' }}>
           <span className="num" style={{ fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)' }}>{right}</span>
           <span className="num" style={{ fontSize: 'var(--fs-caption)', fontWeight: 'var(--fw-semibold)', color: rightColor || 'var(--color-muted-2)' }}>{rightSub}</span>
         </span>
@@ -93,7 +93,7 @@ export default function Memes() {
       )}
 
       {/* Row 2: paste a contract address. */}
-      <div style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '10.19dvh', height: '8.29dvh', display: 'flex', alignItems: 'center', gap: 'calc(12 * var(--u))' }}>
+      <div style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '10.19dvh', height: '8.29dvh', display: 'flex', alignItems: 'center', gap: 'calc(16 * var(--u))' }}>
         <input value={ca} onChange={e => { setCa(e.target.value); setError('') }} onKeyDown={e => e.key === 'Enter' && go(ca)}
           placeholder="Token address (CA)" spellCheck={false} autoCapitalize="off" autoCorrect="off"
           className="address-input" style={{ flex: 1, minWidth: 0 }} />
@@ -138,7 +138,7 @@ export default function Memes() {
       </ScrollBox>
 
       {/* Row 9: the risk line (owner 2026-10-06: plain words, what a member must know). */}
-      <div className="warning-badge" style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '81.52dvh', height: '8.29dvh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 calc(12 * var(--u))', fontSize: 'var(--fs-small)'}}>
+      <div className="warning-badge" style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '81.52dvh', height: '8.29dvh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 calc(16 * var(--u))', fontSize: 'var(--fs-small)'}}>
         Memes can drop to zero in minutes. Copycat tokens use real names - check the address. Only use money you can lose.
       </div>
 

@@ -132,7 +132,7 @@ export default function MemeToken() {
   const hint = (label, val) => (
     <button key={label} disabled={!val || loading} onClick={() => { setTyped(val); setError('') }} style={{
       border: '1.5px solid', borderColor: val ? 'var(--color-brand)' : 'var(--color-muted)', background: 'none', borderRadius: 999,
-      padding: 'calc(6 * var(--u)) calc(14 * var(--u))', fontFamily: 'inherit', fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)',
+      padding: 'calc(8 * var(--u)) calc(16 * var(--u))', fontFamily: 'inherit', fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)',
       cursor: 'pointer', color: val ? 'var(--color-brand)' : 'var(--color-muted)',
     }}>{label}</button>
   )
@@ -148,7 +148,7 @@ export default function MemeToken() {
       <Tabs tabs={[['buy', 'Buy'], ['sell', 'Sell']]} tab={side} setTab={switchSide} />
 
       {/* Rows 2-3: the token + the honeypot check. */}
-      <div style={{ ...at('10.19dvh', '18.48dvh'), ...BOX, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 'calc(6 * var(--u))', padding: 'calc(16 * var(--u))' }}>
+      <div style={{ ...at('10.19dvh', '18.48dvh'), ...BOX, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 'calc(8 * var(--u))', padding: 'calc(16 * var(--u))' }}>
         {info === null ? <span style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)' }}>Checking this token on the network…</span>
           : !info.supported ? <span style={{ fontSize: 'var(--fs-content-2)', color: 'var(--color-error)'}}>Not supported: {info.reason}.</span>
           : (<>
@@ -161,7 +161,7 @@ export default function MemeToken() {
       </div>
 
       {/* Rows 4-5: the amount. */}
-      <div style={{ ...at('30.57dvh', '18.48dvh'), ...BOX, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 'calc(10 * var(--u))', padding: 'calc(16 * var(--u))' }}>
+      <div style={{ ...at('30.57dvh', '18.48dvh'), ...BOX, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 'calc(8 * var(--u))', padding: 'calc(16 * var(--u))' }}>
         <span style={{ fontSize: 'var(--fs-content-2)', color: 'var(--color-muted-2)' }}>
           {buy ? 'Available' : 'You hold'}: <span className="num" style={{ color: 'var(--color-brand)', fontWeight: 'var(--fw-semibold)' }}>
             {buy ? (usdc === undefined ? '…' : `${usdc.toFixed(2)} USDC`) : (info?.supported ? `${fmtUnits(maxSellRaw, info.decimals)} ${sym}` : '…')}</span>
@@ -178,7 +178,7 @@ export default function MemeToken() {
       </div>
 
       {/* Row 6: what you get, the fee, and the note right under them. */}
-      <div style={{ ...at('50.95dvh', 'auto'), display: 'flex', flexDirection: 'column', gap: 'calc(8 * var(--u))', padding: '0 calc(11 * var(--u))', fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)' }}>
+      <div style={{ ...at('50.95dvh', 'auto'), display: 'flex', flexDirection: 'column', gap: 'calc(8 * var(--u))', padding: '0 calc(8 * var(--u))', fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', gap: 'calc(8 * var(--u))' }}>
           <span>You get ≈ <span className="num" style={{ color: 'var(--color-black)', fontWeight: 'var(--fw-semibold)' }}>{outTxt}</span></span>
           <span>Fee: <span className="num" style={{ color: 'var(--color-black)', fontWeight: 'var(--fw-semibold)' }}>{amount > 0 && !over ? (feeUsd === null ? '…' : feeUsd < 0.01 ? '<$0.01' : `up to $${feeUsd.toFixed(3)}`) : '-'}</span></span>
@@ -192,7 +192,7 @@ export default function MemeToken() {
       {/* Row 9: the button. */}
       <div style={{ ...at('81.52dvh', '8.29dvh'), display: 'flex', alignItems: 'center' }}>
         <button className={`btn ${error ? 'btn-secondary' : done ? 'btn-success' : 'btn-primary'}`}
-          style={{ width: '100%', height: 'var(--btn-h)', minHeight: 0, borderRadius: 38, ...(error ? { color: 'var(--color-error)' } : null) }}
+          style={{ width: '100%', height: 'var(--btn-h)', minHeight: 0, borderRadius: 16, ...(error ? { color: 'var(--color-error)' } : null) }}
           disabled={amount > 0 ? !can && !error : loading || done || !info?.supported || blocked}
           onClick={() => error ? setError('') : amount > 0 ? run() : setPad(true)}>
           <span style={{ fontSize: 'var(--fs-content-1)', textAlign: 'center', display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2, overflow: 'hidden' }}>{label}</span>
@@ -204,7 +204,7 @@ export default function MemeToken() {
           <div className="sheet numpad-gray" onClick={e => e.stopPropagation()}>
             <div style={{ flex: 5.5, minHeight: 0, paddingTop: 'calc(24 * var(--u))' }}><Numpad onKey={onPadKey} showComma /></div>
             <div style={{ flex: 0.5 }} />
-            <div style={{ flex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'calc(12 * var(--u))' }}>
+            <div style={{ flex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'calc(16 * var(--u))' }}>
               <button className="btn btn-secondary" style={{ width: '44%' }} onClick={() => { setTyped(''); setPad(false) }}>Clear</button>
               <button className="btn btn-primary" style={{ width: '44%' }} onClick={() => setPad(false)}>Done</button>
             </div>

@@ -245,7 +245,7 @@ export default function SendConfirm() {
           )}
           {unv && (
             // UNVERIFIED token (owner 2026-10-05): one yellow line, never blocks.
-            <div className="confirm-row" style={{ justifyContent: 'center', color: 'var(--color-warning)', fontWeight: 'var(--fw-semibold)', fontSize: 'var(--fs-caption)', textAlign: 'center' }}>
+            <div className="confirm-row" style={{ justifyContent: 'center', color: 'var(--color-warning-text)', fontWeight: 'var(--fw-semibold)', fontSize: 'var(--fs-caption)', textAlign: 'center' }}>
               Unverified token - make sure the receiver expects it
             </div>
           )}
@@ -282,7 +282,7 @@ export default function SendConfirm() {
       {/* Back/Confirm PIN - node 58:298/58:294: ~166px each, i.e. (340 − 8) / 2 - flex:1 with an 8px gap.
           Centre 85.66dvh, glow shadow. "Back" (was "Edit") per the exact Figma label - functionally
           unchanged, still re-opens SendAmount with the same params to adjust the transaction. */}
-      <div style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '85.66dvh', transform: 'translateY(-50%)', display: 'flex', gap: 'calc(8 * var(--u))' }}>
+      <div style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '85.66dvh', transform: 'translateY(-50%)', display: 'flex', gap: 'calc(16 * var(--u))' }}>
         <button className="btn btn-secondary" style={{ flex: 1, boxShadow: 'var(--shadow-y2)' }} disabled={loading || done} onClick={() => navigate('SendAmount', params)}>Back</button>
         <button className="btn btn-primary" style={{ flex: 1, boxShadow: 'var(--shadow-y2)' }}
           disabled={loading || done || !convertReady} onClick={() => (needsQrCheck && !attemptRef.current ? setQrCheck(true) : handleConfirm())}>

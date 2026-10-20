@@ -61,7 +61,7 @@ export default function ServiceHub() {
             <span style={{ width: '25%', flexShrink: 0, display: 'flex', justifyContent: 'center' }}>
               <Icon name={icon} size="calc(56 * var(--u))" color="var(--color-brand)" />
             </span>
-            <span className="col" style={{ width: '75%', minWidth: 0, gap: 'calc(2 * var(--u))' }}>
+            <span className="col" style={{ width: '75%', minWidth: 0, gap: 'calc(8 * var(--u))' }}>
               <span style={{ fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{label}:</span>
               <span style={{ fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-normal)', color: 'var(--color-black)', display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 3, overflow: 'hidden' }}>{desc}</span>
             </span>

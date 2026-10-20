@@ -237,20 +237,20 @@ export default function SendAmount() {
           real icon layer) - replaced with the real token logo for an actual token; USD (a fiat label,
           not a token) shows no logo at all. */}
       <button onClick={() => setShowCur(true)}
-        style={{ position: 'absolute', left: 'calc(var(--m) + 8 * var(--u))', top: '19.4dvh', transform: 'translateY(-50%)', display: 'inline-flex', alignItems: 'center', gap: 'calc(6 * var(--u))', border: 'none', background: 'var(--btn-grad-white)', borderRadius: 999, height: 'calc(42 * var(--u))', padding: '0 calc(14 * var(--u)) 0 calc(8 * var(--u))', boxShadow: 'var(--shadow-y2)', fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)', cursor: 'pointer' }}>
+        style={{ position: 'absolute', left: 'calc(var(--m) + 8 * var(--u))', top: '19.4dvh', transform: 'translateY(-50%)', display: 'inline-flex', alignItems: 'center', gap: 'calc(8 * var(--u))', border: 'none', background: 'var(--btn-grad-white)', borderRadius: 999, height: 'calc(42 * var(--u))', padding: '0 calc(16 * var(--u)) 0 calc(8 * var(--u))', boxShadow: 'var(--shadow-y2)', fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)', cursor: 'pointer' }}>
         {!isFiatLabel(cur) && <img src={`/tokens/${tokenIconFor(cur)}.png`} alt="" style={{ width: 'calc(24 * var(--u))', height: 'calc(24 * var(--u))', borderRadius: '50%', flexShrink: 0 }} />}
         {isUnv(cur) ? <span style={{ maxWidth: 'calc(150 * var(--u))', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{labelOf(cur)}</span> : cur}
         <Icon name="down2" size="var(--is-content-2)" color="var(--color-brand)" />
       </button>
 
-      <span style={{ position: 'absolute', left: 'calc(var(--m) + 8 * var(--u))', right: 'calc(var(--m) + 8 * var(--u))', top: '25.28dvh', transform: 'translateY(-50%)', fontSize: 'var(--fs-content-2)', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: 'calc(6 * var(--u))', minWidth: 0 }}>
+      <span style={{ position: 'absolute', left: 'calc(var(--m) + 8 * var(--u))', right: 'calc(var(--m) + 8 * var(--u))', top: '25.28dvh', transform: 'translateY(-50%)', fontSize: 'var(--fs-content-2)', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: 'calc(8 * var(--u))', minWidth: 0 }}>
         <span style={{ color: 'var(--color-muted-2)' }}>Available:</span>
         <span className="num" style={{ fontWeight: 'var(--fw-semibold)', color: 'var(--color-brand)', overflow: 'hidden', textOverflow: 'ellipsis', minWidth: 0 }}>{availableStr}</span>
         {/* HINT chips, not buttons (owner 2026-10-05): the outlined flat pill of Exchange's amount hints - no gradient,
             no shadow. Tapping one still fills the amount. */}
         {!isVnd && [['50%', halfStr], ['100%', maxStr]].map(([label, v]) => (
           <button key={label} disabled={!v || v === '0'} onClick={() => pickAmount(v)}
-            style={{ flexShrink: 0, border: `1.5px solid ${!v || v === '0' ? 'var(--color-muted)' : 'var(--color-brand)'}`, borderRadius: 999, background: 'var(--color-white)', height: 'calc(28 * var(--u))', padding: '0 calc(10 * var(--u))', fontFamily: 'inherit', fontSize: 'var(--fs-caption)', fontWeight: 'var(--fw-semibold)', color: !v || v === '0' ? 'var(--color-muted)' : 'var(--color-brand)', cursor: !v || v === '0' ? 'default' : 'pointer' }}>
+            style={{ flexShrink: 0, border: `1.5px solid ${!v || v === '0' ? 'var(--color-muted)' : 'var(--color-brand)'}`, borderRadius: 999, background: 'var(--color-white)', height: 'calc(28 * var(--u))', padding: '0 calc(8 * var(--u))', fontFamily: 'inherit', fontSize: 'var(--fs-caption)', fontWeight: 'var(--fw-semibold)', color: !v || v === '0' ? 'var(--color-muted)' : 'var(--color-brand)', cursor: !v || v === '0' ? 'default' : 'pointer' }}>
             {label}
           </button>
         ))}
@@ -326,7 +326,7 @@ export default function SendAmount() {
           after adding ScreenSheet - CreateQR.jsx has the identical pattern but no ScreenSheet, so it never
           hit this). */}
       {!typingText && !showNote && (
-      <div className="numpad-gray" style={{ position: 'relative', gridRow: '6 / 11', margin: '0 calc(-20 * var(--u)) 0', padding: 'calc(27 * var(--u)) 20px 0', background: 'var(--color-card)', borderRadius: '16px 16px 0 0' }}>
+      <div className="numpad-gray" style={{ position: 'relative', gridRow: '6 / 11', margin: '0 calc(-20 * var(--u)) 0', padding: 'calc(24 * var(--u)) 20px 0', background: 'var(--color-card)', borderRadius: '16px 16px 0 0' }}>
         {/* AMOUNT SUGGESTIONS (VND only) - placed DIRECTLY ABOVE the numpad so the typing finger reaches them instantly, one tap
             instead of counting zeroes. Height only reserved WHILE hints are actually showing - VND is
             unreachable in practice (see the file header comment), so this never actually pushes the numpad
@@ -334,7 +334,7 @@ export default function SendAmount() {
         <div style={{ height: hints.length ? 44 : 0, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'calc(8 * var(--u))', flexShrink: 0, overflow: 'hidden' }}>
           {hints.map(v => (
             <button key={v} onClick={() => setDigits(String(v))}
-              style={{ border: '1.5px solid var(--color-gray)', background: 'var(--btn-grad-white)', borderRadius: 999, padding: 'calc(6 * var(--u)) calc(14 * var(--u))', cursor: 'pointer', fontFamily: 'var(--font-condensed)', fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-content)', whiteSpace: 'nowrap' }}>
+              style={{ border: '1.5px solid var(--color-gray)', background: 'var(--btn-grad-white)', borderRadius: 999, padding: 'calc(8 * var(--u)) calc(16 * var(--u))', cursor: 'pointer', fontFamily: 'var(--font-condensed)', fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-content)', whiteSpace: 'nowrap' }}>
               {fmtAmountHint(v)}
             </button>
           ))}
@@ -386,10 +386,10 @@ export default function SendAmount() {
       {/* Currency picker popup - standard .popup-card (centred over rows 2-5, leaving the bottom half for the keyboard) */}
       {showCur && (
         <div className="popup-overlay" onClick={() => setShowCur(false)}>
-          <div className="popup-card" onClick={e => e.stopPropagation()} style={{ maxHeight: '80dvh', overflowY: 'auto' }}>
+          <div className="popup-card" onClick={e => e.stopPropagation()} style={{ top: '50dvh', maxHeight: '80dvh', overflowY: 'auto' }}>   {/* centred: a long list would rise off the top at the default 30dvh */}
             <div className="popup-title">Select currency</div>
             {[...CURRENCIES, ...(unvList.length ? ['__unv'] : []), ...unvList.map(u => u.key)].map(c => c === '__unv' ? (
-              <div key={c} style={{ fontSize: 'var(--fs-caption)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-warning)', textAlign: 'center' }}>Unverified tokens</div>
+              <div key={c} style={{ fontSize: 'var(--fs-caption)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-warning-text)', textAlign: 'center' }}>Unverified tokens</div>
             ) : (
               // Changing currency → CLEAR what was typed. Whether "50" means 50 dollars or 50 dong are two entirely
               // different things; keeping the old number invites the user to send twenty thousand times too much.

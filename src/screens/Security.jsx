@@ -23,8 +23,8 @@ const CUR_SHORT = { USDC: 'USD', EURC: 'EUR' }
 const LANGUAGE_OPTIONS = [{ code: 'en', label: 'English', locked: true }]
 
 // Value chip - node 58:362/58:364/58:366: white pill, glow shadow, no border, 42px tall.
-const CHIP = { border: 'none', background: 'var(--btn-grad-white)', boxShadow: 'var(--shadow-y2)', borderRadius: 999, height: 'calc(42 * var(--u))', padding: '0 calc(14 * var(--u))', fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', cursor: 'pointer', flexShrink: 0, display: 'inline-flex', alignItems: 'center', gap: 'calc(6 * var(--u))', fontFamily: 'inherit' }
-const ROW = { position: 'absolute', left: 'calc(var(--m) + 11 * var(--u))', right: 'calc(var(--m) + 11 * var(--u))', transform: 'translateY(-50%)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'calc(12 * var(--u))' }
+const CHIP = { border: 'none', background: 'var(--btn-grad-white)', boxShadow: 'var(--shadow-y2)', borderRadius: 999, height: 'calc(42 * var(--u))', padding: '0 calc(16 * var(--u))', fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', cursor: 'pointer', flexShrink: 0, display: 'inline-flex', alignItems: 'center', gap: 'calc(8 * var(--u))', fontFamily: 'inherit' }
+const ROW = { position: 'absolute', left: 'calc(var(--m) + 16 * var(--u))', right: 'calc(var(--m) + 16 * var(--u))', transform: 'translateY(-50%)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'calc(16 * var(--u))' }
 // Row centres - user decision 2026-09-27: EVERY item (Network, Email, Wallet address, PIN, Language,
 // Default currency) is its own line on ONE even step, so Network→Email is the same gap as Wallet→PIN.
 // First centre 14.34dvh (121px, the middle of grid row 2), step 7.58dvh (64px). About.jsx uses the SAME
@@ -41,7 +41,7 @@ function Picker({ title, options, active, onPick, onClose }) {
           <button key={o.code} disabled={o.locked}
             onClick={() => { if (!o.locked) onPick(o.code) }}
             className={`btn ${o.code === active ? 'btn-primary' : 'btn-secondary'}`}
-            style={{ width: '100%', justifyContent: 'flex-start', paddingLeft: 'calc(18 * var(--u))' }}>
+            style={{ width: '100%', justifyContent: 'flex-start', paddingLeft: 'calc(16 * var(--u))' }}>
             {o.label}
           </button>
         ))}

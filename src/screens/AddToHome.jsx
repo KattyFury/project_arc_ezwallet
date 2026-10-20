@@ -1,4 +1,5 @@
 import { useNav } from '../nav'
+import { GRADIENT } from '../brandBg'
 import Icon from '../components/Icon'
 import { bootTarget, A2HS_KEY } from '../boot'
 import logoIcon from '../../design/logo-icon.svg'
@@ -13,7 +14,7 @@ import arrowDown from '../../design/arrow-down.svg'
 // ⚠️ The background is a GRADIENT, which the old BRAND-GUIDELINE.md forbids ("tất cả là màu SOLID").
 // The user settled this directly on 2026-09-23: "Figma là nguồn sự thật, guideline cũ rồi." Do not
 // "fix" this back to a solid fill.
-const GRADIENT = 'linear-gradient(204.80096509205717deg, #FFFFFF 50%, #1E6DF7 100%)'
+// The shared brand gradient (src/brandBg.js) - one definition for every gradient screen.
 
 // The five rows of the fake iOS share sheet (node 48:358). Only the LAST one is legible - the four
 // above it are blurred, because the point of the picture is to show the user which line to look for,
@@ -109,7 +110,7 @@ export default function AddToHome() {
         <div style={{
           width: '70.26%', height: '28.67dvh', flexShrink: 0,
           background: 'var(--color-white)', border: '1px solid var(--color-brand)', borderRadius: 16,
-          padding: 'calc(5 * var(--u)) 0', display: 'flex', flexDirection: 'column', overflow: 'hidden',
+          padding: 'calc(8 * var(--u)) 0', display: 'flex', flexDirection: 'column', overflow: 'hidden',
         }}>
           {SHEET_ROWS.map((row, i) => (
             <div key={row.label} style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>

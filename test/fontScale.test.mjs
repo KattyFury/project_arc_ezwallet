@@ -66,3 +66,19 @@ test('no hand-set line heights', () => {
   }
   assert.deepEqual(bad, [], 'use the --lh-* token paired with the font size')
 })
+
+// 2026-10-20 (owner): every padding / margin / gap in the screens is on the 8-grid (PctSlider's track internals and
+// negative hit-area margins excepted).
+test('spacing is a multiple of 8', () => {
+  const bad = []
+  for (const f of files) {
+    if (!f.endsWith('.jsx') || f.endsWith('PctSlider.jsx')) continue
+    readFileSync(f, 'utf8').split('\n').forEach((line, i) => {
+      if (/^\s*(\/\/|\*|\/\*|\{\/\*)/.test(line)) return
+      for (const m of line.matchAll(/\b(?:padding|margin|gap|rowGap|columnGap)(?:Top|Bottom|Left|Right)?\s*:\s*['`]([^'`]*)['`]/g))
+        for (const k of m[1].matchAll(/calc\(([0-9.]+) \* var\(--u\)\)/g))
+          if (Number(k[1]) % 8) bad.push(`${f}:${i + 1}  ${m[0]}`)
+    })
+  }
+  assert.deepEqual(bad, [], 'spacing must be a multiple of 8')
+})

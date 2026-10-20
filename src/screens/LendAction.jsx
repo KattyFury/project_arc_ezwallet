@@ -161,7 +161,7 @@ export default function LendAction() {
   const avail = deposit ? balances[asset] : position?.balance
   const hint = (label, n) => (
     <button key={label} disabled={!(n > 0) || loading} onClick={() => setAmount(n)} style={{
-      border: '1.5px solid var(--color-brand)', background: 'none', borderRadius: 999, padding: 'calc(6 * var(--u)) calc(14 * var(--u))',
+      border: '1.5px solid var(--color-brand)', background: 'none', borderRadius: 999, padding: 'calc(8 * var(--u)) calc(16 * var(--u))',
       fontFamily: 'inherit', fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', cursor: 'pointer',
       color: n > 0 ? 'var(--color-brand)' : 'var(--color-muted)', borderColor: n > 0 ? 'var(--color-brand)' : 'var(--color-muted)',
     }}>{label}</button>
@@ -174,7 +174,7 @@ export default function LendAction() {
       <Tabs tabs={[['deposit', 'Deposit'], ['withdraw', 'Withdraw']]} tab={kind} setTab={switchKind} />
 
       {/* Rows 2-3: the vault. */}
-      <div style={{ ...at('10.19dvh', '18.48dvh'), ...BOX, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 'calc(6 * var(--u))', padding: 'calc(16 * var(--u))' }}>
+      <div style={{ ...at('10.19dvh', '18.48dvh'), ...BOX, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 'calc(8 * var(--u))', padding: 'calc(16 * var(--u))' }}>
         <span style={{ fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)' }}>{vault.name}</span>
         <span style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)' }}>APY {typeof vault.apy === 'number' ? `${(vault.apy * 100).toFixed(2)}%` : '…'}{vault.curator ? ` · ${vault.curator}` : ''}</span>
         <span style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)' }}>
@@ -184,7 +184,7 @@ export default function LendAction() {
       </div>
 
       {/* Rows 4-5: the amount. */}
-      <div style={{ ...at('30.57dvh', '18.48dvh'), ...BOX, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 'calc(10 * var(--u))', padding: 'calc(16 * var(--u))' }}>
+      <div style={{ ...at('30.57dvh', '18.48dvh'), ...BOX, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 'calc(8 * var(--u))', padding: 'calc(16 * var(--u))' }}>
         <span style={{ fontSize: 'var(--fs-content-2)', color: 'var(--color-muted-2)' }}>
           {deposit ? 'Available' : 'In this vault'}: <span className="num" style={{ color: 'var(--color-brand)', fontWeight: 'var(--fw-semibold)' }}>{avail === undefined || avail === null ? '…' : `${fmtAmt(avail)} ${asset}`}</span>
         </span>
@@ -201,7 +201,7 @@ export default function LendAction() {
       </div>
 
       {/* Row 6: fee + the cap, the note RIGHT UNDER them (owner: an orphan note in row 7 looked odd). */}
-      <div style={{ ...at('50.95dvh', 'auto'), display: 'flex', flexDirection: 'column', gap: 'calc(8 * var(--u))', padding: '0 calc(11 * var(--u))', fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)' }}>
+      <div style={{ ...at('50.95dvh', 'auto'), display: 'flex', flexDirection: 'column', gap: 'calc(8 * var(--u))', padding: '0 calc(8 * var(--u))', fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', gap: 'calc(8 * var(--u))' }}>
           <span>Fee: <span className="num" style={{ color: 'var(--color-black)', fontWeight: 'var(--fw-semibold)' }}>{amount > 0 && !over ? (feeUsd === null ? '…' : feeUsd < 0.01 ? '<$0.01' : `up to $${feeUsd.toFixed(3)}`) : '-'}</span></span>
           {deposit && <span>Max ${MAX_USD} per deposit</span>}
@@ -215,7 +215,7 @@ export default function LendAction() {
       {/* Row 9: the button - the only place status/errors show (as Swap). */}
       <div style={{ ...at('81.52dvh', '8.29dvh'), display: 'flex', alignItems: 'center' }}>
         <button className={`btn ${error ? 'btn-secondary' : done ? 'btn-success' : 'btn-primary'}`}
-          style={{ width: '100%', height: 'var(--btn-h)', minHeight: 0, borderRadius: 38, ...(error ? { color: 'var(--color-error)' } : null) }}
+          style={{ width: '100%', height: 'var(--btn-h)', minHeight: 0, borderRadius: 16, ...(error ? { color: 'var(--color-error)' } : null) }}
           disabled={amount > 0 ? !can && !error : loading || done}
           onClick={() => amount > 0 ? (error ? setError('') : run()) : setPad(true)}>
           <span style={{ fontSize: 'var(--fs-content-1)', textAlign: 'center', display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2, overflow: 'hidden' }}>
@@ -229,7 +229,7 @@ export default function LendAction() {
           <div className="sheet numpad-gray" onClick={e => e.stopPropagation()}>
             <div style={{ flex: 5.5, minHeight: 0, paddingTop: 'calc(24 * var(--u))' }}><Numpad onKey={onPadKey} showComma /></div>
             <div style={{ flex: 0.5 }} />
-            <div style={{ flex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'calc(12 * var(--u))' }}>
+            <div style={{ flex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'calc(16 * var(--u))' }}>
               <button className="btn btn-secondary" style={{ width: '44%' }} onClick={() => { setTyped(''); setPad(false) }}>Clear</button>
               <button className="btn btn-primary" style={{ width: '44%' }} onClick={() => setPad(false)}>Done</button>
             </div>

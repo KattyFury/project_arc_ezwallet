@@ -44,7 +44,7 @@ export default function ScrollBox({ header, style, listStyle, children }) {
 // The standard box header: a title on the left, optional small text on the right (e.g. the data source).
 export function BoxHeader({ title, right }) {
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 'calc(8 * var(--u))', padding: 'calc(12 * var(--u)) calc(16 * var(--u)) calc(8 * var(--u))' }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 'calc(8 * var(--u))', padding: 'calc(16 * var(--u)) calc(16 * var(--u)) calc(8 * var(--u))' }}>
       <span style={{ fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)' }}>{title}</span>
       {right && <span style={{ fontSize: 'var(--fs-small)', color: 'var(--color-muted-2)', whiteSpace: 'nowrap' }}>{right}</span>}
     </div>

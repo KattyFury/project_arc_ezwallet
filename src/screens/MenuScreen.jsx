@@ -111,10 +111,10 @@ export default function MenuScreen() {
           option B 2026-10-03 because the plain `up`/`down` used before were the SAME glyphs as the NavBar's
           Send/Receive, so Withdraw read as Send and Deposit as Receive. Size = 1.2x the label (--ib-content-1). */}
       <button className="btn" onClick={() => setPopup('withdraw')} style={{
-        position: 'absolute', left: 'var(--m)', top: '30.57dvh', width: 'calc((var(--cw) - 8 * var(--u)) / 2)', height: 'calc(70 * var(--u))',
+        position: 'absolute', left: 'var(--m)', top: '30.57dvh', width: 'calc((var(--cw) - 16 * var(--u)) / 2)', height: 'calc(70 * var(--u))',
         background: 'var(--btn-grad-white)', border: 'none', borderRadius: 16,
         boxShadow: 'var(--shadow-y2)', cursor: 'pointer',
-        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(2 * var(--u))',
+        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(8 * var(--u))',
         fontFamily: 'inherit', fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)',
       }}>
         <Icon name="withdraw" size="var(--it)" color="var(--color-black)" />
@@ -123,10 +123,10 @@ export default function MenuScreen() {
       {/* Deposit / Withdraw open FundsPopup (owner spec 2026-10-03): Deposit = this wallet's Arc address, Withdraw =
           a send to another Arc address. No fiat on/off-ramp (Onramp Kit needs a KYB the owner does not have). */}
       <button className="btn" onClick={() => setPopup('deposit')} style={{
-        position: 'absolute', left: 'calc(var(--m) + (var(--cw) - 8 * var(--u)) / 2 + 8 * var(--u))', top: '30.57dvh', width: 'calc((var(--cw) - 8 * var(--u)) / 2)', height: 'calc(70 * var(--u))',
+        position: 'absolute', left: 'calc(var(--m) + (var(--cw) - 16 * var(--u)) / 2 + 16 * var(--u))', top: '30.57dvh', width: 'calc((var(--cw) - 16 * var(--u)) / 2)', height: 'calc(70 * var(--u))',
         background: 'var(--btn-grad-brand)', border: 'none', borderRadius: 16,
         boxShadow: 'var(--shadow-y2)', cursor: 'pointer',
-        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(2 * var(--u))',
+        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(8 * var(--u))',
         fontFamily: 'inherit', fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-white)',
       }}>
         <Icon name="deposit" size="var(--it)" color="var(--color-white)" />

@@ -167,7 +167,7 @@ export default function BorrowAction() {
   const [bandColor, bandWord] = BAND[loan?.band] || ['var(--color-muted-2)', '']
   const chip = (label, onClick, active) => (
     <button key={label} disabled={loading} onClick={onClick} style={{
-      border: '1.5px solid var(--color-brand)', background: active ? 'var(--color-brand)' : 'none', borderRadius: 999, padding: 'calc(6 * var(--u)) calc(14 * var(--u))',
+      border: '1.5px solid var(--color-brand)', background: active ? 'var(--color-brand)' : 'none', borderRadius: 999, padding: 'calc(8 * var(--u)) calc(16 * var(--u))',
       fontFamily: 'inherit', fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', cursor: 'pointer', color: active ? 'var(--color-white)' : 'var(--color-brand)',
     }}>{label}</button>
   )
@@ -187,7 +187,7 @@ export default function BorrowAction() {
       <Tabs tabs={[['borrow', 'Borrow'], ...(loan ? [['repay', 'Repay'], ['collateral', 'Collateral']] : [])]} tab={tab} setTab={switchTab} />
 
       {/* Rows 2-3: the loan (or the market for a first borrow). */}
-      <div style={{ ...at('10.19dvh', '18.48dvh'), ...BOX, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 'calc(6 * var(--u))', padding: 'calc(16 * var(--u))' }}>
+      <div style={{ ...at('10.19dvh', '18.48dvh'), ...BOX, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 'calc(8 * var(--u))', padding: 'calc(16 * var(--u))' }}>
         {loan ? (<>
           <span style={{ fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)' }}>Loan: {fmtAmt(borrowed)} USDC <span style={{ color: bandColor, fontSize: 'var(--fs-caption)' }}>· {bandWord}</span></span>
           <span style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)' }}>Collateral {fmtBtc(collateral)} cirBTC · APY {fmtApy(loan.borrowApy)}</span>
@@ -203,10 +203,10 @@ export default function BorrowAction() {
       </div>
 
       {/* Rows 4-5: the amount. */}
-      <div style={{ ...at('30.57dvh', '18.48dvh'), ...BOX, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 'calc(10 * var(--u))', padding: 'calc(16 * var(--u))' }}>
+      <div style={{ ...at('30.57dvh', '18.48dvh'), ...BOX, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 'calc(8 * var(--u))', padding: 'calc(16 * var(--u))' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 'calc(8 * var(--u))' }}>
           <span style={{ fontSize: 'var(--fs-content-2)', color: 'var(--color-muted-2)' }}><span className="num" style={{ color: 'var(--color-brand)', fontWeight: 'var(--fw-semibold)' }}>{avail}</span></span>
-          {tab === 'collateral' && <div style={{ display: 'flex', gap: 'calc(6 * var(--u))' }}>{chip('Add', () => { setColMode('add'); setTyped('') }, colMode === 'add')}{chip('Withdraw', () => { setColMode('withdraw'); setTyped('') }, colMode === 'withdraw')}</div>}
+          {tab === 'collateral' && <div style={{ display: 'flex', gap: 'calc(8 * var(--u))' }}>{chip('Add', () => { setColMode('add'); setTyped('') }, colMode === 'add')}{chip('Withdraw', () => { setColMode('withdraw'); setTyped('') }, colMode === 'withdraw')}</div>}
         </div>
         <button onClick={() => !loading && !done && kind !== 'close' && setPad(true)} style={{ border: 'none', background: 'none', padding: 0, cursor: 'pointer', fontFamily: 'inherit', textAlign: 'left', overflow: 'hidden', whiteSpace: 'nowrap' }}>
           <span className="num" style={{ fontSize: 'var(--fs-hero)', fontWeight: 'var(--fw-light)', color: over ? 'var(--color-error)' : 'var(--color-black)' }}>
@@ -221,7 +221,7 @@ export default function BorrowAction() {
       </div>
 
       {/* Row 6: what happens, the fee, the note. */}
-      <div style={{ ...at('50.95dvh', 'auto'), display: 'flex', flexDirection: 'column', gap: 'calc(8 * var(--u))', padding: '0 calc(11 * var(--u))', fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)' }}>
+      <div style={{ ...at('50.95dvh', 'auto'), display: 'flex', flexDirection: 'column', gap: 'calc(8 * var(--u))', padding: '0 calc(8 * var(--u))', fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)' }}>
         {what && <span style={{ color: 'var(--color-black)' }}>{what}</span>}
         <span>Fee: <span className="num" style={{ color: 'var(--color-black)', fontWeight: 'var(--fw-semibold)' }}>{ready ? (info?.feeMax ? (Number(info.feeMax) < 0.01 ? '<$0.01' : `up to $${Number(info.feeMax).toFixed(3)}`) : '…') : '-'}</span>{kind === 'borrow' ? ` · max $${MAX_USD} per loan` : ''}</span>
         <span style={{ fontSize: 'var(--fs-small)'}}>
@@ -234,7 +234,7 @@ export default function BorrowAction() {
       {/* Row 9: the button. */}
       <div style={{ ...at('81.52dvh', '8.29dvh'), display: 'flex', alignItems: 'center' }}>
         <button className={`btn ${error ? 'btn-secondary' : done ? 'btn-success' : 'btn-primary'}`}
-          style={{ width: '100%', height: 'var(--btn-h)', minHeight: 0, borderRadius: 38, ...(error ? { color: 'var(--color-error)' } : null) }}
+          style={{ width: '100%', height: 'var(--btn-h)', minHeight: 0, borderRadius: 16, ...(error ? { color: 'var(--color-error)' } : null) }}
           disabled={alertStep ? loading : ready ? (!can && !error) : (loading || done)}
           onClick={() => error ? setError('') : alertStep ? turnOnAlerts(alertStep) : ready ? run() : setPad(true)}>
           <span style={{ fontSize: 'var(--fs-content-1)', textAlign: 'center', display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2, overflow: 'hidden' }}>{label}</span>
@@ -246,7 +246,7 @@ export default function BorrowAction() {
           <div className="sheet numpad-gray" onClick={e => e.stopPropagation()}>
             <div style={{ flex: 5.5, minHeight: 0, paddingTop: 'calc(24 * var(--u))' }}><Numpad onKey={onPadKey} showComma /></div>
             <div style={{ flex: 0.5 }} />
-            <div style={{ flex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'calc(12 * var(--u))' }}>
+            <div style={{ flex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'calc(16 * var(--u))' }}>
               <button className="btn btn-secondary" style={{ width: '44%' }} onClick={() => { setTyped(''); setPad(false) }}>Clear</button>
               <button className="btn btn-primary" style={{ width: '44%' }} onClick={() => setPad(false)}>Done</button>
             </div>

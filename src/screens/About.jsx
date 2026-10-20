@@ -32,13 +32,13 @@ export default function About() {
           <div className="col" style={{ flexShrink: 0 }}>
               {ROWS.map(({ label, value, link, screen }) => (
                 value !== undefined ? (
-                  <div key={label} style={{ ...ROW, justifyContent: 'space-between', gap: 'calc(12 * var(--u))' }}>
+                  <div key={label} style={{ ...ROW, justifyContent: 'space-between', gap: 'calc(16 * var(--u))' }}>
                     <span style={{ fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', flexShrink: 0 }}>{label}</span>
                     <span style={{ fontSize: 'var(--fs-content-2)', color: 'var(--color-muted-2)', textAlign: 'right' }}>{value}</span>
                   </div>
                 ) : (
                   <button key={label} onClick={() => (screen ? navigate(...screen) : link.startsWith('mailto:') ? (window.location.href = link) : window.open(link, '_blank', 'noopener'))}
-                    style={{ ...ROW, gap: 'calc(10 * var(--u))', border: 'none', background: 'none', cursor: 'pointer', fontFamily: 'inherit', padding: 0, width: '100%', textAlign: 'left' }}>
+                    style={{ ...ROW, gap: 'calc(8 * var(--u))', border: 'none', background: 'none', cursor: 'pointer', fontFamily: 'inherit', padding: 0, width: '100%', textAlign: 'left' }}>
                     <Icon name="right2" size="calc(17 * var(--u))" color="var(--color-brand)" />
                     <span style={{ fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)' }}>{label}</span>
                   </button>

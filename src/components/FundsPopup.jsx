@@ -22,7 +22,7 @@ import { acct } from '../store'
 
 const field = {
   display: 'flex', alignItems: 'center', gap: 'calc(8 * var(--u))',
-  height: 'var(--input-h)', padding: '0 calc(12 * var(--u))',
+  height: 'var(--input-h)', padding: '0 calc(16 * var(--u))',
   background: 'var(--color-card)', borderRadius: 16, flexShrink: 0,   // a tall popup scrolls; boxes never squash
 }
 const input = {
@@ -63,7 +63,7 @@ function ExchangeTabs({ cex, setCex }) {
 
 function Steps({ items }) {
   return (
-    <ol style={{ ...note, paddingLeft: 'calc(20 * var(--u))', display: 'flex', flexDirection: 'column', gap: 'calc(4 * var(--u))' }}>
+    <ol style={{ ...note, paddingLeft: 'calc(24 * var(--u))', display: 'flex', flexDirection: 'column', gap: 'calc(8 * var(--u))' }}>
       {items.map((s, i) => <li key={i}>{s}</li>)}
     </ol>
   )
@@ -82,7 +82,7 @@ function Deposit() {
   return (
     <>
       {/* The FULL address (wrapped), never shortened: people copy it by eye too. */}
-      <div style={{ ...field, height: 'auto', padding: 'calc(12 * var(--u))' }}>
+      <div style={{ ...field, height: 'auto', padding: 'calc(16 * var(--u))' }}>
         <span style={{ flex: 1, minWidth: 0, overflowWrap: 'anywhere', fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-brand)' }}>
           {addr || '…'}
         </span>
@@ -233,8 +233,8 @@ export default function FundsPopup({ mode, onClose }) {
         position: 'absolute', left: 'var(--m)', width: 'var(--cw)', top: '10.19dvh',
         maxHeight: '85dvh', overflowY: 'auto', boxSizing: 'border-box',
         background: 'var(--color-white)', borderRadius: 16, boxShadow: 'var(--shadow-y2)',
-        padding: 'calc(20 * var(--u)) calc(16 * var(--u))',
-        display: 'flex', flexDirection: 'column', gap: 'max(8px, calc(12 * var(--u)))',
+        padding: 'calc(24 * var(--u)) calc(16 * var(--u))',
+        display: 'flex', flexDirection: 'column', gap: 'max(8px, calc(16 * var(--u)))',
       }}>
         <button onClick={onClose} aria-label="Close" style={{ ...iconBtn, position: 'absolute', top: 'calc(14 * var(--u))', right: 'calc(14 * var(--u))' }}>
           <Icon name="x" size="calc(24 * var(--u))" color="var(--color-black)" />

@@ -77,7 +77,7 @@ const STYLE = {
   sent:     { color: 'var(--color-info)',    icon: 'up' },      // sent = blue
   error:    { color: 'var(--color-error)',   icon: 'warning' }, // error = red
   announce: { color: 'var(--color-brand)',   icon: 'info' },    // from the ezwallet team (src/inbox.js) - owner decision 2026-09-29
-  unverified: { color: 'var(--color-warning)', icon: 'down' },  // an UNVERIFIED token arrived = yellow (owner 2026-10-03)
+  unverified: { color: 'var(--color-warning-text)', icon: 'down' },  // an UNVERIFIED token arrived = yellow (owner 2026-10-03)
 }
 
 // ⚠️ CHANGED 2026-08-25 (user bug report): rows used to be forced onto ONE LINE + "…" for compactness, but the swap
@@ -224,7 +224,7 @@ export default function NotifArea({ hints = [], warning = null, pollMs = 15000 }
       maskImage: 'linear-gradient(to bottom, transparent 0, black calc(100dvh / 30))',
     }}>
       {/* gap 10 = the spacing the Figma card uses between the hint block and the notification pill */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 'calc(10 * var(--u))', minHeight: '100%', justifyContent: 'flex-end' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'calc(8 * var(--u))', minHeight: '100%', justifyContent: 'flex-end' }}>
         {items.map(n => {
           if (n.type === 'hint') return <HintBlock key={n.id} lines={n.hints} />
           if (n.type === 'warning') return <div key={n.id}>{n.node}</div>
@@ -234,7 +234,7 @@ export default function NotifArea({ hints = [], warning = null, pollMs = 15000 }
             // MINIMUM height 40 = exactly the "Send" button in Contacts.jsx; a long sentence makes the row taller
             // (the hardcoded `height: 40` was dropped 08-25, see the ROW_TEXT note). 8px vertical padding keeps a single
             // line at exactly 40px as before.
-            <div key={n.id} onClick={() => open(n)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'calc(10 * var(--u))', background: 'var(--color-white)', borderRadius: 16, minHeight: 'calc(40 * var(--u))', padding: 'calc(3 * var(--u)) calc(10 * var(--u))', flexShrink: 0, cursor: clickable ? 'pointer' : 'default' }}>
+            <div key={n.id} onClick={() => open(n)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'calc(8 * var(--u))', background: 'var(--color-white)', borderRadius: 16, minHeight: 'calc(40 * var(--u))', padding: 'calc(8 * var(--u)) calc(8 * var(--u))', flexShrink: 0, cursor: clickable ? 'pointer' : 'default' }}>
               <span style={{ display: 'flex', alignItems: 'center', gap: 'calc(8 * var(--u))', fontSize: NOTIF_FS, color: s.color, ...ROW_TEXT }}>
                 <Icon name={s.icon} size="var(--is-caption)" color={s.color} style={{ flexShrink: 0 }} />
                 <span style={ROW_TEXT}>
@@ -242,7 +242,7 @@ export default function NotifArea({ hints = [], warning = null, pollMs = 15000 }
                   {n.memo ? <> · <b style={{ fontWeight: 'var(--fw-bold)' }}>{n.memo}</b></> : null}
                 </span>
               </span>
-              <button onClick={e => clear(n.id, e)} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', flexShrink: 0, padding: 'calc(2 * var(--u))' }}><Icon name="x" size="calc(20 * var(--u))" color={s.color} /></button>
+              <button onClick={e => clear(n.id, e)} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', flexShrink: 0, padding: 'calc(8 * var(--u))' }}><Icon name="x" size="calc(20 * var(--u))" color={s.color} /></button>
             </div>
           )
         })}

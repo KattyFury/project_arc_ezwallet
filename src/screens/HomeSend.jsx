@@ -76,7 +76,7 @@ export const HALF_OVAL_STYLE = {
   // KEEP their shadow (an earlier pass misread this as "no shadow").
   borderRadius: '38px 38px 0 0', border: 'none', background: 'var(--color-white)',
   boxShadow: 'var(--shadow-y2)',   // the standard button drop shadow (Y 2, owner 2026-10-05)
-  padding: '0 calc(18 * var(--u))', overflow: 'hidden', textOverflow: 'ellipsis',
+  padding: '0 calc(16 * var(--u))', overflow: 'hidden', textOverflow: 'ellipsis',
   color: 'var(--color-content)', fontFamily: 'var(--font-condensed)', fontSize: 'var(--fs-content-2)',
   fontWeight: 'var(--fw-semibold)', cursor: 'pointer', whiteSpace: 'nowrap',
   WebkitTouchCallout: 'none', WebkitUserSelect: 'none', userSelect: 'none',
@@ -92,7 +92,7 @@ const BIG_BTN = { top: `calc(79.62dvh + ${GAP})`, height: `calc(12.09dvh - 2 * $
 // Owner 2026-10-20: the three action buttons are ONE size (the big one's), equal widths 8 apart; colours stay
 // white / blue / white so the centre one still leads.
 const SIDE_BTN = BIG_BTN
-const W3 = '((var(--cw) - 16 * var(--u)) / 3)'
+const W3 = '((var(--cw) - 32 * var(--u)) / 3)'   // three buttons 16 apart
 
 export default function HomeSend() {
   const { navigate } = useNav()
@@ -159,18 +159,18 @@ export default function HomeSend() {
           is what makes it read as a half-oval sitting on that edge rather than a floating button. */}
       <div style={{
         position: 'absolute', left: 'var(--m)', top: '10.19dvh', width: 'var(--cw)', height: '38.86dvh',
-        background: 'var(--color-card)', borderRadius: 16, padding: 'calc(15.94 * var(--u)) calc(16 * var(--u)) 0', minWidth: 0,
+        background: 'var(--color-card)', borderRadius: 16, padding: 'calc(16 * var(--u)) calc(16 * var(--u)) 0', minWidth: 0,
         overflow: 'hidden',
       }}>
         <div className="scroll-hidden" style={{
-          display: 'flex', flexDirection: 'column', gap: 'calc(8 * var(--u))', overflowY: 'auto', height: '100%', paddingBottom: 'calc(44 * var(--u))',
+          display: 'flex', flexDirection: 'column', gap: 'calc(8 * var(--u))', overflowY: 'auto', height: '100%', paddingBottom: 'calc(48 * var(--u))',
           WebkitMaskImage: 'linear-gradient(to top, transparent 0, black calc(100dvh / 30))',
           maskImage: 'linear-gradient(to top, transparent 0, black calc(100dvh / 30))',
         }}>
         {loading ? (
-          <div style={{ display: 'flex', alignItems: 'center', color: 'var(--color-muted-2)', fontSize: 'var(--fs-content-1)', padding: '0 calc(2 * var(--u))' }}>Loading...</div>
+          <div style={{ display: 'flex', alignItems: 'center', color: 'var(--color-muted-2)', fontSize: 'var(--fs-content-1)', padding: '0 calc(8 * var(--u))' }}>Loading...</div>
         ) : heldTokens.length === 0 ? (
-          <div style={{ display: 'flex', alignItems: 'center', color: 'var(--color-muted-2)', fontSize: 'var(--fs-content-1)', padding: '0 calc(2 * var(--u))' }}>
+          <div style={{ display: 'flex', alignItems: 'center', color: 'var(--color-muted-2)', fontSize: 'var(--fs-content-1)', padding: '0 calc(8 * var(--u))' }}>
             No tokens yet
           </div>
         ) : (
@@ -207,7 +207,7 @@ export default function HomeSend() {
                   </span>
                   {rates && isVolatile(tk.symbol) && tk.change24h != null && Math.abs(tk.change24h) >= 0.005 && (
                     <button onClick={() => setPctPopup(tk)} aria-label={`24h price change for ${tk.symbol}`}
-                      style={{ background: 'none', border: 'none', padding: 'calc(6 * var(--u))', margin: 'calc(-6 * var(--u)) calc(-6 * var(--u)) calc(-6 * var(--u)) calc(9 * var(--u))', display: 'flex', cursor: 'pointer' }}>
+                      style={{ background: 'none', border: 'none', padding: 'calc(8 * var(--u))', margin: 'calc(-6 * var(--u)) calc(-6 * var(--u)) calc(-6 * var(--u)) calc(8 * var(--u))', display: 'flex', cursor: 'pointer' }}>
                       <TrendArrow pct={tk.change24h} />
                     </button>
                   )}
@@ -274,7 +274,7 @@ export default function HomeSend() {
             // the wallet CAN still pay a fee (~0.002 measured), so "out of USDC for fees" would be false.
             !loading && (tokens.find(tk => tk.symbol === 'USDC')?.amount ?? 0) < GAS_RESERVE_USDC ? (
               <div
-                style={{ width: '100%', background: 'var(--color-white)', borderRadius: 16, padding: 'calc(6 * var(--u)) calc(10 * var(--u))', display: 'flex', flexDirection: 'column', gap: 'calc(2 * var(--u))', fontSize: NOTIF_FS, color: 'var(--color-warning)', fontWeight: 'var(--fw-semibold)' }}>
+                style={{ width: '100%', background: 'var(--color-white)', borderRadius: 16, padding: 'calc(8 * var(--u)) calc(8 * var(--u))', display: 'flex', flexDirection: 'column', gap: 'calc(8 * var(--u))', fontSize: NOTIF_FS, color: 'var(--color-warning-text)', fontWeight: 'var(--fw-semibold)' }}>
                 <span style={{ minWidth: 0}}>Out of USDC for transaction fees</span>
               </div>
             ) : null
@@ -289,7 +289,7 @@ export default function HomeSend() {
         position: 'absolute', left: 'var(--m)', top: SIDE_BTN.top, width: `calc(${W3})`, height: SIDE_BTN.height,
         background: 'var(--btn-grad-white)', border: 'none', borderRadius: 16,
         boxShadow: 'var(--shadow-y2)',
-        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(2 * var(--u))',
+        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(8 * var(--u))',
         fontFamily: 'inherit', fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)',
         cursor: 'pointer', WebkitTapHighlightColor: 'transparent',
       }}>
@@ -298,10 +298,10 @@ export default function HomeSend() {
       </button>
 
       <button onClick={() => navigate('QRScanner')} style={{
-        position: 'absolute', left: `calc(var(--m) + ${W3} + 8 * var(--u))`, top: BIG_BTN.top, width: `calc(${W3})`, height: BIG_BTN.height,
+        position: 'absolute', left: `calc(var(--m) + ${W3} + 16 * var(--u))`, top: BIG_BTN.top, width: `calc(${W3})`, height: BIG_BTN.height,
         background: 'var(--btn-grad-brand)', border: 'none', borderRadius: 16,
         boxShadow: 'var(--shadow-y2)',
-        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(2 * var(--u))',
+        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(8 * var(--u))',
         fontFamily: 'inherit', fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-white)',
         cursor: 'pointer', WebkitTapHighlightColor: 'transparent',
       }}>
@@ -310,10 +310,10 @@ export default function HomeSend() {
       </button>
 
       <button onClick={() => navigate('Contacts')} style={{
-        position: 'absolute', left: `calc(var(--m) + 2 * ${W3} + 16 * var(--u))`, top: SIDE_BTN.top, width: `calc(${W3})`, height: SIDE_BTN.height,
+        position: 'absolute', left: `calc(var(--m) + 2 * ${W3} + 32 * var(--u))`, top: SIDE_BTN.top, width: `calc(${W3})`, height: SIDE_BTN.height,
         background: 'var(--btn-grad-white)', border: 'none', borderRadius: 16,
         boxShadow: 'var(--shadow-y2)',
-        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(2 * var(--u))',
+        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(8 * var(--u))',
         fontFamily: 'inherit', fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)',
         cursor: 'pointer', WebkitTapHighlightColor: 'transparent',
       }}>
@@ -328,7 +328,7 @@ export default function HomeSend() {
         <div className="popup-overlay" onClick={() => setPctPopup(null)}>
           <div className="popup-card" onClick={e => e.stopPropagation()} style={{ position: 'relative' }}>
             <button onClick={() => setPctPopup(null)} aria-label="Close"
-              style={{ position: 'absolute', top: 'calc(12 * var(--u))', right: 'calc(12 * var(--u))', background: 'none', border: 'none', cursor: 'pointer', padding: 'calc(4 * var(--u))' }}>
+              style={{ position: 'absolute', top: 'calc(12 * var(--u))', right: 'calc(12 * var(--u))', background: 'none', border: 'none', cursor: 'pointer', padding: 'calc(8 * var(--u))' }}>
               <Icon name="x" size="calc(17 * var(--u))" color="var(--color-muted)" />
             </button>
             <div className="popup-title">{pctPopup.symbol}</div>

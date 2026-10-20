@@ -41,7 +41,7 @@ const decimalsFor = sym => (sym === 'cirBTC' ? 6 : 2)
 function TokenRow({ sym, onClick }) {
   return (
     <button onClick={onClick}
-      style={{ display: 'flex', alignItems: 'center', gap: 'calc(8 * var(--u))', border: 'none', borderRadius: 999, height: 'calc(42 * var(--u))', background: 'var(--btn-grad-white)', cursor: 'pointer', fontFamily: 'inherit', padding: '0 calc(12 * var(--u)) 0 calc(8 * var(--u))', boxShadow: 'var(--shadow-y2)', flexShrink: 0 }}>
+      style={{ display: 'flex', alignItems: 'center', gap: 'calc(8 * var(--u))', border: 'none', borderRadius: 999, height: 'calc(42 * var(--u))', background: 'var(--btn-grad-white)', cursor: 'pointer', fontFamily: 'inherit', padding: '0 calc(16 * var(--u)) 0 calc(8 * var(--u))', boxShadow: 'var(--shadow-y2)', flexShrink: 0 }}>
       <img src={`/tokens/${sym.toLowerCase()}.png`} alt={sym} style={{ width: 'calc(24 * var(--u))', height: 'calc(24 * var(--u))', borderRadius: '50%' }} />
       <span className="num" style={{ fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-content)' }}>{sym}</span>
       <Icon name="down2" size="var(--is-content-2)" color="var(--color-brand)" />
@@ -59,7 +59,7 @@ function TokenPicker({ current, onSelect, onClose }) {
         <div className="popup-title">Select token</div>
         {SWAP_TOKENS.map(sym => (
           <button key={sym} onClick={() => { onSelect(sym); onClose() }} className={`btn ${sym === current ? 'btn-primary' : 'btn-secondary'}`}
-            style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'calc(10 * var(--u))' }}>
+            style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'calc(8 * var(--u))' }}>
             <img src={`/tokens/${sym.toLowerCase()}.png`} alt="" style={{ width: 'calc(24 * var(--u))', height: 'calc(24 * var(--u))', borderRadius: '50%' }} />
             {sym}
           </button>
@@ -338,7 +338,7 @@ export default function Swap() {
 
   // The card = a PALE GREY BACKGROUND, NO BORDER, NO SHADOW (nodes 1:68/1:69, 2026-09-10: radius 16,
   // was 20 - the token chip inside stays WHITE so it stands out on the grey without needing a border).
-  const CARD = { border: 'none', borderRadius: 16, background: 'var(--color-surface)', padding: 'calc(14 * var(--u)) calc(16 * var(--u))' }
+  const CARD = { border: 'none', borderRadius: 16, background: 'var(--color-surface)', padding: 'calc(16 * var(--u)) calc(16 * var(--u))' }
 
   // ONE MINIMAL 3-row card (user decision 07-20 "strip it back so the text can be bigger for older users"):
   //   the You pay/receive label
@@ -374,7 +374,7 @@ export default function Swap() {
     {/* 44px max (was 52), node 1:82's "_" caret - measured at 44 on this Figma pull */}
     const [fitRef, fitSize, fitLine] = useFitFontSize((showZero ? '' : amtStr) + (showCaret ? '_' : ''), { max: 48, min: 18 })
     return (
-      <div style={{ ...CARD, minWidth: 0, height: '100%', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 'calc(10 * var(--u))' }}>
+      <div style={{ ...CARD, minWidth: 0, height: '100%', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 'calc(8 * var(--u))' }}>
         {/* 2026-09-10: 18px semibold BLACK (was --fs-body 19 medium muted) - nodes 1:70/1:76 */}
         <span style={{ fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-content)' }}>{label}</span>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'calc(8 * var(--u))', minWidth: 0 }}>
@@ -391,7 +391,7 @@ export default function Swap() {
           <div ref={fitRef} onClick={onAmount} style={{
             flex: 1, minWidth: 0, overflow: 'hidden', display: 'flex', justifyContent: 'flex-end', alignItems: 'center',
             cursor: onAmount ? 'pointer' : 'default',
-            ...(onAmount ? { padding: 'calc(2 * var(--u)) calc(12 * var(--u))', minHeight: 'calc(56 * var(--u))' } : null),
+            ...(onAmount ? { padding: 'calc(8 * var(--u)) calc(16 * var(--u))', minHeight: 'calc(56 * var(--u))' } : null),
           }}>
             <span className="num" style={{ fontSize: fitSize, lineHeight: fitLine, fontWeight: 'var(--fw-light)', color: amtColor, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               {showZero ? null : amtStr}
@@ -458,7 +458,7 @@ export default function Swap() {
               <Numpad onKey={onPadKey} showComma />
             </div>
             <div style={{ flex: 0.5 }} />
-            <div style={{ flex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'calc(12 * var(--u))' }}>
+            <div style={{ flex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'calc(16 * var(--u))' }}>
               <button className="btn btn-secondary" style={{ width: '44%' }} onClick={cancelPad}>Back</button>
               <button className="btn btn-primary" style={{ width: '44%' }} onClick={() => setPad(false)}>Done</button>
             </div>
@@ -508,7 +508,7 @@ export default function Swap() {
       {/* Rate + Fee - node 1:83/10:123: raw Figma reading was 13px, rounded up to Chú thích (15px) - the
           new 5-tier scale (2026-09-10) has no tier below 15, absorbing the old --fs-tiny. Label colour
           --color-muted-2 #4B5568, figures BLACK semibold. Alone in row 6, centred at 51.4dvh. */}
-      <div style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '51.4dvh', transform: 'translateY(-50%)', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', columnGap: 'calc(8 * var(--u))', rowGap: 'calc(2 * var(--u))', padding: '0 calc(11 * var(--u))' }}>
+      <div style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '51.4dvh', transform: 'translateY(-50%)', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', columnGap: 'calc(8 * var(--u))', rowGap: 'calc(8 * var(--u))', padding: '0 calc(8 * var(--u))' }}>
         <span style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)', whiteSpace: 'nowrap' }}>
           Rate: <span className="num" style={{ color: 'var(--color-content)', fontWeight: 'var(--fw-semibold)' }}>{rateTxt}</span>
         </span>
@@ -537,7 +537,7 @@ export default function Swap() {
                 // chip should follow instead of the stale 17. Both spans now match (semibold, brand blue)
                 // as one value, not a differently-weighted label:value pair.
                 <button key={v} onClick={() => pickHint(v)}
-                  style={{ border: '1.5px solid var(--color-brand)', background: 'var(--btn-grad-white)', borderRadius: 999, padding: 'calc(6 * var(--u)) calc(14 * var(--u))', cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap', minWidth: 0 }}>
+                  style={{ border: '1.5px solid var(--color-brand)', background: 'var(--btn-grad-white)', borderRadius: 999, padding: 'calc(8 * var(--u)) calc(16 * var(--u))', cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap', minWidth: 0 }}>
                   <span className="num" style={{ fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-brand)' }}>{fmtHint(v, decimalsFor(fromSym))}</span>
                   <span className="num" style={{ fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-brand)' }}> {fromSym}</span>
                 </button>
@@ -570,7 +570,7 @@ export default function Swap() {
           return (
         <button className={`btn ${error ? 'btn-secondary' : success ? 'btn-success' : 'btn-primary'}`}
           style={{
-            width: '100%', height: 'var(--btn-h)', minHeight: 0, borderRadius: 38, overflow: 'hidden',
+            width: '100%', height: 'var(--btn-h)', minHeight: 0, borderRadius: 16, overflow: 'hidden',
             boxShadow: error || success ? undefined : '0 2px 20px rgba(0, 0, 0, 0.32)',
             ...(error ? { color: 'var(--color-error)', borderColor: 'var(--color-error)' } : null),
             ...(success ? { opacity: confirmed ? 1 : 0.6 } : null),
@@ -584,7 +584,7 @@ export default function Swap() {
           {/* Long text (errors) WRAPS to at most 2 centred lines (owner 2026-10-05) - it used to be one nowrap line
               cut short, and line-height 1 + overflow:hidden clipped g/y/p even on a single line. 2 × 20 × 1.2 = 48
               design px fits the 58px button; only a 3rd line gets "…". */}
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 'calc(6 * var(--u))', maxWidth: '100%', minWidth: 0, ...(needAmount ? { fontSize: 'var(--fs-content-2)' } : null) }}>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 'calc(8 * var(--u))', maxWidth: '100%', minWidth: 0, ...(needAmount ? { fontSize: 'var(--fs-content-2)' } : null) }}>
             {success && <Icon name="check" size="var(--ib-content-1)" color="var(--color-white)" />}
             {(() => { const text = error || status || (needAmount ? 'Slide or tap here to enter' : 'Swap')
               return <TwoLineFit key={text} sizes={['content-1', 'content-2', 'caption', 'small']}>{text}</TwoLineFit> })()}

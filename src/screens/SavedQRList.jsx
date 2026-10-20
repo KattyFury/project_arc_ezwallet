@@ -57,7 +57,7 @@ export default function SavedQRList() {
               // straight drop-shadow). Name is BLACK 16px semibold (was brand-blue 17px - that colour
               // belongs to the amount line only), amount stays brand-blue 18px semibold (was 15px).
               <button key={q.id} onClick={() => navigate('ShowQR', { amount: q.amount, currency: c, name: q.name, fromStorage: true, saveToLibrary: false, back: 'SavedQRList' })}
-                style={{ position: 'relative', minWidth: 0, height: 'calc(242 * var(--u))', border: 'none', borderRadius: 16, background: 'var(--btn-grad-white)', boxShadow: 'var(--shadow-y2)', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(6 * var(--u))', padding: 'calc(16 * var(--u)) calc(10 * var(--u)) calc(12 * var(--u))', fontFamily: 'inherit' }}>
+                style={{ position: 'relative', minWidth: 0, height: 'calc(242 * var(--u))', border: 'none', borderRadius: 16, background: 'var(--btn-grad-white)', boxShadow: 'var(--shadow-y2)', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(8 * var(--u))', padding: 'calc(16 * var(--u)) calc(8 * var(--u)) calc(16 * var(--u))', fontFamily: 'inherit' }}>
                 <span onClick={e => askDelete(q, e)} style={{ position: 'absolute', top: 'calc(8 * var(--u))', right: 'calc(8 * var(--u))', display: 'flex' }}><Icon name="x" size="calc(16 * var(--u))" color="var(--color-muted)" /></span>
                 {/* THE QR SCALES WITH THE BOX (user decision 07-23b "do not fix the size, follow the grey"): a square frame with
                     aspectRatio 1 taking the full box width (minus 20px of margin and room for the X, matching
@@ -104,7 +104,7 @@ export default function SavedQRList() {
         <div className="popup-overlay" onClick={() => setPendingDelete(null)}>
           <div className="popup-card" style={{ textAlign: 'center' }} onClick={e => e.stopPropagation()}>
             <div className="popup-title">{'Delete QR:'} {pendingDelete.name || qrAmountLabel(pendingDelete.amount, pendingDelete.currency || 'USD')}</div>
-            <div className="popup-actions" style={{ marginTop: 'calc(4 * var(--u))' }}>
+            <div className="popup-actions" style={{ marginTop: 'calc(8 * var(--u))' }}>
               <button className="btn btn-secondary" onClick={() => setPendingDelete(null)}>Back</button>
               <button className="btn btn-error" onClick={confirmDelete}>Confirm</button>
             </div>

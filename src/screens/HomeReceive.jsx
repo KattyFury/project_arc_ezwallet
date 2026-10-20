@@ -24,7 +24,7 @@ const BIG_BTN = { top: `calc(79.62dvh + ${GAP})`, height: `calc(12.09dvh - 2 * $
 // Owner 2026-10-20: the three action buttons are ONE size (the big one's), equal widths 8 apart; colours stay
 // white / blue / white so the centre one still leads.
 const SIDE_BTN = BIG_BTN
-const W3 = '((var(--cw) - 16 * var(--u)) / 3)'
+const W3 = '((var(--cw) - 32 * var(--u)) / 3)'   // three buttons 16 apart
 
 export default function HomeReceive() {
   const { navigate } = useNav()
@@ -152,7 +152,7 @@ export default function HomeReceive() {
         position: 'absolute', left: 'var(--m)', top: SIDE_BTN.top, width: `calc(${W3})`, height: SIDE_BTN.height,
         background: 'var(--btn-grad-white)', border: 'none', borderRadius: 16,
         boxShadow: 'var(--shadow-y2)',
-        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(2 * var(--u))',
+        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(8 * var(--u))',
         fontFamily: 'inherit', fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)',
         cursor: 'pointer', WebkitTapHighlightColor: 'transparent',
       }}>
@@ -161,10 +161,10 @@ export default function HomeReceive() {
       </button>
 
       <button onClick={() => navigate('CreateQR')} style={{
-        position: 'absolute', left: `calc(var(--m) + ${W3} + 8 * var(--u))`, top: BIG_BTN.top, width: `calc(${W3})`, height: BIG_BTN.height,
+        position: 'absolute', left: `calc(var(--m) + ${W3} + 16 * var(--u))`, top: BIG_BTN.top, width: `calc(${W3})`, height: BIG_BTN.height,
         background: 'var(--btn-grad-brand)', border: 'none', borderRadius: 16,
         boxShadow: 'var(--shadow-y2)',
-        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(2 * var(--u))',
+        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(8 * var(--u))',
         fontFamily: 'inherit', fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-white)',
         cursor: 'pointer', WebkitTapHighlightColor: 'transparent',
       }}>
@@ -173,10 +173,10 @@ export default function HomeReceive() {
       </button>
 
       <button onClick={handleShare} style={{
-        position: 'absolute', left: `calc(var(--m) + 2 * ${W3} + 16 * var(--u))`, top: SIDE_BTN.top, width: `calc(${W3})`, height: SIDE_BTN.height,
+        position: 'absolute', left: `calc(var(--m) + 2 * ${W3} + 32 * var(--u))`, top: SIDE_BTN.top, width: `calc(${W3})`, height: SIDE_BTN.height,
         background: 'var(--btn-grad-white)', border: 'none', borderRadius: 16,
         boxShadow: 'var(--shadow-y2)',
-        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(2 * var(--u))',
+        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(8 * var(--u))',
         fontFamily: 'inherit', fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)',
         cursor: 'pointer', WebkitTapHighlightColor: 'transparent',
       }}>

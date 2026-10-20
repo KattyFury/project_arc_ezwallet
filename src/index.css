@@ -65,6 +65,7 @@
   --color-error:        #C42B3F; /* guideline "danger" - updated 2026-09-08 from #EC221F to match the Figma file's Exit/Sign-out red exactly (the user declared that file the new colour source) */
   --color-error-soft:   #FDE8EB; /* pale tint of --color-error (15% mixed into white, recomputed for the new red) */
   --color-warning:      #F5B301; /* guideline "warning" */
+  --color-warning-text: #8A5F00; /* design-system yellow-text: WORDS in the warning colour on white (the bright #F5B301 is ~2:1 there) - 2026-10-20 */
   --color-warning-soft: #FEF5D9; /* pale tint of --color-warning (15% mixed into white) */
   --color-white:        #FFFFFF;
   --color-gray:         var(--color-line);   /* 2026-10-19 redesign: = line (borders, dividers, tracks) */   /* was #E3E3E3 - merged into the ONE app grey (user decision 2026-09-27) */ /* borders / dividers / NavBar's flat inactive background - NOT the recessed-box colour below, kept grey on purpose */
@@ -410,7 +411,7 @@ body {
   font-size: var(--fs-content-1);
   line-height: var(--lh-content-1);
   font-weight: var(--fw-semibold);
-  border-radius: 50px;
+  border-radius: 16px;   /* radius-md 16 like every button in the design system (was a 50px pill) - owner 2026-10-20 */
   border: none;
   cursor: pointer;
   padding: 0 calc(16 * var(--u));
@@ -485,7 +486,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: calc(8 * var(--u));                     /* was 12px on .row10-dual only - 2026-09-10: every multi-button row in the
+  gap: calc(16 * var(--u));                    /* 16 since 2026-10-20 (owner: buttons side by side 16 apart, app-wide). Was 12px on .row10-dual only - 2026-09-10: every multi-button row in the
                                     current Figma file (2-button AND 3-button alike) uses 8px, not 12. */
 }
 /* A BUTTON STANDING ALONE = FULL 340px card width (2026-09-10 CORRECTION: was 3/4 of the screen, a
@@ -523,10 +524,12 @@ body {
   overflow-y: auto;
   background: var(--color-white);
   border-radius: 16px;
-  padding: calc(20 * var(--u));
+  /* 2026-10-20 (owner): every popup = the email-login popup's rhythm - 24 top/bottom (title 24 below the top
+     edge, buttons 24 above the bottom), 16 left/right, 16 between blocks. */
+  padding: calc(24 * var(--u)) calc(16 * var(--u));
   display: flex;
   flex-direction: column;
-  gap: calc(12 * var(--u));
+  gap: calc(16 * var(--u));
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -539,7 +542,7 @@ body {
   font-weight: var(--fw-semibold);   /* the title is BOLD (semibold) - the heavy pole of the contrast */
   text-align: center;
 }
-.popup-actions { display: flex; gap: calc(8 * var(--u)); }
+.popup-actions { display: flex; gap: calc(16 * var(--u)); }   /* 16 between buttons, app-wide (owner 2026-10-20) */
 .popup-actions .btn { flex: 1; }
 
 /* ── Numpad ── */

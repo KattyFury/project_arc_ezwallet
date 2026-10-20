@@ -71,7 +71,7 @@ function AvatarCropper({ src, onCancel, onDone }) {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'calc(14 * var(--u))' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'calc(16 * var(--u))' }}>
       <div className="screen-title" style={{ fontSize: 'var(--fs-h1)', fontWeight: 'var(--fw-medium)' }}>Adjust photo</div>
       <div
         onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={up}
@@ -147,14 +147,14 @@ export default function Contacts() {
           has no Figma evidence to check against and is left as the prior user-tuned value). */}
       {/* ⚠️ ABSOLUTE card (fix 2026-09-27), not className="row-2-8": as a plain grid item it painted UNDER the
           absolutely-positioned ScreenSheet - the same bug SavedQRList had - so the grey box never showed and the WHOLE contact list was hidden behind the white sheet. */}
-      <div style={{ position: 'absolute', left: 'var(--m)', top: '10.19dvh', width: 'var(--cw)', height: '69.43dvh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', ...(contacts.length ? { background: 'var(--color-card)', borderRadius: 16, padding: 'calc(4 * var(--u)) calc(16 * var(--u))', alignItems: 'stretch', justifyContent: 'flex-start', overflow: 'hidden' } : {}) }}>
+      <div style={{ position: 'absolute', left: 'var(--m)', top: '10.19dvh', width: 'var(--cw)', height: '69.43dvh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', ...(contacts.length ? { background: 'var(--color-card)', borderRadius: 16, padding: 'calc(8 * var(--u)) calc(16 * var(--u))', alignItems: 'stretch', justifyContent: 'flex-start', overflow: 'hidden' } : {}) }}>
         {contacts.length === 0 ? (
           <span style={{ fontSize: 'var(--fs-content-1)', color: 'var(--color-muted)' }}>No contacts yet</span>
         ) : (
           <div className="scroll-hidden" style={{ overflowY: 'auto', height: '100%', display: 'flex', flexDirection: 'column' }}>
           {contacts.map(c => {
             return (
-              <div key={c.id} style={{ display: 'flex', alignItems: 'center', gap: 'calc(14 * var(--u))', width: '100%', padding: 'calc(14 * var(--u)) 0' }}>
+              <div key={c.id} style={{ display: 'flex', alignItems: 'center', gap: 'calc(16 * var(--u))', width: '100%', padding: 'calc(16 * var(--u)) 0' }}>
                 {c.avatar ? (
                   <img src={c.avatar} alt="" style={{ width: 'calc(52 * var(--u))', height: 'calc(52 * var(--u))', borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
                 ) : (
@@ -168,7 +168,7 @@ export default function Contacts() {
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-medium)' }}>{c.name}</div>
                   <button onClick={() => copyAddr(c)}
-                    style={{ display: 'inline-flex', alignItems: 'center', gap: 'calc(6 * var(--u))', background: 'none', border: 'none', padding: 0, cursor: 'pointer', fontFamily: 'inherit' }}>
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: 'calc(8 * var(--u))', background: 'none', border: 'none', padding: 0, cursor: 'pointer', fontFamily: 'inherit' }}>
                     <span style={{ fontSize: 'var(--fs-content-2)', color: 'var(--color-muted-2)' }}>
                       {shortenAddr(c.address)}
                     </span>
@@ -182,7 +182,7 @@ export default function Contacts() {
                   <Icon name="send" size="calc(20 * var(--u))" color="var(--color-white)" />
                 </button>
                 <button onClick={() => openEdit(c)}
-                  style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0 calc(4 * var(--u))', flexShrink: 0, display: 'flex' }}>
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0 calc(8 * var(--u))', flexShrink: 0, display: 'flex' }}>
                   <Icon name="option" size="calc(20 * var(--u))" color="var(--color-muted)" />
                 </button>
               </div>
@@ -228,7 +228,7 @@ export default function Contacts() {
                     centres itself over rows 1-6 thanks to top:30dvh + translateY(-50%). */}
                 {form.id && (
                   <button onClick={() => setConfirmDelete(true)}
-                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-error)', WebkitTextFillColor: 'var(--color-error)', fontFamily: 'inherit', fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-medium)', padding: 'calc(2 * var(--u)) 0', margin: 'calc(14 * var(--u)) 0', textAlign: 'center' }}>
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-error)', WebkitTextFillColor: 'var(--color-error)', fontFamily: 'inherit', fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-medium)', padding: 'calc(8 * var(--u)) 0', margin: 'calc(16 * var(--u)) 0', textAlign: 'center' }}>
                     Delete contact
                   </button>
                 )}
@@ -248,7 +248,7 @@ export default function Contacts() {
           <div className="popup-card" style={{ textAlign: 'center' }} onClick={e => e.stopPropagation()}>
             <div className="popup-title">Delete contact?</div>
             <div style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted)' }}>This can't be undone.</div>
-            <div className="popup-actions" style={{ marginTop: 'calc(4 * var(--u))' }}>
+            <div className="popup-actions" style={{ marginTop: 'calc(8 * var(--u))' }}>
               <button className="btn btn-secondary" onClick={() => setConfirmDelete(false)}>Back</button>
               <button className="btn btn-error" onClick={handleDelete}>Delete</button>
             </div>

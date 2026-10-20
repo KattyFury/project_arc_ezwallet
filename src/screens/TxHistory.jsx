@@ -72,14 +72,14 @@ function TxRow({ tx, walletAddr, contacts, onClick, cur, rates, memo, isSwap, sw
   return (
     <button onClick={onClick} style={{
       // Owner 2026-10-19: each transaction = a WHITE card (radius 16) inside the grey box, like Lending's vault cards.
-      display: 'flex', alignItems: 'flex-start', gap: 'calc(10 * var(--u))', width: '100%', flexShrink: 0,
-      padding: 'calc(12 * var(--u))', marginBottom: 'calc(8 * var(--u))', border: 'none', borderRadius: 16,
+      display: 'flex', alignItems: 'flex-start', gap: 'calc(8 * var(--u))', width: '100%', flexShrink: 0,
+      padding: 'calc(16 * var(--u))', marginBottom: 'calc(8 * var(--u))', border: 'none', borderRadius: 16,
       background: 'var(--color-white)', cursor: 'pointer',
       fontFamily: 'inherit', textAlign: 'left',
     }}>
       {/* Sent/received icon - anchored to rows 1-2 (top-aligned) */}
       <div style={{
-        width: 'calc(34 * var(--u))', height: 'calc(34 * var(--u))', borderRadius: '50%', flexShrink: 0, marginTop: 'calc(2 * var(--u))',
+        width: 'calc(34 * var(--u))', height: 'calc(34 * var(--u))', borderRadius: '50%', flexShrink: 0, marginTop: 'calc(8 * var(--u))',
         background: isSend ? 'var(--color-info-soft)' : 'var(--color-primary-soft)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}>
@@ -95,31 +95,31 @@ function TxRow({ tx, walletAddr, contacts, onClick, cur, rates, memo, isSwap, sw
         </div>
         {/* row 2: status/time + the [Add contacts] button. Swap → "Swap completed · <time>" (user decision 07-20d;
             "At" dropped 2026-10-03 - with the bigger type it wrapped the time onto 2 lines) */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'calc(8 * var(--u))', marginTop: 'calc(2 * var(--u))' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'calc(8 * var(--u))', marginTop: 'calc(8 * var(--u))' }}>
           <span style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)', whiteSpace: 'nowrap' }}>
             {isSwap ? 'Swap completed · ' : ''}<span className="num">{timeLabel(tx.timeStamp)}</span>
           </span>
           {!isSwap && !name && counter && !isSelf && (
             <span onClick={e => { e.stopPropagation(); onAdd(counter) }}
-              style={{ flexShrink: 0, fontSize: 'var(--fs-caption)', fontWeight: 'var(--fw-medium)', color: 'var(--color-brand)', border: '1px solid var(--color-brand)', borderRadius: 16, padding: 'calc(1 * var(--u)) calc(8 * var(--u))', whiteSpace: 'nowrap', background: 'var(--btn-grad-white)' }}>
+              style={{ flexShrink: 0, fontSize: 'var(--fs-caption)', fontWeight: 'var(--fw-medium)', color: 'var(--color-brand)', border: '1px solid var(--color-brand)', borderRadius: 16, padding: 'calc(8 * var(--u)) calc(8 * var(--u))', whiteSpace: 'nowrap', background: 'var(--btn-grad-white)' }}>
               Add contacts
             </span>
           )}
         </div>
         {/* rows 3-4: Note (if any) - free to wrap when long */}
         {memo && (
-          <div style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)', marginTop: 'calc(2 * var(--u))', wordBreak: 'break-word' }}>
+          <div style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)', marginTop: 'calc(8 * var(--u))', wordBreak: 'break-word' }}>
             Note: {memo}
           </div>
         )}
       </div>
 
       {/* The money block - anchored to rows 1-2 (top-aligned). Primary: display money ($). Secondary: the real token, grey */}
-      <div style={{ textAlign: 'right', flexShrink: 0, marginTop: 'calc(2 * var(--u))' }}>
+      <div style={{ textAlign: 'right', flexShrink: 0, marginTop: 'calc(8 * var(--u))' }}>
         <div className="num" style={{ fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: isSend ? 'var(--color-error)' : 'var(--color-primary)', whiteSpace: 'nowrap' }}>
           {isSend ? '-' : '+'}{rates ? `${displaySymbol(cur)}${displayNum(usd, cur, rates)}` : '…'}
         </div>
-        <div className="num" style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)', marginTop: 'calc(2 * var(--u))', whiteSpace: 'nowrap' }}>
+        <div className="num" style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)', marginTop: 'calc(8 * var(--u))', whiteSpace: 'nowrap' }}>
           {amount.toFixed(amount < 0.01 ? 6 : 2)} {symbol}
         </div>
       </div>
@@ -129,7 +129,7 @@ function TxRow({ tx, walletAddr, contacts, onClick, cur, rates, memo, isSwap, sw
 
 function DetailRow({ label, children }) {
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', gap: 'calc(12 * var(--u))', padding: 'calc(7 * var(--u)) 0' }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', gap: 'calc(16 * var(--u))', padding: 'calc(8 * var(--u)) 0' }}>
       <span style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted)', flexShrink: 0 }}>{label}</span>
       <span style={{ fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-medium)', color: 'var(--color-content)', textAlign: 'right', wordBreak: 'break-word' }}>{children}</span>
     </div>
@@ -262,7 +262,7 @@ export default function TxHistory() {
           rows, so the row padding below has no Figma evidence and is left as-is). */}
       {/* ⚠️ ABSOLUTE card (fix 2026-09-27), not className="row-2-8": as a plain grid item it painted UNDER the
           absolutely-positioned ScreenSheet - the same bug SavedQRList had - so the grey box never showed. */}
-      <div style={{ position: 'absolute', left: 'var(--m)', top: '10.19dvh', width: 'var(--cw)', height: '69.43dvh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'var(--color-card)', borderRadius: 16, padding: 'calc(8 * var(--u)) calc(12 * var(--u)) 0', alignItems: 'stretch', justifyContent: 'flex-start', overflow: 'hidden' }}>
+      <div style={{ position: 'absolute', left: 'var(--m)', top: '10.19dvh', width: 'var(--cw)', height: '69.43dvh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'var(--color-card)', borderRadius: 16, padding: 'calc(8 * var(--u)) calc(16 * var(--u)) 0', alignItems: 'stretch', justifyContent: 'flex-start', overflow: 'hidden' }}>
       <div className="scroll-hidden" style={{
         display: 'flex', flexDirection: 'column', alignItems: 'stretch', justifyContent: 'flex-start', height: '100%', overflowY: 'auto',
         WebkitMaskImage: 'linear-gradient(to top, transparent 0, black calc(100dvh / 30))',
@@ -325,7 +325,7 @@ export default function TxHistory() {
             <DetailRow label={'Converted'}><span className="num">{rates ? `${displaySymbol(cur)}${displayNum(d.usd, cur, rates)}` : '…'}</span></DetailRow>
             <DetailRow label={'Time'}>{new Date(selected.timeStamp * 1000).toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</DetailRow>
             {memoLoading ? <DetailRow label={'Note'}>Loading...</DetailRow> : memo ? <DetailRow label={'Note'}>{memo}</DetailRow> : null}
-            <button className="btn btn-secondary" style={{ width: '100%', marginTop: 'calc(14 * var(--u))' }}
+            <button className="btn btn-secondary" style={{ width: '100%', marginTop: 'calc(16 * var(--u))' }}
               onClick={() => window.open(`${ARCSCAN}/tx/${selected.hash}`, '_blank')}>
               View on ArcScan
             </button>
