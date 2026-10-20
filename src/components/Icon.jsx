@@ -53,7 +53,6 @@ import {
   NotepadText,      // Add to Quick Note   - a note pad
   FileSearch,       // Find on Page        - a document with a magnifier
   SquarePlus,       // Add to Home Screen  - a plus inside a rounded square
-  Image as ImageGlyph, // image  - a photo frame (QR scanner "Choose from library", owner 2026-10-20); renamed so it never shadows window.Image
 } from 'lucide-react'
 
 const ICONS = {
@@ -72,7 +71,6 @@ const ICONS = {
   globe: Globe,
   hub: LayoutGrid,
   human: User,
-  image: ImageGlyph,
   info: Info,
   mail: Mail,
   menu: Menu,

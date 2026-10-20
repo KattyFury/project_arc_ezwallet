@@ -33,9 +33,9 @@
     apart**; buttons in one row = **one size**, the primary differs only by colour (Home/Receive rows are 3 equal big
     buttons). Standard buttons radius 16 (pills only for small chips).
     **A button standing alone = `--btn-lone` 296 wide (3/4 of the screen), centred** (owner 2026-10-20, never full width; 240 was tried first - too small): `.row10-single`
-    applies it; About/Security/ErrorBoundary use the token directly. Scan QR now has one Done only
-    (QR storage keeps its Back + Add pair - owner tried Done only, reverted); Scan QR's "QR image" became a small "Choose from library" pill
-    (image icon left) under the caption. **Exception - stays FULL width** (owner 2026-10-20): the action/status button
+    applies it; About/Security/ErrorBoundary use the token directly. Scan QR = Back (white) + QR image (blue)
+    (QR storage keeps its Back + Add pair; owner tried a lone Done + a small "Choose from library" pill on both, reverted).
+    **Exception - stays FULL width** (owner 2026-10-20): the action/status button
     of Swap / Lend / Borrow / MemeToken (it carries long dynamic text: hints, "At most …", errors).
     **Icon-over-label tiles: VISIBLE gap icon → text = 8** (owner 2026-10-20). The box gap is `--it-gap` = 0 on purpose:
     a CSS gap of 8 measured ~16 in pixels (Lucide inner margin + line-height/ascender space above the capitals).

@@ -10,7 +10,6 @@ import ScreenSheet from '../components/ScreenSheet'
 import ExitBar from '../components/ExitBar'
 import { GRADIENT } from '../brandBg'
 import { NETWORK_NOTE } from '../clientNet'
-import Icon from '../components/Icon'
 
 export default function QRScanner() {
   const { navigate } = useNav()
@@ -36,7 +35,7 @@ export default function QRScanner() {
         await videoRef.current.play().catch(() => {})
         scan()
       } catch {
-        setError('Cannot access camera – choose a QR from your library or paste an address.')
+        setError('Cannot access camera – pick a QR image or paste an address.')
       }
     }
 
@@ -132,29 +131,19 @@ export default function QRScanner() {
         </div>
       )}
 
-      {/* "Choose from library" (owner 2026-10-20, was the big "QR image" button in the bottom row): a small pill
-          (18 semibold, 18 icon on the LEFT) centred 16 below the caption (caption = 16..40 → pill 56..96). Shown
-          even when the camera fails - it is the fallback then. */}
-      <div style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: 'calc(49.05dvh + calc(56 * var(--u)))', display: 'flex', justifyContent: 'center' }}>
-        {/* Same geometry as Lending's smallBtn (40 high, 18 text, 16 sides) - copied, not imported, so this screen's lazy chunk does not pull in Lending/Borrow. */}
-        <button className="btn btn-secondary" style={{ height: 'calc(40 * var(--u))', minHeight: 0, fontSize: 'var(--fs-content-2)', padding: '0 calc(16 * var(--u))', boxShadow: 'var(--shadow-y2)' }} onClick={() => fileRef.current?.click()}>
-          <Icon name="image" size="var(--is-content-2)" style={{ marginRight: 'calc(8 * var(--u))' }} />
-          Choose from library
-        </button>
-      </div>
-
       {/* Dynamic scan hint - real, working functionality (updates as the camera reads frames) that the
-          static Figma mock has no equivalent for, kept as its own line 16 below the library pill, same size. */}
+          static Figma mock has no equivalent for, kept as its own line under the caption, same size. */}
       {!error && (
-        <span style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: 'calc(49.05dvh + calc(112 * var(--u)))', fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-medium)', color: 'var(--color-content)', textAlign: 'center' }}>{hint}</span>
+        <span style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: 'calc(49.05dvh + calc(48 * var(--u)))', fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-medium)', color: 'var(--color-content)', textAlign: 'center' }}>{hint}</span>
       )}
 
       <input ref={fileRef} type="file" accept="image/*" onChange={handlePickImage} style={{ display: 'none' }} />
 
-      {/* One button alone = full width, centred (owner 2026-10-20). "Done" and NOT "Back" (user decision 07-29):
-          a BLUE button = the primary/finishing action. */}
-      <div className="row10-single">
-        <button className="btn btn-primary" onClick={() => navigate('HomeSend')}>Done</button>
+      {/* WHITE Back + BLUE "QR image" (owner 2026-10-20, after trying a lone Done + a small "Choose from library" pill):
+          picking a QR from the photo library is this screen's other way in, so it is the blue one. */}
+      <div className="row10-dual">
+        <button className="btn btn-secondary" onClick={() => navigate('HomeSend')}>Back</button>
+        <button className="btn btn-primary" onClick={() => fileRef.current?.click()}>QR image</button>
       </div>
 
       <ExitBar onClick={() => navigate('HomeSend')} />
