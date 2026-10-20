@@ -23,9 +23,11 @@ import { NET } from '../clientNet'
 // SPACING (owner 2026-10-20, design-system pass): info card → Withdraw/Deposit 24 · buttons → first row 32 · every row 80
 // apart (centre to centre), divider halfway between two rows. Positions hang off the info card's bottom in --u px, not
 // dvh, so the gaps stay on the 8-grid on every screen height. Replaces the Figma-derived dvh tops (86.8 px row step).
-const BTN_TOP = 'calc(10.19dvh + 18.48dvh + 24 * var(--u))'                        // info card bottom + 24
-const rowC = (i) => `calc(10.19dvh + 18.48dvh + ${24 + 70 + 32 + 22 + 80 * i} * var(--u))` // centre of row i (44-high row → +22)
-const ruleTop = (i) => `calc(10.19dvh + 18.48dvh + ${24 + 70 + 32 + 22 + 80 * i + 40} * var(--u))`
+// The info card is 164 tall (owner 2026-10-20): 24 + three 28-lines 16 apart + 24, all on the 8-grid.
+const CARD_H = 164
+const BTN_TOP = `calc(10.19dvh + ${CARD_H + 24} * var(--u))`                        // info card bottom + 24
+const rowC = (i) => `calc(10.19dvh + ${CARD_H + 24 + 70 + 32 + 22 + 80 * i} * var(--u))` // centre of row i (44-high row → +22)
+const ruleTop = (i) => `calc(10.19dvh + ${CARD_H + 24 + 70 + 32 + 22 + 80 * i + 40} * var(--u))`
 const ITEMS = [
   { id: 'TxHistory', label: 'Transaction history',            icon: 'clock' },
   // Figma merges the old separate Security/Currency rows into one: "Security, language & currency",
@@ -91,19 +93,21 @@ export default function MenuScreen() {
           "$10,000.00" - replaced with the real values, sourced exactly like Security.jsx already does.
           The network is NET.label ("Arc"), the label used everywhere else in the app. */}
       <div style={{
-        position: 'absolute', left: 'var(--m)', top: '10.19dvh', width: 'var(--cw)', height: '18.48dvh',
+        position: 'absolute', left: 'var(--m)', top: '10.19dvh', width: 'var(--cw)', height: `calc(${CARD_H} * var(--u))`,
         background: 'var(--color-card)', borderRadius: 16,
         display: 'flex', alignItems: 'center', padding: '0 calc(16 * var(--u))',
       }}>
-        <p style={{ margin: 0, fontSize: 'var(--fs-content-1)', color: 'var(--color-black)' }}>
-          Email: <span style={{ fontWeight: 'var(--fw-semibold)', color: 'var(--color-brand)' }}>{email}</span><br />
-          Network: <span style={{ fontWeight: 'var(--fw-semibold)', color: 'var(--color-brand)' }}>{NET.label}</span><br />
-          Wallet address: <span style={{ fontWeight: 'var(--fw-semibold)', color: 'var(--color-brand)' }}>{shortAddr}</span>
+        {/* Three lines 16 apart (owner 2026-10-20: they were packed in the middle with empty space above and below). */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'calc(16 * var(--u))', fontSize: 'var(--fs-content-1)', color: 'var(--color-black)' }}>
+          <div>Email: <span style={{ fontWeight: 'var(--fw-semibold)', color: 'var(--color-brand)' }}>{email}</span></div>
+          <div>Network: <span style={{ fontWeight: 'var(--fw-semibold)', color: 'var(--color-brand)' }}>{NET.label}</span></div>
+          <div>Wallet address: <span style={{ fontWeight: 'var(--fw-semibold)', color: 'var(--color-brand)' }}>{shortAddr}</span>
           <button onClick={copyAddr} aria-label="Copy wallet address"
             style={{ display: 'inline-flex', verticalAlign: 'middle', marginLeft: 'calc(8 * var(--u))', padding: 0, border: 'none', background: 'none', cursor: 'pointer' }}>
             <Icon name={copied ? 'check' : 'copy'} size="calc(18 * var(--u))" color={copied ? 'var(--color-primary)' : 'var(--color-brand)'} />
           </button>
-        </p>
+          </div>
+        </div>
       </div>
 
       {/* WITHDRAW / DEPOSIT - nodes 58:208-58:210 (left, white) and 58:204-58:206 (right, brand blue),

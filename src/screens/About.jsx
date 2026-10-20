@@ -38,9 +38,10 @@ export default function About() {
                   </div>
                 ) : (
                   <button key={label} onClick={() => (screen ? navigate(...screen) : link.startsWith('mailto:') ? (window.location.href = link) : window.open(link, '_blank', 'noopener'))}
-                    style={{ ...ROW, gap: 'calc(8 * var(--u))', border: 'none', background: 'none', cursor: 'pointer', fontFamily: 'inherit', padding: 0, width: '100%', textAlign: 'left' }}>
-                    <Icon name="right2" size="calc(17 * var(--u))" color="var(--color-brand)" />
-                    <span style={{ fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)' }}>{label}</span>
+                    style={{ ...ROW, justifyContent: 'space-between', gap: 'calc(16 * var(--u))', border: 'none', background: 'none', cursor: 'pointer', fontFamily: 'inherit', padding: 0, width: '100%', textAlign: 'left' }}>
+                    {/* Owner 2026-10-20: label LEFT, a bigger chevron (24, design-system icon size) RIGHT - was a 17 blue chevron before the label. */}
+                    <span style={{ fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)', minWidth: 0, overflowWrap: 'anywhere' }}>{label}</span>
+                    <Icon name="right2" size="calc(24 * var(--u))" color="var(--color-black)" />
                   </button>
                 )
               ))}

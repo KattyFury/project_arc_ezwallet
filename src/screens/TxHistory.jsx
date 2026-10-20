@@ -74,43 +74,44 @@ function TxRow({ tx, walletAddr, contacts, onClick, cur, rates, memo, isSwap, sw
   return (
     <button onClick={onClick} style={{
       // Owner 2026-10-19: each transaction = a WHITE card (radius 16) inside the grey box, like Lending's vault cards.
-      display: 'flex', alignItems: 'flex-start', gap: 'calc(8 * var(--u))', width: '100%', flexShrink: 0,
+      display: 'flex', alignItems: 'center', gap: 'calc(16 * var(--u))', width: '100%', flexShrink: 0,
       padding: 'calc(16 * var(--u))', marginBottom: 'calc(8 * var(--u))', border: 'none', borderRadius: 16,
       background: 'var(--color-white)', cursor: 'pointer',
       fontFamily: 'inherit', textAlign: 'left',
     }}>
-      {/* Sent/received icon - anchored to rows 1-2 (top-aligned) */}
+      {/* Sent/received icon - 40, centred on the whole text block (owner 2026-10-20: it sat off the text when the title wrapped). */}
       <div style={{
-        width: 'calc(34 * var(--u))', height: 'calc(34 * var(--u))', borderRadius: '50%', flexShrink: 0, marginTop: 'calc(8 * var(--u))',
+        width: 'calc(40 * var(--u))', height: 'calc(40 * var(--u))', borderRadius: '50%', flexShrink: 0,
         background: neutral ? 'var(--color-card)' : isSend ? 'var(--color-info-soft)' : 'var(--color-primary-soft)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}>
-        <Icon name={isSwap ? 'trade' : isSend ? 'up' : 'down'} size="var(--is-caption)" color={neutral ? 'var(--color-content)' : isSend ? 'var(--color-info)' : 'var(--color-primary)'} />
+        <Icon name={isSwap ? 'trade' : isSend ? 'up' : 'down'} size="calc(20 * var(--u))" color={neutral ? 'var(--color-content)' : isSend ? 'var(--color-info)' : 'var(--color-primary)'} />
       </div>
 
       {/* TEXT GRID (owner 2026-10-20: left and right were not on the same lines - the money block sat 8 lower and used a
           bigger size). Column 1 = who / time / note, column 2 = money / token. Row 1 shares a BASELINE, row 2 is centred,
           so each right-hand line sits exactly on its left-hand line. */}
       <div style={{ flex: 1, minWidth: 0, display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) auto', columnGap: 'calc(8 * var(--u))', rowGap: 'calc(8 * var(--u))' }}>
-        <div style={{ gridColumn: 1, gridRow: 1, alignSelf: 'baseline', fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-medium)', color: 'var(--color-content)', overflowWrap: 'break-word' }}>
+        {/* Owner 2026-10-20: every line 16 - who/amount semibold black (or the money colour), time/token muted. */}
+        <div style={{ gridColumn: 1, gridRow: 1, alignSelf: 'baseline', fontSize: 'var(--fs-caption)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)', overflowWrap: 'break-word' }}>
           {/* A shortened address stays in ONE piece (browsers may break right after its "…"); a contact name wraps freely. */}
           {isSwap ? swapTitle : <>{isSend ? 'Sent to' : 'Received from'} <span style={!name && !isSelf ? { whiteSpace: 'nowrap' } : undefined}>{who}</span></>}
         </div>
         {/* Money - a swap only trades one token for another (the wallet's value does not change), so it has NO +/- and is
             drawn in the content colour, not red/green (owner 2026-10-20). */}
-        <div className="num" style={{ gridColumn: 2, gridRow: 1, alignSelf: 'baseline', textAlign: 'right', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: neutral ? 'var(--color-content)' : isSend ? 'var(--color-error)' : 'var(--color-primary)', whiteSpace: 'nowrap' }}>
+        <div className="num" style={{ gridColumn: 2, gridRow: 1, alignSelf: 'baseline', textAlign: 'right', fontSize: 'var(--fs-caption)', fontWeight: 'var(--fw-semibold)', color: neutral ? 'var(--color-black)' : isSend ? 'var(--color-error)' : 'var(--color-primary)', whiteSpace: 'nowrap' }}>
           {neutral ? '' : isSend ? '-' : '+'}{rates ? `${displaySymbol(cur)}${displayNum(usd, cur, rates)}` : '…'}
         </div>
         {/* row 2: status/time + the [Add contacts] button. Swap → "Swap completed · <time>" (user decision 07-20d;
             "At" dropped 2026-10-03 - with the bigger type it wrapped the time onto 2 lines) */}
         <div style={{ gridColumn: 1, gridRow: 2, alignSelf: 'center', display: 'flex', alignItems: 'center', gap: 'calc(8 * var(--u))' }}>
           {/* May wrap (the 2-column grid would otherwise push "Swap completed · 09:15" into the token amount); the time itself stays whole. */}
-          <span style={{ minWidth: 0, fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)' }}>
+          <span style={{ minWidth: 0, flexShrink: isSwap ? 1 : 0, fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)' }}>
             {isSwap ? 'Swap completed · ' : ''}<span className="num" style={{ whiteSpace: 'nowrap' }}>{timeLabel(tx.timeStamp)}</span>
           </span>
           {!isSwap && !name && counter && !isSelf && (
             <span onClick={e => { e.stopPropagation(); onAdd(counter) }}
-              style={{ flexShrink: 0, fontSize: 'var(--fs-caption)', fontWeight: 'var(--fw-medium)', color: 'var(--color-brand)', border: '1px solid var(--color-brand)', borderRadius: 16, padding: 'calc(8 * var(--u)) calc(8 * var(--u))', whiteSpace: 'nowrap', background: 'var(--btn-grad-white)' }}>
+              style={{ flexShrink: 0, fontSize: 'var(--fs-small)', fontWeight: 'var(--fw-medium)', color: 'var(--color-brand)', border: '1px solid var(--color-brand)', borderRadius: 16, padding: '0 calc(8 * var(--u))', whiteSpace: 'nowrap', background: 'var(--btn-grad-white)' }}>
               Add contacts
             </span>
           )}
