@@ -31,8 +31,21 @@
   is refused while the 1st lives (~5 min). Every amount change in the fee preview does it too. Needs one intent
   reused fee → execute (e.g. cached per wallet+kind+amount in KV until its deadline) - not built yet. Borrow is LABS
   (test.ezwallet.cash only), so ezwallet.cash is not affected.
-- **Branches:** `main` = `a1f2783` (ezwallet.cash, old look - untouched today) · `test` carried the redesign - MERGED into main later the same day (see the line above).
-- **Today (all TEST ONLY), the rules now in force - follow them for every new screen:**
+- **Branches:** `main` = `test` = `213aafd`+ (both live: ezwallet.cash + test.ezwallet.cash). Everything below marked
+  "TEST ONLY" went to main with that merge.
+- **▶ NEXT SESSION, in order:**
+  1. Fix the Borrow 409 above (one intent for fee + execute), then the owner borrows ~0.98 USDC on test (Max), alerts on,
+     "Repay all & close". Wallet 0x…b0ab has 0.00002462 cirBTC + ~12.3 USDC.
+  2. Rebuild the old-blue PNGs (icon / favicon / og) - ezwallet.cash now shows the new UI with the old icons.
+  3. Owner keeps walking screens and reports. Not re-checked in pixels yet: the code step of the email popup (mock
+     cannot reach it), PinGate / ForgotPin, Paste / Contacts / Memes inputs after the 16 padding change.
+- **Later on 2026-10-20 (owner walking the test site), all on main now:** Scan QR = Back + QR image · lone button 296 ·
+  icon→label 8 · Menu card 164 (3 lines 16 apart) + 24/32/80 spacing · Send money / Create QR / inputs 16 from the edge ·
+  History: 2-column grid, every line 16, icon 40 centred, swaps + sends-to-self neutral (no ±, swap icon), swap detail
+  "Swapped A → B · You paid / You got" · About: label left, chevron 24 right · hints/notes/errors 16 (14 = labels only) ·
+  Borrow max by cirBTC · 155113 session retry · email popup fixed 360 · Memes card hidden. Screenshots: Desktop
+  `ezwallet-*` folders of 2026-10-20.
+- **The rules now in force (design system) - follow them for every new screen:**
   - **Type scale (app):** only 14 · 16 · 18 · 22 · 28 · 34 · 48 with paired line heights 20 · 24 · 24 · 28 · 36 · 40 · 56
     (`--fs-*` / `--lh-*` in `src/index.css`). Never set a size or a line height by hand - `test/fontScale.test.mjs` fails.
     Auto-fit amounts (`useFitFontSize`) step 48 → 34 → 28 → 22 → 18 and return the paired line height.
