@@ -20,18 +20,24 @@ import { NET } from '../clientNet'
 // at a fixed offset within that repeating 70px-row + 16px-gutter unit, so the old +34.5px should still
 // hold structurally even though the whole block shifted down. Flagged here so a future correction is easy
 // to spot if it turns out wrong, rather than reading as an already-verified number.
+// SPACING (owner 2026-10-20, design-system pass): info card → Withdraw/Deposit 24 · buttons → first row 32 · every row 80
+// apart (centre to centre), divider halfway between two rows. Positions hang off the info card's bottom in --u px, not
+// dvh, so the gaps stay on the 8-grid on every screen height. Replaces the Figma-derived dvh tops (86.8 px row step).
+const BTN_TOP = 'calc(10.19dvh + 18.48dvh + 24 * var(--u))'                        // info card bottom + 24
+const rowC = (i) => `calc(10.19dvh + 18.48dvh + ${24 + 70 + 32 + 22 + 80 * i} * var(--u))` // centre of row i (44-high row → +22)
+const ruleTop = (i) => `calc(10.19dvh + 18.48dvh + ${24 + 70 + 32 + 22 + 80 * i + 40} * var(--u))`
 const ITEMS = [
-  { id: 'TxHistory', label: 'Transaction history',            top: '44.91dvh', rule: '48.99dvh', icon: 'clock' },
+  { id: 'TxHistory', label: 'Transaction history',            icon: 'clock' },
   // Figma merges the old separate Security/Currency rows into one: "Security, language & currency",
   // renamed "Security & Region" (user decision 2026-09-27).
   // Security.jsx (node 58:332, rebuilt 2026-09-24) now absorbs the language/currency chips inline -
   // Currency.jsx is deleted, this still navigates to 'Security'.
-  { id: 'Security',  label: 'Security & Region',  top: '55.09dvh', rule: '59.18dvh', icon: 'shield' },
+  { id: 'Security',  label: 'Security & Region',  icon: 'shield' },
   // ⚠️ NEW ROW, NO DESTINATION YET. Figma draws it (node 58:220/58:221) but there is no corresponding
   // frame anywhere in the file and no existing screen/route for it. Disabled - same standard as
   // "Withdraw" below (drawn, not yet wired) - until the user gives it a real screen to open.
-  { id: 'LearnBlockchain', label: 'Learn about blockchain',   top: '65.28dvh', rule: '69.37dvh', disabled: true, icon: 'book' },
-  { id: 'About',      label: 'About ezwallet',                top: '75.47dvh', rule: '79.56dvh', icon: 'info' },
+  { id: 'LearnBlockchain', label: 'Learn about blockchain',   disabled: true, icon: 'book' },
+  { id: 'About',      label: 'About ezwallet',                icon: 'info' },
 ]
 
 // Row geometry - left/right markers at the standard 6.41% inset (matches every other card's side margin
@@ -111,7 +117,7 @@ export default function MenuScreen() {
           option B 2026-10-03 because the plain `up`/`down` used before were the SAME glyphs as the NavBar's
           Send/Receive, so Withdraw read as Send and Deposit as Receive. Size = 1.2x the label (--ib-content-1). */}
       <button className="btn" onClick={() => setPopup('withdraw')} style={{
-        position: 'absolute', left: 'var(--m)', top: '30.57dvh', width: 'calc((var(--cw) - 16 * var(--u)) / 2)', height: 'calc(70 * var(--u))',
+        position: 'absolute', left: 'var(--m)', top: BTN_TOP, width: 'calc((var(--cw) - 16 * var(--u)) / 2)', height: 'calc(70 * var(--u))',
         background: 'var(--btn-grad-white)', border: 'none', borderRadius: 16,
         boxShadow: 'var(--shadow-y2)', cursor: 'pointer',
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'var(--it-gap)',
@@ -123,7 +129,7 @@ export default function MenuScreen() {
       {/* Deposit / Withdraw open FundsPopup (owner spec 2026-10-03): Deposit = this wallet's Arc address, Withdraw =
           a send to another Arc address. No fiat on/off-ramp (Onramp Kit needs a KYB the owner does not have). */}
       <button className="btn" onClick={() => setPopup('deposit')} style={{
-        position: 'absolute', left: 'calc(var(--m) + (var(--cw) - 16 * var(--u)) / 2 + 16 * var(--u))', top: '30.57dvh', width: 'calc((var(--cw) - 16 * var(--u)) / 2)', height: 'calc(70 * var(--u))',
+        position: 'absolute', left: 'calc(var(--m) + (var(--cw) - 16 * var(--u)) / 2 + 16 * var(--u))', top: BTN_TOP, width: 'calc((var(--cw) - 16 * var(--u)) / 2)', height: 'calc(70 * var(--u))',
         background: 'var(--btn-grad-brand)', border: 'none', borderRadius: 16,
         boxShadow: 'var(--shadow-y2)', cursor: 'pointer',
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'var(--it-gap)',
@@ -133,26 +139,27 @@ export default function MenuScreen() {
         Deposit
       </button>
 
-      {ITEMS.map(({ id, label, top, rule, disabled, icon }) => (
+      {ITEMS.map(({ id, label, disabled, icon }, i) => (
         <div key={id}>
-          <button style={{ ...ROW_STYLE, top, opacity: disabled ? 0.4 : 1, cursor: disabled ? 'not-allowed' : 'pointer', border: 'none', background: 'none' }}
+          <button style={{ ...ROW_STYLE, top: rowC(i), cursor: disabled ? 'not-allowed' : 'pointer', border: 'none', background: 'none' }}
             disabled={disabled} onClick={disabled ? undefined : () => navigate(id, { title: label })}>
-            <RowIcon name={icon} size="var(--ib-content-1)" color="var(--color-black)" />
-            <span style={{ flex: 1, fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)', textAlign: 'left' }}>{label}</span>
-            <RowIcon name="right2" color="var(--color-black)" />
+            {/* Disabled = Muted colour, never lower opacity (design system, owner 2026-10-20). */}
+            <RowIcon name={icon} size="var(--ib-content-1)" color={disabled ? 'var(--color-muted)' : 'var(--color-black)'} />
+            <span style={{ flex: 1, fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: disabled ? 'var(--color-muted)' : 'var(--color-black)', textAlign: 'left' }}>{label}</span>
+            <RowIcon name="right2" color={disabled ? 'var(--color-muted)' : 'var(--color-black)'} />
           </button>
           {/* 0.5px, #8B95A8 - the SAME hairline spec as AddToHome's share-sheet dividers (Figma bakes
               this exact stroke into that screen's own asset: stroke="#8B95A8" stroke-width="0.5"). Was
               `var(--color-gray)` (#E3E3E3, a different pre-redesign token) - the user approved having a
               divider here at all (it isn't in the Figma node, inferred - see the comment on ITEMS above)
               but corrected the colour to match the other one this redesign already draws. */}
-          <div style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: rule, height: 0.5, background: 'var(--color-muted)' }} />
+          <div style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: ruleTop(i), height: 0.5, background: 'var(--color-muted)' }} />
         </div>
       ))}
 
       {/* Sign out - node 58:226/58:227/58:236: same row shape, both markers AND the label in the danger
           red. No divider - it is the last row. */}
-      <button style={{ ...ROW_STYLE, top: '85.66dvh', border: 'none', background: 'none', cursor: 'pointer' }} onClick={() => {
+      <button style={{ ...ROW_STYLE, top: rowC(ITEMS.length), border: 'none', background: 'none', cursor: 'pointer' }} onClick={() => {
         ;['ez_user_token','ez_wallet_addr','ez_wallet_id','ez_encryption_key','ez_email','ez_auth_token','ez_notifs','ez_last_recv_ts','ez_refresh_token','ez_google_email','ez_login_method'].forEach(k => localStorage.removeItem(k))
         sessionStorage.removeItem('ez_pin_ok')
         sessionStorage.removeItem('ez_sync_token')
