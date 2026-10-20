@@ -37,6 +37,9 @@
     (QR storage keeps its Back + Add pair - owner tried Done only, reverted); Scan QR's "QR image" became a small "Choose from library" pill
     (image icon left) under the caption. **Exception - stays FULL width** (owner 2026-10-20): the action/status button
     of Swap / Lend / Borrow / MemeToken (it carries long dynamic text: hints, "At most …", errors).
+    **Icon-over-label tiles: VISIBLE gap icon → text = 8** (owner 2026-10-20). The box gap is `--it-gap` = 0 on purpose:
+    a CSS gap of 8 measured ~16 in pixels (Lucide inner margin + line-height/ascender space above the capitals).
+    Used by Home Send/Receive rows + Menu Withdraw/Deposit. Measure ink in pixels, not box edges, for any gap like this.
   - **Spacing:** every padding / margin / gap a multiple of 8 (test enforces; `PctSlider` internals and negative hit-area
     margins excepted). Popups (`.popup-card` and the email-login popup): 24 top/bottom, 16 sides, 16 between blocks.
   - **Colours:** tokens only. Mist `--color-card` is now **#ECF0F8** (one step darker). Yellow WORDS use

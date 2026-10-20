@@ -114,7 +114,7 @@ export default function MenuScreen() {
         position: 'absolute', left: 'var(--m)', top: '30.57dvh', width: 'calc((var(--cw) - 16 * var(--u)) / 2)', height: 'calc(70 * var(--u))',
         background: 'var(--btn-grad-white)', border: 'none', borderRadius: 16,
         boxShadow: 'var(--shadow-y2)', cursor: 'pointer',
-        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(8 * var(--u))',
+        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'var(--it-gap)',
         fontFamily: 'inherit', fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)',
       }}>
         <Icon name="withdraw" size="var(--it)" color="var(--color-black)" />
@@ -126,7 +126,7 @@ export default function MenuScreen() {
         position: 'absolute', left: 'calc(var(--m) + (var(--cw) - 16 * var(--u)) / 2 + 16 * var(--u))', top: '30.57dvh', width: 'calc((var(--cw) - 16 * var(--u)) / 2)', height: 'calc(70 * var(--u))',
         background: 'var(--btn-grad-brand)', border: 'none', borderRadius: 16,
         boxShadow: 'var(--shadow-y2)', cursor: 'pointer',
-        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(8 * var(--u))',
+        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'var(--it-gap)',
         fontFamily: 'inherit', fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-white)',
       }}>
         <Icon name="deposit" size="var(--it)" color="var(--color-white)" />

@@ -158,6 +158,10 @@
   /* BUTTON TYPES (owner 2026-10-20): plain text button = --fs-content-1 22 · icon-over-label tile = --fs-content-2 18
      semibold with a 24 icon (--it, a design-system icon size) · small pill (50%, Max, Open, chips, pickers) = --fs-content-2 18. */
   --it:           calc(24 * var(--u));
+  /* Icon-over-label tile: the box gap is 0 ON PURPOSE so the VISIBLE gap is 8 (owner 2026-10-20: "too far apart").
+     Measured in pixels: a CSS gap of 8 drew ~16 on screen = 8 + Lucide's ~1px inner margin + ~6.5px of line-height
+     and ascender space above the 18/24 label's capitals. With 0 the ink-to-ink gap is ~8. */
+  --it-gap:       0px;
 
   /* ── SCREEN WIDTH ──
      .screen = min(100vw, --screen-max). To size something as a % OF THE SCREEN (not a % of a parent

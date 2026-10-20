@@ -152,7 +152,7 @@ export default function HomeReceive() {
         position: 'absolute', left: 'var(--m)', top: SIDE_BTN.top, width: `calc(${W3})`, height: SIDE_BTN.height,
         background: 'var(--btn-grad-white)', border: 'none', borderRadius: 16,
         boxShadow: 'var(--shadow-y2)',
-        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(8 * var(--u))',
+        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'var(--it-gap)',
         fontFamily: 'inherit', fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)',
         cursor: 'pointer', WebkitTapHighlightColor: 'transparent',
       }}>
@@ -164,7 +164,7 @@ export default function HomeReceive() {
         position: 'absolute', left: `calc(var(--m) + ${W3} + 16 * var(--u))`, top: BIG_BTN.top, width: `calc(${W3})`, height: BIG_BTN.height,
         background: 'var(--btn-grad-brand)', border: 'none', borderRadius: 16,
         boxShadow: 'var(--shadow-y2)',
-        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(8 * var(--u))',
+        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'var(--it-gap)',
         fontFamily: 'inherit', fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-white)',
         cursor: 'pointer', WebkitTapHighlightColor: 'transparent',
       }}>
@@ -176,7 +176,7 @@ export default function HomeReceive() {
         position: 'absolute', left: `calc(var(--m) + 2 * ${W3} + 32 * var(--u))`, top: SIDE_BTN.top, width: `calc(${W3})`, height: SIDE_BTN.height,
         background: 'var(--btn-grad-white)', border: 'none', borderRadius: 16,
         boxShadow: 'var(--shadow-y2)',
-        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(8 * var(--u))',
+        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'var(--it-gap)',
         fontFamily: 'inherit', fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)',
         cursor: 'pointer', WebkitTapHighlightColor: 'transparent',
       }}>
