@@ -22,8 +22,9 @@ const SERVICES = [
     : { id: 'swap', icon: 'exchange', label: 'Exchange', desc: 'Coming soon', screen: null },
   // LABS (owner 2026-10-05): ONE card for Lending + Borrow (tabs inside); only where src/labs.js allows it.
   ...(isLabsHost(window.location.hostname)
-    ? [{ id: 'lend', icon: 'lending', label: 'Lending / Borrow', desc: 'Earn interest on USDC & EURC in Morpho vaults', screen: 'Lending' },
-       { id: 'memes', icon: 'memes', label: 'Memes', desc: 'Buy & sell tokens launched on Argus', screen: 'Memes' }]
+    ? [{ id: 'lend', icon: 'lending', label: 'Lending / Borrow', desc: 'Earn interest on USDC & EURC in Morpho vaults', screen: 'Lending' }]
+    // Memes card HIDDEN for now (owner 2026-10-20: "tạm bỏ meme khỏi service hub"); the Memes screens stay in the code.
+    // To bring it back: { id: 'memes', icon: 'memes', label: 'Memes', desc: 'Buy & sell tokens launched on Argus', screen: 'Memes' }
     : []),
 ]
 

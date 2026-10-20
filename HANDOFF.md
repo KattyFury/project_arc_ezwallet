@@ -22,8 +22,16 @@
    cherry-pick onto `main` (see Session (5)).
 
 ## ▶ WHERE WE STOPPED - 2026-10-20 (READ THIS FIRST)
-- **Branches:** `main` = `a1f2783` (ezwallet.cash, old look - untouched today) · `test` = `8d2c5b7`+ (test.ezwallet.cash) carries
-  the whole redesign. Still **do not merge test → main** until the owner approves; urgent live fixes = cherry-pick.
+- **🟢 2026-10-20 (later): REDESIGN APPROVED - `test` fast-forwarded into `main`** (owner: "push test lên main"). ezwallet.cash
+  now has the redesign; test = main again → back to the normal rule (commit on `test`, ff to `main`, push both).
+  Same day: the **Memes card is hidden** in the Service hub (screens kept, see ServiceHub.jsx). Still TODO: rebuild
+  `public/icon.png`, `fav_icon.png`, `og.png` in the new blue (`tools/build-og.mjs`).
+- **🔴 OPEN - Borrow 409 / 380608** ("An earlier signed request to open this loan is still live"): the FEE step
+  (`action: 'fee'`) calls `fetchExecution` = Borrow Kit creates a signed intent, then EXECUTE calls it again → the 2nd
+  is refused while the 1st lives (~5 min). Every amount change in the fee preview does it too. Needs one intent
+  reused fee → execute (e.g. cached per wallet+kind+amount in KV until its deadline) - not built yet. Borrow is LABS
+  (test.ezwallet.cash only), so ezwallet.cash is not affected.
+- **Branches:** `main` = `a1f2783` (ezwallet.cash, old look - untouched today) · `test` carried the redesign - MERGED into main later the same day (see the line above).
 - **Today (all TEST ONLY), the rules now in force - follow them for every new screen:**
   - **Type scale (app):** only 14 · 16 · 18 · 22 · 28 · 34 · 48 with paired line heights 20 · 24 · 24 · 28 · 36 · 40 · 56
     (`--fs-*` / `--lh-*` in `src/index.css`). Never set a size or a line height by hand - `test/fontScale.test.mjs` fails.
