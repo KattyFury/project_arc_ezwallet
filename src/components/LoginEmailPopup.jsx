@@ -215,9 +215,9 @@ export default function LoginEmailPopup({ onClose }) {
         background: 'var(--color-white)', borderRadius: 16, boxShadow: 'var(--shadow-y2)',
       }} />
 
-      {/* Title - node 54:4: 24px semibold, line-height 30, centred on (195,121). */}
+      {/* Title - 24 below the card's top edge, the same 24 the buttons keep above its bottom edge (owner 2026-10-20). */}
       <div style={{
-        position: 'absolute', left: '50%', top: '14.34dvh', transform: 'translate(-50%, -50%)',
+        position: 'absolute', left: '50%', top: 'calc(10.19dvh + 24 * var(--u))', transform: 'translateX(-50%)',
         width: 'var(--cw)', textAlign: 'center',
         fontSize: 'var(--fs-h2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)',
       }}>
@@ -283,10 +283,12 @@ export default function LoginEmailPopup({ onClose }) {
 
       {/* Back / Continue - nodes 1:197 and 1:196: both 48 tall at y=430, RADIUS 16 (not pills), glow
           var(--shadow-y2), labels 18px semibold. Back closes the popup and returns to Login
-          rather than navigating anywhere - the popup never was a screen. */}
+          rather than navigating anywhere - the popup never was a screen.
+          SPACING (owner 2026-10-20): 16 between the two buttons, 16 to the popup's left/right edges, and 24 above
+          its bottom edge = the title's 24 below the top edge (the card spans 10.19dvh-59.24dvh), so each button is (--cw - 48) / 2 wide. */}
       <button onClick={back}
         style={{
-          position: 'absolute', left: 'calc(var(--m) + 16 * var(--u))', top: '50.95dvh', width: 'calc((var(--cw) - 40 * var(--u)) / 2)', height: 'var(--btn-h)',
+          position: 'absolute', left: 'calc(var(--m) + 16 * var(--u))', top: 'calc(59.24dvh - 24 * var(--u) - var(--btn-h))', width: 'calc((var(--cw) - 48 * var(--u)) / 2)', height: 'var(--btn-h)',
           background: 'var(--btn-grad-white)', color: 'var(--color-black)', border: 'none', borderRadius: 16,
           boxShadow: 'var(--shadow-y2)',
           fontFamily: 'inherit', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', cursor: 'pointer',
@@ -295,7 +297,7 @@ export default function LoginEmailPopup({ onClose }) {
       </button>
       <button onClick={handleSubmit} disabled={!valid || loading}
         style={{
-          position: 'absolute', left: 'calc(var(--m) + 24 * var(--u) + (var(--cw) - 40 * var(--u)) / 2)', top: '50.95dvh', width: 'calc((var(--cw) - 40 * var(--u)) / 2)', height: 'var(--btn-h)',
+          position: 'absolute', left: 'calc(var(--m) + 32 * var(--u) + (var(--cw) - 48 * var(--u)) / 2)', top: 'calc(59.24dvh - 24 * var(--u) - var(--btn-h))', width: 'calc((var(--cw) - 48 * var(--u)) / 2)', height: 'var(--btn-h)',
           background: valid && !loading ? 'var(--btn-grad-brand)' : 'var(--color-line)', color: valid && !loading ? 'var(--color-white)' : 'var(--color-muted)', border: 'none', borderRadius: 16,
           boxShadow: valid && !loading ? 'var(--shadow-y2)' : 'none',
           fontFamily: 'inherit', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)',
