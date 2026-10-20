@@ -20,6 +20,10 @@ import { Tabs, fmtAmt, fmtApy } from './Lending'
 // Row map: 2-3 the loan/market · 4-5 the amount + [50%] [Max] (+ Collateral: Add | Withdraw, Repay: "Repay all & close") ·
 // 6 what happens + fee + note · 9 the button · 10 Exit (back to the Borrow tab).
 const MAX_USD = 200, MAX_LTV = 0.5
+// The app's BTC price (display rates) is not Morpho's oracle and the Borrow Service sizes collateral its own way, so a borrow
+// sized at exactly 50% of the wallet's cirBTC can need a hair more cirBTC than the wallet holds → the fee estimate reverts
+// (owner hit it 2026-10-20: 1.00 USDC against 0.00002462 cirBTC). The collateral-based max keeps a 2% margin.
+const PRICE_BUFFER = 0.98
 const BOX = { border: 'none', borderRadius: 16, background: 'var(--color-card)' }
 const at = (top, height) => ({ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top, height })
 const fmtBtc = (n) => typeof n === 'number' ? n.toFixed(8).replace(/0+$/, '').replace(/\.$/, '') : '…'
@@ -60,10 +64,11 @@ export default function BorrowAction() {
   const borrowed = loan?.borrowed || 0, collateral = loan?.collateral || 0
 
   // The most this action can move (display + chips; the server enforces the real rules).
+  const byCollateral = kind === 'borrow' && btcUsd !== null && bal.cirBTC !== undefined
+    ? ((bal.cirBTC || 0) + collateral) * btcUsd * MAX_LTV * PRICE_BUFFER - borrowed : null
   const max = (() => {
     if (kind === 'borrow') {
-      if (!market || btcUsd === null || bal.cirBTC === undefined) return null
-      const byCollateral = ((bal.cirBTC || 0) + collateral) * btcUsd * MAX_LTV - borrowed
+      if (!market || byCollateral === null) return null
       return Math.max(0, floorTo(Math.min(market.free, MAX_USD - borrowed, byCollateral), dec))
     }
     if (kind === 'repay') return bal.USDC === undefined ? null : Math.max(0, floorTo(Math.min(borrowed, bal.USDC - GAS_RESERVE_USDC), dec))
@@ -81,7 +86,11 @@ export default function BorrowAction() {
     if (!ready) return
     debounce.current = setTimeout(() => {
       borrowApi('fee', { kind, marketId: market?.marketId, loanId: loan?.loanId, amount: kind === 'close' ? '0' : typed, walletAddress, walletId })
-        .then(f => { setInfo(f); setError('') }).catch(e => setError(e.message))
+        .then(f => { setInfo(f); setError('') }).catch(e => setError(/revert/i.test(e.message || '')
+          // Circle's "Estimate fee execution reverted." = the batch would fail on chain; for a borrow that is almost always
+          // too little cirBTC at the current price (owner 2026-10-20) - say that, not the raw RPC words.
+          ? (kind === 'borrow' ? 'Not enough cirBTC for this amount right now - try a smaller amount.' : 'This would fail on the network right now - try a smaller amount.')
+          : e.message))
     }, 600)
     return () => clearTimeout(debounce.current)
   }, [typed, kind])
@@ -172,13 +181,13 @@ export default function BorrowAction() {
     }}>{label}</button>
   )
   const unit = isBtc ? 'cirBTC' : 'USDC'
-  const avail = { borrow: market ? `${fmtAmt(market.free)} USDC free` : '…', repay: `${fmtAmt(borrowed)} USDC owed`, close: `${fmtAmt(borrowed)} USDC owed`,
+  const avail = { borrow: max !== null ? `You can borrow up to ${fmtAmt(max)} USDC` : '…',   // by YOUR cirBTC, not the market's free USDC (owner 2026-10-20) repay: `${fmtAmt(borrowed)} USDC owed`, close: `${fmtAmt(borrowed)} USDC owed`,
     addCollateral: `${fmtBtc(bal.cirBTC)} cirBTC in wallet`, withdrawCollateral: `${fmtBtc(collateral)} cirBTC locked` }[kind]
   const what = kind === 'borrow'
     ? (info ? `Locks ≈ ${fmtBtc(info.cirbtcNeeded)} cirBTC · liquidation if BTC < $${Math.round(info.liquidationPrice || 0).toLocaleString('en-US')}` : '')
     : kind === 'close' ? 'Repays everything and returns all your cirBTC.' : ''
   const label = alertStep ? 'Turn on liquidation alerts (PIN)' : error || status
-    || (kind === 'close' ? 'Repay all & close' : over ? `At most ${shown(String(max), showDec)} ${unit}` : amount > 0
+    || (kind === 'close' ? 'Repay all & close' : over ? `${kind === 'borrow' && byCollateral !== null && max >= floorTo(byCollateral, dec) - 1e-9 ? 'Not enough cirBTC - at most' : 'At most'} ${shown(String(max), showDec)} ${unit}` : amount > 0
       ? { borrow: 'Borrow', repay: 'Repay', addCollateral: 'Add collateral', withdrawCollateral: 'Withdraw collateral' }[kind] : 'Tap the amount to enter')
 
   return (

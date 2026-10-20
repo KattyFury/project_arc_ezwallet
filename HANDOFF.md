@@ -52,6 +52,12 @@
     (copy A, 8-grid stack, white arrow + white button with blue text), email-login popup (flex stack, @yahoo dropped),
     Home (cirBTC hold-to-show uses `fmtTokenAmount`, no more 0.0000), QR storage (QR 118 → 141, tiles hug content).
   - Screenshots: Desktop `ezwallet-redesign-all\` (all screens + popups), `ezwallet-chieu-cao-dong\` (type/line-height work).
+- **Borrow fix 2026-10-20 (TEST ONLY):** owner's 1.00 USDC borrow failed with Circle "Estimate fee execution reverted." -
+  measured: wallet 0x…b0ab holds 0.00002462 cirBTC, 1 USDC needs 0.0000244 (99%), so a small BTC move tips it over. Fix
+  (owner option A): collateral-based max × `PRICE_BUFFER` 0.98, the amount card says "You can borrow up to X USDC" (not the
+  market's free USDC), over-limit button "Not enough cirBTC - at most X", a revert from the fee estimate shown in plain words.
+  `verify-borrow.mjs … 0.98` PASSES (needs 0.00002392). Each dry run creates a Borrow Kit intent that blocks a new
+  borrow for ~5 min (409 / 380608) - warn the owner before running one.
 - **Design system kept in sync** (do the same when a rule changes): claude.ai artifact `Rvs7H37zwuUdb8uBGf5rtM` (v10: App type
   scale, `app-button-small`, mist #ECF0F8, button rules in README) + Figma `IPyKVg7ylGw1mjMRyYVrL7` (file "hieu", now a
   PUBLISHED team library in team nguyen0xhieu → Team folder; re-Publish after edits).
