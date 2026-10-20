@@ -40,6 +40,9 @@
     **Icon-over-label tiles: VISIBLE gap icon → text = 8** (owner 2026-10-20). The box gap is `--it-gap` = 0 on purpose:
     a CSS gap of 8 measured ~16 in pixels (Lucide inner margin + line-height/ascender space above the capitals).
     Used by Home Send/Receive rows + Menu Withdraw/Deposit. Measure ink in pixels, not box edges, for any gap like this.
+  - **Content sits 16 from a box edge** (owner 2026-10-20): Send money / Create QR cards, the "To" card, `.address-input`
+    and `.memo-row` (every input app-wide) were 8-12 → 16. **Menu:** card → Withdraw/Deposit 24, buttons → list 32, rows
+    80 apart (positions in --u px off the card, not dvh); the disabled row is Muted text, no opacity.
   - **Spacing:** every padding / margin / gap a multiple of 8 (test enforces; `PctSlider` internals and negative hit-area
     margins excepted). Popups (`.popup-card` and the email-login popup): 24 top/bottom, 16 sides, 16 between blocks.
   - **Colours:** tokens only. Mist `--color-card` is now **#ECF0F8** (one step darker). Yellow WORDS use

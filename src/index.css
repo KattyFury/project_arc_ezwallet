@@ -768,7 +768,7 @@ body {
   border: none;
   background: var(--color-surface);
   border-radius: 16px;   /* radius 16 (user rule 2026-09-27: every 8px radius -> 16) */
-  padding: calc(8 * var(--u)) calc(12 * var(--u));
+  padding: calc(8 * var(--u)) calc(16 * var(--u));   /* 16 from the box edge like every card (owner 2026-10-20; was 12) */
 }
 
 .memo-input {
@@ -869,7 +869,7 @@ body {
   border: none;
   background: var(--color-surface);
   border-radius: 16px;   /* radius 16 (user rule 2026-09-27: every 8px radius -> 16) */
-  padding: calc(10 * var(--u)) calc(12 * var(--u));
+  padding: calc(8 * var(--u)) calc(16 * var(--u));   /* 16 from the box edge like every card (owner 2026-10-20; was 10/12) */
   font-family: var(--font-base);
   font-size: var(--fs-caption);
   line-height: var(--lh-caption);
