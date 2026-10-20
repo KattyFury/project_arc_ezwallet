@@ -97,7 +97,8 @@ const ROW_TEXT = { minWidth: 0, overflowWrap: 'anywhere' }
 // ⚠️ 13px since 2026-09-10 (was --fs-item 17): the current Figma file sets every line in this area to
 // 13px, and at 17 the hint block's 4 lines wrap and overflow the card the design gives them.
 // 14px since 2026-10-03: the owner's type scale makes 14 the smallest allowed size (--fs-small).
-export const NOTIF_FS = 'var(--fs-small)'
+// 16px since 2026-10-20 (owner: "hint đang khá nhỏ, tăng lên"): App/Note 16/24 - notes, toasts, hints.
+export const NOTIF_FS = 'var(--fs-caption)'
 
 // The hint = ONE multi-line notification (not several separate ones), the LOWEST priority, with NO X button and
 // not tappable - always present, pushed up by real notifications and fading out (as one block) when it runs out
@@ -124,7 +125,7 @@ function HintBlock({ lines }) {
     // line. Tightened to 6px/12px + gap 3 so 4 lines fit. Do NOT loosen it again without removing a line.
     // 2026-09-10: WHITE card with NO border, radius 16, 13px, BLACK body text with semibold keywords -
     // node 1:356/1:361. The blue border + all-blue 17px text was the older design.
-    <div style={{ background: 'var(--color-white)', border: 'none', borderRadius: 16, padding: 'calc(6 * var(--u)) calc(10 * var(--u))', display: 'flex', flexDirection: 'column', gap: 'calc(2 * var(--u))', fontSize: NOTIF_FS, color: 'var(--color-content)', textAlign: 'left', flexShrink: 0 }}>
+    <div style={{ background: 'var(--color-white)', border: 'none', borderRadius: 16, padding: 'calc(8 * var(--u)) calc(16 * var(--u))', display: 'flex', flexDirection: 'column', fontSize: NOTIF_FS, color: 'var(--color-content)', textAlign: 'left', flexShrink: 0 }}>
       <div style={{ minWidth: 0, color: 'var(--color-error)', fontWeight: 'var(--fw-semibold)' }}>
         {NETWORK_NOTE}
       </div>
@@ -235,13 +236,13 @@ export default function NotifArea({ hints = [], warning = null, pollMs = 15000 }
             // line at exactly 40px as before.
             <div key={n.id} onClick={() => open(n)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'calc(10 * var(--u))', background: 'var(--color-white)', borderRadius: 16, minHeight: 'calc(40 * var(--u))', padding: 'calc(3 * var(--u)) calc(10 * var(--u))', flexShrink: 0, cursor: clickable ? 'pointer' : 'default' }}>
               <span style={{ display: 'flex', alignItems: 'center', gap: 'calc(8 * var(--u))', fontSize: NOTIF_FS, color: s.color, ...ROW_TEXT }}>
-                <Icon name={s.icon} size="calc(19.5 * var(--u))" color={s.color} style={{ flexShrink: 0 }} />
+                <Icon name={s.icon} size="var(--is-caption)" color={s.color} style={{ flexShrink: 0 }} />
                 <span style={ROW_TEXT}>
                   {n.text}
                   {n.memo ? <> · <b style={{ fontWeight: 'var(--fw-bold)' }}>{n.memo}</b></> : null}
                 </span>
               </span>
-              <button onClick={e => clear(n.id, e)} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', flexShrink: 0, padding: 'calc(2 * var(--u))' }}><Icon name="x" size="calc(19.5 * var(--u))" color={s.color} /></button>
+              <button onClick={e => clear(n.id, e)} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', flexShrink: 0, padding: 'calc(2 * var(--u))' }}><Icon name="x" size="calc(20 * var(--u))" color={s.color} /></button>
             </div>
           )
         })}

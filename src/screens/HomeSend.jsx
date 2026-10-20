@@ -4,7 +4,7 @@ import ScreenSheet from '../components/ScreenSheet'
 import BalanceHeader from '../components/BalanceHeader'
 import Icon from '../components/Icon'
 import { useNav } from '../nav'
-import { getDisplayCurrency, fmtDisplay, GAS_RESERVE_USDC } from '../data'
+import { getDisplayCurrency, fmtDisplay, fmtTokenAmount, GAS_RESERVE_USDC } from '../data'
 import { getTokenBalances, getDisplayRates, cachedBalances, cachedRates, getUnverifiedTokens, sumUsd } from '../chain'
 import { ensureWalletAddress } from '../circle'
 import NotifArea, { NOTIF_FS } from '../components/NotifArea'
@@ -199,7 +199,7 @@ export default function HomeSend() {
                 <span style={{ display: 'flex', alignItems: 'center', marginLeft: 'auto' }}>
                   <span style={{ ...TOKEN_TEXT_STYLE, color: 'var(--color-brand)' }}>
                     {showToken
-                      ? tk.amount.toFixed(tk.symbol === 'cirBTC' ? 4 : 2)
+                      ? fmtTokenAmount(tk.amount, tk.symbol)   // cirBTC 6 decimals, dust widens to 8 (was toFixed(4) → "0.0000", owner 2026-10-20)
                       : (rates ? fmtDisplay(tk.usd, cur, rates) : '…')}
                   </span>
                   {rates && isVolatile(tk.symbol) && tk.change24h != null && Math.abs(tk.change24h) >= 0.005 && (

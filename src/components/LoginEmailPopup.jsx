@@ -11,7 +11,7 @@ import { createSession, startEmailCode, verifyEmailCode, createEmailToken, getSD
 // Coordinates are node 1:193's own numbers in the app's usual convention (x = px/390 as %, y = px/844
 // as dvh), measured against the SCREEN rather than the card, exactly like every other screen.
 
-const DOMAINS = ['@gmail.com', '@yahoo.com', '@icloud.com']
+const DOMAINS = ['@gmail.com', '@icloud.com']   // @yahoo.com dropped (owner 2026-10-20)
 const APP_ID = NET.circleAppId   // per network (src/network.js)
 // ✅ Email OTP: signing in requires the CODE mailed to you → only the mailbox owner gets in (closing the "anyone who
 // types your email is in" hole). Needs SMTP configured in Circle Console (done 2026-07-05). Flag off = back to the old
