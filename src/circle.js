@@ -208,8 +208,32 @@ export async function refreshSocialToken(userToken, refreshToken, deviceId) {
     body: JSON.stringify({ action: 'refreshSocial', userToken, refreshToken, deviceId }),
   })
   const data = await res.json()
-  if (data.error) { console.error('[refreshSocialToken]', data.error, data.detail); throw new Error(data.error) }
+  if (data.error) { console.error('[refreshSocialToken]', data.error, data.code, data.detail); throw Object.assign(new Error(data.error), { code: data.code }) }
   return data   // { userToken, encryptionKey, refreshToken }
+}
+
+// Circle 155113 "Provided device ID is not found in the system." on /users/token/refresh (owner hit it 2026-10-20 on the
+// PIN unlock): Circle no longer knows the deviceId saved at login (iOS can clear Circle's iframe storage; Circle's docs do
+// not say how long a device lives). Option A (owner): ask the SDK for the CURRENT deviceId and try once more; if that also
+// fails the session cannot be renewed → back to the email login with a plain note, never a stuck error screen.
+const isDeviceGone = (e) => e?.code === 155113 || /device id is not found/i.test(e?.message || '')
+async function refreshWithDeviceRetry(userToken, refreshToken, deviceId) {
+  try { return await refreshSocialToken(userToken, refreshToken, deviceId) }
+  catch (e) {
+    if (!isDeviceGone(e)) throw e
+    let fresh = null
+    try { fresh = await (await getSDK()).getDeviceId() } catch {}
+    if (fresh && fresh !== deviceId) {
+      try {
+        const r = await refreshSocialToken(userToken, refreshToken, fresh)
+        localStorage.setItem('ez_google_deviceId', fresh)
+        return r
+      } catch {}
+    }
+    sessionStorage.setItem('ez_login_note', 'Your session ended - please sign in again.')
+    expireToLogin()
+    throw new Error('no-session')
+  }
 }
 
 // A token THIS module minted less than 50' ago is reused as is (Circle OpenAPI: "The token will expire after 60
@@ -251,7 +275,7 @@ export async function refreshSession() {
   const deviceId = localStorage.getItem('ez_google_deviceId')
   if (refreshToken && deviceId) {
     try {
-      const r = await refreshSocialToken(fallback.userToken, refreshToken, deviceId)
+      const r = await refreshWithDeviceRetry(fallback.userToken, refreshToken, deviceId)
       if (r?.userToken) {
         storeUserToken(r.userToken)
         if (r.encryptionKey) localStorage.setItem('ez_encryption_key', r.encryptionKey)
@@ -281,7 +305,7 @@ export async function forceFreshSession() {
     const refreshToken = localStorage.getItem('ez_refresh_token')
     const deviceId = localStorage.getItem('ez_google_deviceId')
     if (!refreshToken || !deviceId) throw new Error('no-session')   // not enough to mint → back to login
-    const r = await refreshSocialToken(localStorage.getItem('ez_user_token'), refreshToken, deviceId)
+    const r = await refreshWithDeviceRetry(localStorage.getItem('ez_user_token'), refreshToken, deviceId)
     if (r.refreshToken) localStorage.setItem('ez_refresh_token', r.refreshToken)
     s = { userToken: r.userToken, encryptionKey: r.encryptionKey }
   }

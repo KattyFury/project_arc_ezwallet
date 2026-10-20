@@ -33,7 +33,7 @@ function saveEmailHistory(email) {
 
 // The suggestion chip - node 1:204 / 7:33: 32 tall, RADIUS 8 (not a pill: the exported path's corner is
 // `a 8 8` and the shared app-wide hint chip's 999 would be visibly rounder), 1px brand border on white,
-// 14px brand text.
+// 16px brand text (was 14 until 2026-10-20).
 // Owner 2026-10-05: the chips sit 16px under the field (they used to overlap it - the field is --input-h tall, not
 // Figma's 40) and flow side by side, wrapping to a new line only when the row is full.
 function Chip({ label, onClick }) {
@@ -43,7 +43,7 @@ function Chip({ label, onClick }) {
         flexShrink: 0, height: 'calc(32 * var(--u))', maxWidth: '100%',
         padding: '0 calc(16 * var(--u))', border: '1px solid var(--color-brand)', borderRadius: 16,
         background: 'var(--btn-grad-white)', cursor: 'pointer',
-        fontFamily: 'inherit', fontSize: 'var(--fs-small)', color: 'var(--color-brand)',
+        fontFamily: 'inherit', fontSize: 'var(--fs-caption)', color: 'var(--color-brand)',   // 16 (owner 2026-10-20: 14 only for truly secondary bits)
         overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
       }}>
       {label}
@@ -211,10 +211,10 @@ export default function LoginEmailPopup({ onClose }) {
 
       {/* THE CARD IS ONE VERTICAL STACK (owner 2026-10-20: "sửa luôn chỗ chưa chuẩn guideline"). Fixed size
           (the old node 51:5 frame: --cw wide, 49.05dvh tall, from 10.19dvh) so it never jumps while chips come and
-          go. Padding 24 top/bottom, 16 left/right. Title → 24 → field → 16 → chips / code note → flexible space
-          → error → 16 → the button row (16 apart). Every gap is on the 8-grid. */}
+          go. Padding 24 top/bottom, 16 left/right. Title → 24 → field → 16 → chips (32 kept) / code note → (16 → error)
+          → 24 → the button row (16 apart). Every gap is on the 8-grid. 2026-10-20: the card hugs this stack. */}
       <div style={{
-        position: 'absolute', left: 'var(--m)', top: '10.19dvh', width: 'var(--cw)', height: '49.05dvh',
+        position: 'absolute', left: 'var(--m)', top: '10.19dvh', width: 'var(--cw)',   // height HUGS the content (owner 2026-10-20: the fixed 49dvh left the lower half empty and the keyboard covered it)
         background: 'var(--color-white)', borderRadius: 16, boxShadow: 'var(--shadow-y2)',
         padding: 'calc(24 * var(--u)) calc(16 * var(--u))', display: 'flex', flexDirection: 'column',
       }}>
@@ -255,23 +255,22 @@ export default function LoginEmailPopup({ onClose }) {
           </div>
         )}
 
-        {chips.length > 0 && (
-          <div style={{ marginTop: 'calc(16 * var(--u))', display: 'flex', flexWrap: 'wrap', gap: 'calc(8 * var(--u))' }}>
+        {/* The chip row keeps its 32 even while empty (email step) so the hugging card does not jump as you type. */}
+        {(step === 'email' || chips.length > 0) && (
+          <div style={{ marginTop: 'calc(16 * var(--u))', minHeight: 'calc(32 * var(--u))', display: 'flex', flexWrap: 'wrap', gap: 'calc(8 * var(--u))' }}>
             {chips.map(c => <Chip key={c.label} label={c.label} onClick={c.onClick} />)}
           </div>
         )}
 
-        <div style={{ flex: 1 }} />
-
         {error && (
-          <div style={{ marginBottom: 'calc(16 * var(--u))', fontSize: 'var(--fs-caption)', color: 'var(--color-error)' }}>
+          <div style={{ marginTop: 'calc(16 * var(--u))', fontSize: 'var(--fs-caption)', color: 'var(--color-error)' }}>
             {error}
           </div>
         )}
 
         {/* Back / Continue - radius 16, shadow Y2, App/Button 22. Back closes the popup (or returns to the email
             step) rather than navigating anywhere - the popup never was a screen. */}
-        <div style={{ display: 'flex', gap: 'calc(16 * var(--u))', flexShrink: 0 }}>
+        <div style={{ display: 'flex', gap: 'calc(16 * var(--u))', flexShrink: 0, marginTop: 'calc(24 * var(--u))' }}>
           <button onClick={back}
             style={{
               flex: 1, height: 'var(--btn-h)',

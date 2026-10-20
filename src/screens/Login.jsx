@@ -29,6 +29,9 @@ export default function Login() {
   const sdkRef = useRef(null)
   const [restoring, setRestoring] = useState(false)  // finishing up after the redirect
   const [googleErr, setGoogleErr] = useState('')
+  // Set by circle.js when a session could not be renewed (device ID gone, 2026-10-20) - shown once, then dropped.
+  const [note] = useState(() => sessionStorage.getItem('ez_login_note') || '')
+  useEffect(() => { sessionStorage.removeItem('ez_login_note') }, [])   // read in the initializer, dropped after mount (StrictMode calls initializers twice)
   // The email popup (node 1:193). It is NOT a screen - it opens over this one, which blurs behind it.
   const [emailOpen, setEmailOpen] = useState(false)
 
@@ -216,6 +219,7 @@ export default function Login() {
             </div>
           ))}
         </div>
+        {note && <p style={{ margin: 'calc(32 * var(--u)) 0 0', fontSize: 'var(--fs-caption)', color: 'var(--color-error)' }}>{note}</p>}
       </div>
 
       {/* THE ONLY CONTROL - one row at the bottom, 48 above the screen edge (clears the 34 home-indicator safe

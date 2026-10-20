@@ -58,6 +58,13 @@
   market's free USDC), over-limit button "Not enough cirBTC - at most X", a revert from the fee estimate shown in plain words.
   `verify-borrow.mjs … 0.98` PASSES (needs 0.00002392). Each dry run creates a Borrow Kit intent that blocks a new
   borrow for ~5 min (409 / 380608) - warn the owner before running one.
+- **Session-renewal fix 2026-10-20 (TEST ONLY):** owner's PIN unlock showed Circle **155113** "Provided device ID is not
+  found in the system." - OTP users renew with `/users/token/refresh` + the deviceId saved at login, and Circle no longer
+  knew it (cause not measured; Circle docs give no device lifetime). Option A: `refreshWithDeviceRetry` in circle.js asks the
+  SDK for the current deviceId and tries once more; still failing → `expireToLogin()` + Login shows "Your session ended -
+  please sign in again." session.js now passes Circle's `code` back. If it keeps happening, `wrangler tail` the refresh call.
+- **Email login popup** hugs its content (was a fixed 49dvh with empty lower half under the keyboard); chip row keeps 32.
+  Email chips and every hint/note/error are 16; 14 only for truly secondary bits (labels, chips in boxes, badges).
 - **Design system kept in sync** (do the same when a rule changes): claude.ai artifact `Rvs7H37zwuUdb8uBGf5rtM` (v10: App type
   scale, `app-button-small`, mist #ECF0F8, button rules in README) + Figma `IPyKVg7ylGw1mjMRyYVrL7` (file "hieu", now a
   PUBLISHED team library in team nguyen0xhieu → Team folder; re-Publish after edits).

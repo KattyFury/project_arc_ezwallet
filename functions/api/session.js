@@ -34,7 +34,7 @@ export async function onRequestPost(ctx) {
     const data = await res.json();
     if (data.code || !data.data?.userToken) {
       console.error('[session] token refresh failed:', JSON.stringify(data));
-      return new Response(JSON.stringify({ error: data.message || 'refresh failed' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
+      return new Response(JSON.stringify({ error: data.message || 'refresh failed', code: data.code }), { status: 400, headers: { 'Content-Type': 'application/json' } });
     }
     return new Response(JSON.stringify({
       userToken: data.data.userToken,
