@@ -74,10 +74,10 @@ export default function AddToHome() {
           {/* Logo - the BLUE mark (design/logo-icon.svg); the white variant would vanish on the white half. */}
           <img src={logoIcon} alt="" style={{ width: 'calc(82 * var(--u))', height: 'calc(70 * var(--u))' }} />
           <div style={{
-            marginTop: 'calc(16 * var(--u))',
-            fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)',
+            marginTop: 'calc(16 * var(--u))',   // screen title = App/Title Screen 28, above the 22 steps (owner 2026-10-20)
+            fontSize: 'var(--fs-title)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)',
           }}>
-            <Ez /> works best as an app
+            Use <Ez /> as an app
           </div>
           <div style={{
             marginTop: 'calc(8 * var(--u))',
