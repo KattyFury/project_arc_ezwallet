@@ -16,7 +16,7 @@ export default class ErrorBoundary extends Component {
         <div style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted)', maxWidth: 'calc(300 * var(--u))' }}>
           The app hit an unexpected error. Your wallet and funds are safe. Please reload.
         </div>
-        {/* A button standing alone = --btn-lone (240), like .row10-single (owner 2026-10-20). */}
+        {/* A button standing alone = --btn-lone (296), like .row10-single (owner 2026-10-20). */}
         <button className="btn btn-primary" style={{ width: 'var(--btn-lone)' }} onClick={() => window.location.reload()}>Reload</button>
       </div>
     )

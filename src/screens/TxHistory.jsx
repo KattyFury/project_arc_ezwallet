@@ -294,7 +294,7 @@ export default function TxHistory() {
 
       {/* ONE full-width Done button (user decision 2026-09-24: the 3-button Send/Receive/Done row looked
           cluttered - the Send/Receive filter feature is removed entirely, not just visually). */}
-      {/* Owner 2026-10-20: a lone button = --btn-lone (240), centred - .row10-single does it. */}
+      {/* Owner 2026-10-20: a lone button = --btn-lone (296), centred - .row10-single does it. */}
       <div className="row10-single">
         <button className="btn btn-primary" onClick={() => navigate('MenuScreen')}>Done</button>
       </div>

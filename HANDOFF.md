@@ -32,9 +32,9 @@
     semibold + 24 icon (`--it`) · small pill (50%, Max, Open, chips, pickers) 18 semibold. Buttons side by side = **16
     apart**; buttons in one row = **one size**, the primary differs only by colour (Home/Receive rows are 3 equal big
     buttons). Standard buttons radius 16 (pills only for small chips).
-    **A button standing alone = `--btn-lone` 240 wide, centred** (owner 2026-10-20, never full width): `.row10-single`
-    applies it; About/Security/ErrorBoundary use the token directly. Scan QR and QR storage now have one Done only
-    (QR storage's Add is gone - the "+" tile adds); Scan QR's "QR image" became a small "Choose from library" pill
+    **A button standing alone = `--btn-lone` 296 wide (3/4 of the screen), centred** (owner 2026-10-20, never full width; 240 was tried first - too small): `.row10-single`
+    applies it; About/Security/ErrorBoundary use the token directly. Scan QR now has one Done only
+    (QR storage keeps its Back + Add pair - owner tried Done only, reverted); Scan QR's "QR image" became a small "Choose from library" pill
     (image icon left) under the caption. **Exception - stays FULL width** (owner 2026-10-20): the action/status button
     of Swap / Lend / Borrow / MemeToken (it carries long dynamic text: hints, "At most …", errors).
   - **Spacing:** every padding / margin / gap a multiple of 8 (test enforces; `PctSlider` internals and negative hit-area

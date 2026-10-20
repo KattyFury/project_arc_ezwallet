@@ -92,10 +92,11 @@ export default function SavedQRList() {
       </div>
       </div>
 
-      {/* One BLUE Done, lone = --btn-lone 240 centred (owner 2026-10-20: the "+" tile already adds a QR, so the Add
-          button of the old Back/Add pair is gone). */}
-      <div className="row10-single">
-        <button className="btn btn-primary" onClick={() => navigate('HomeReceive')}>Done</button>
+      {/* A WHITE Back (left) + BLUE Add (right) pair following the .row10-dual standard (user decision 07-29; owner
+          2026-10-20 tried a lone Done and brought this pair back): Add opens the same add-QR popup as the "+" tile. */}
+      <div className="row10-dual">
+        <button className="btn btn-secondary" onClick={() => navigate('HomeReceive')}>Back</button>
+        <button className="btn btn-primary" onClick={addQR}>Add</button>
       </div>
 
       <ExitBar onClick={() => navigate('HomeReceive')} />
