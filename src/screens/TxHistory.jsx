@@ -309,17 +309,19 @@ export default function TxHistory() {
           {/* display:block - DetailRow brings its own padding+border, so the flex gap of .popup-card is NOT used */}
           <div className="popup-card" style={{ display: 'block' }} onClick={e => e.stopPropagation()}>
             <div className="popup-title" style={{ marginBottom: 'calc(8 * var(--u))' }}>Transaction details</div>
-            <DetailRow label={'Type'}>{d.isSend ? 'Sent' : 'Received'} {d.symbol}</DetailRow>
-            {d.name && <DetailRow label={d.isSend ? 'Recipient' : 'Sender'}>{d.name}</DetailRow>}
-            <DetailRow label={'Wallet address'}>
+            {/* A swap leg (owner 2026-10-20): Type names both tokens; no "Wallet address" (the counterparty is the swap
+                contract, not a person); Amount says which side this leg is. */}
+            <DetailRow label={'Type'}>{swapPairs[selected.hash] ? `Swapped ${swapPairs[selected.hash].outSym} → ${swapPairs[selected.hash].inSym}` : `${d.isSend ? 'Sent' : 'Received'} ${d.symbol}`}</DetailRow>
+            {d.name && !swapPairs[selected.hash] && <DetailRow label={d.isSend ? 'Recipient' : 'Sender'}>{d.name}</DetailRow>}
+            {!swapPairs[selected.hash] && <DetailRow label={'Wallet address'}>
               <span style={{ display: 'inline-flex', alignItems: 'center', gap: 'calc(8 * var(--u))' }}>
                 {shortenAddr(d.counter)}
                 <button onClick={() => copyCounter(d.counter)} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', padding: 0 }}>
                   <Icon name={copied ? 'check' : 'copy'} size="var(--is-content-2)" color={copied ? 'var(--color-primary)' : 'var(--color-muted)'} />
                 </button>
               </span>
-            </DetailRow>
-            <DetailRow label={'Amount'}>
+            </DetailRow>}
+            <DetailRow label={swapPairs[selected.hash] ? (d.isSend ? 'You paid' : 'You got') : 'Amount'}>
               {/* A swap leg or a send to yourself: no +/-, content colour - same rule as the row (owner 2026-10-20). */}
               {(() => { const neutral = swapHashes.has(selected.hash) || d.counter?.toLowerCase() === walletAddr?.toLowerCase(); return (
               <span className="num" style={{ color: neutral ? 'var(--color-content)' : d.isSend ? 'var(--color-error)' : 'var(--color-primary)' }}>
