@@ -1,3 +1,4 @@
+import arrowDown from '../../design/arrow-down.svg'
 import { GRADIENT } from '../brandBg'
 import { useNav } from '../nav'
 import { NET } from '../clientNet'
@@ -217,21 +218,28 @@ export default function Login() {
         </div>
       </div>
 
-      {/* THE ONLY CONTROL - full content width at the bottom, 48 above the screen edge (clears the 34
-          home-indicator safe area). On the gradient's blue end it is the white button with blue text
-          (design system: secondary = ground + blue), App/Button 22, the standard --btn-h, shadow Y2. */}
-      <button
-        onClick={() => setEmailOpen(true)}
-        style={{
-          position: 'absolute', left: 'var(--m)', bottom: 'calc(48 * var(--u))',
-          width: 'var(--cw)', height: 'var(--btn-h)',
-          background: 'var(--color-white)', border: 'none', borderRadius: 16,
-          boxShadow: 'var(--shadow-y2)',
-          fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-brand)', cursor: 'pointer',
-          WebkitTapHighlightColor: 'transparent',
-        }}>
-        {restoring ? 'Processing...' : 'Log in with email'}
-      </button>
+      {/* THE ONLY CONTROL - one row at the bottom, 48 above the screen edge (clears the 34 home-indicator safe
+          area): the white arrow pointing right (owner 2026-10-20: keep it, it is part of the look) in a 48-wide
+          slot, 16 gap, then the white button with blue text (App/Button 22, the standard --btn-h, shadow Y2). */}
+      <div style={{
+        position: 'absolute', left: 'var(--m)', bottom: 'calc(48 * var(--u))', width: 'var(--cw)',
+        display: 'flex', alignItems: 'center', gap: 'calc(16 * var(--u))',
+      }}>
+        <div aria-hidden="true" style={{ width: 'calc(48 * var(--u))', flexShrink: 0, display: 'flex', justifyContent: 'center' }}>
+          <img src={arrowDown} alt="" style={{ width: 'calc(40 * var(--u))', height: 'calc(45.938 * var(--u))', transform: 'rotate(-90deg)' }} />
+        </div>
+        <button
+          onClick={() => setEmailOpen(true)}
+          style={{
+            flex: 1, height: 'var(--btn-h)',
+            background: 'var(--color-white)', border: 'none', borderRadius: 16,
+            boxShadow: 'var(--shadow-y2)',
+            fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-brand)', cursor: 'pointer',
+            WebkitTapHighlightColor: 'transparent',
+          }}>
+          {restoring ? 'Processing...' : 'Log in with email'}
+        </button>
+      </div>
 
       </div>
 
