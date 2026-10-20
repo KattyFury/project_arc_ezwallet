@@ -41,7 +41,7 @@ function Chip({ label, onClick }) {
     <button onClick={onClick} title={label}
       style={{
         flexShrink: 0, height: 'calc(32 * var(--u))', maxWidth: '100%',
-        padding: '0 calc(12 * var(--u))', border: '1px solid var(--color-brand)', borderRadius: 16,
+        padding: '0 calc(16 * var(--u))', border: '1px solid var(--color-brand)', borderRadius: 16,
         background: 'var(--btn-grad-white)', cursor: 'pointer',
         fontFamily: 'inherit', fontSize: 'var(--fs-small)', color: 'var(--color-brand)',
         overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
@@ -209,102 +209,90 @@ export default function LoginEmailPopup({ onClose }) {
     // instruction). This layer only has to sit above that blurred content and catch its own taps.
     <div style={{ position: 'absolute', inset: 0, zIndex: 100 }}>
 
-      {/* The card - node 51:5: 340x414 at (25,86), radius 16, glow shadow var(--shadow-y2). */}
+      {/* THE CARD IS ONE VERTICAL STACK (owner 2026-10-20: "sửa luôn chỗ chưa chuẩn guideline"). Fixed size
+          (the old node 51:5 frame: --cw wide, 49.05dvh tall, from 10.19dvh) so it never jumps while chips come and
+          go. Padding 24 top/bottom, 16 left/right. Title → 24 → field → 16 → chips / code note → flexible space
+          → error → 16 → the button row (16 apart). Every gap is on the 8-grid. */}
       <div style={{
         position: 'absolute', left: 'var(--m)', top: '10.19dvh', width: 'var(--cw)', height: '49.05dvh',
         background: 'var(--color-white)', borderRadius: 16, boxShadow: 'var(--shadow-y2)',
-      }} />
-
-      {/* Title - 24 below the card's top edge, the same 24 the buttons keep above its bottom edge (owner 2026-10-20). */}
-      <div style={{
-        position: 'absolute', left: '50%', top: 'calc(10.19dvh + 24 * var(--u))', transform: 'translateX(-50%)',
-        width: 'var(--cw)', textAlign: 'center',
-        fontSize: 'var(--fs-h2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)',
+        padding: 'calc(24 * var(--u)) calc(16 * var(--u))', display: 'flex', flexDirection: 'column',
       }}>
-        {step === 'email' ? 'Log in with email' : 'Enter the code'}
-      </div>
+        <div style={{ textAlign: 'center', fontSize: 'var(--fs-h2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)' }}>
+          {step === 'email' ? 'Log in with email' : 'Enter the code'}
+        </div>
 
-      {/* The email field - node 1:200: 307.96x40 centred at x=195, top edge y=186, radius 8, #ECF0F8,
-          with an 18px #8B95A8 placeholder (node 1:202). */}
-      <input
-        key={step}
-        type={step === 'email' ? 'email' : 'text'}
-        inputMode={step === 'email' ? 'email' : 'numeric'}
-        autoComplete={step === 'email' ? 'email' : 'one-time-code'}
-        placeholder={step === 'email' ? 'example@gmail.com' : '6-digit code'}
-        value={step === 'email' ? email : code}
-        onChange={e => {
-          if (step === 'email') setEmail(e.target.value)
-          else setCode(e.target.value.replace(/\D/g, '').slice(0, 6))
-          setError('')
-        }}
-        onKeyDown={e => e.key === 'Enter' && handleSubmit()}
-        autoFocus
-        style={{
-          position: 'absolute', left: '50%', top: '22.04dvh', transform: 'translateX(-50%)',
-          width: 'calc(var(--cw) - 32 * var(--u))', height: 'var(--input-h)',
-          background: '#ECF0F8', border: 'none', borderRadius: 16,
-          // The browser draws a BLACK FOCUS RING on an autofocused input. The design has no such line
-          // anywhere, so it read as a drawing mistake rather than as focus. Killed here, not app-wide.
-          outline: 'none',
-          padding: '0 calc(12 * var(--u))', fontSize: 'var(--fs-content-1)', color: 'var(--color-black)',
-        }} />
+        <input
+          key={step}
+          type={step === 'email' ? 'email' : 'text'}
+          inputMode={step === 'email' ? 'email' : 'numeric'}
+          autoComplete={step === 'email' ? 'email' : 'one-time-code'}
+          placeholder={step === 'email' ? 'example@gmail.com' : '6-digit code'}
+          value={step === 'email' ? email : code}
+          onChange={e => {
+            if (step === 'email') setEmail(e.target.value)
+            else setCode(e.target.value.replace(/\D/g, '').slice(0, 6))
+            setError('')
+          }}
+          onKeyDown={e => e.key === 'Enter' && handleSubmit()}
+          autoFocus
+          style={{
+            marginTop: 'calc(24 * var(--u))', width: '100%', height: 'var(--input-h)', flexShrink: 0,
+            background: 'var(--color-card)', border: 'none', borderRadius: 16,
+            // The browser draws a BLACK FOCUS RING on an autofocused input. The design has no such line
+            // anywhere, so it read as a drawing mistake rather than as focus. Killed here, not app-wide.
+            outline: 'none',
+            padding: '0 calc(16 * var(--u))', fontSize: 'var(--fs-content-1)', color: 'var(--color-black)',
+          }} />
 
-      {step === 'code' && (
-        <div style={{
-          position: 'absolute', left: 'calc(var(--m) + 16 * var(--u))', width: 'calc(var(--cw) - 32 * var(--u))', top: 'calc(22.04dvh + var(--input-h) + 16 * var(--u))',   // 16px under the field (owner 2026-10-05)
-          fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)',
-        }}>
-          We sent a 6-digit code to <span style={{ color: 'var(--color-black)', fontWeight: 'var(--fw-semibold)', overflowWrap: 'anywhere' }}>{email.trim()}</span>. It expires in 10 minutes.
-          <div style={{ marginTop: 'calc(8 * var(--u))' }}>
-            <span onClick={resend} style={{ color: 'var(--color-brand)', fontWeight: 'var(--fw-semibold)', cursor: loading ? 'default' : 'pointer' }}>Resend code</span>
-            {notice && <span style={{ marginLeft: 'calc(8 * var(--u))' }}>{notice}</span>}
+        {step === 'code' && (
+          <div style={{ marginTop: 'calc(16 * var(--u))', fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)' }}>
+            We sent a 6-digit code to <span style={{ color: 'var(--color-black)', fontWeight: 'var(--fw-semibold)', overflowWrap: 'anywhere' }}>{email.trim()}</span>. It expires in 10 minutes.
+            <div style={{ marginTop: 'calc(8 * var(--u))' }}>
+              <span onClick={resend} style={{ color: 'var(--color-brand)', fontWeight: 'var(--fw-semibold)', cursor: loading ? 'default' : 'pointer' }}>Resend code</span>
+              {notice && <span style={{ marginLeft: 'calc(8 * var(--u))' }}>{notice}</span>}
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {chips.length > 0 && (
-        <div style={{
-          position: 'absolute', left: 'calc(var(--m) + 16 * var(--u))', width: 'calc(var(--cw) - 32 * var(--u))', top: 'calc(22.04dvh + var(--input-h) + 16 * var(--u))',
-          display: 'flex', flexWrap: 'wrap', gap: 'calc(8 * var(--u))',
-        }}>
-          {chips.map(c => <Chip key={c.label} label={c.label} onClick={c.onClick} />)}
-        </div>
-      )}
+        {chips.length > 0 && (
+          <div style={{ marginTop: 'calc(16 * var(--u))', display: 'flex', flexWrap: 'wrap', gap: 'calc(8 * var(--u))' }}>
+            {chips.map(c => <Chip key={c.label} label={c.label} onClick={c.onClick} />)}
+          </div>
+        )}
 
-      {error && (
-        <div style={{
-          position: 'absolute', left: 'calc(var(--m) + 16 * var(--u))', right: 'calc(var(--m) + 16 * var(--u))', top: '46.5dvh',
-          fontSize: 'var(--fs-small)', color: 'var(--color-error)',
-        }}>
-          {error}
-        </div>
-      )}
+        <div style={{ flex: 1 }} />
 
-      {/* Back / Continue - nodes 1:197 and 1:196: both 48 tall at y=430, RADIUS 16 (not pills), glow
-          var(--shadow-y2), labels 18px semibold. Back closes the popup and returns to Login
-          rather than navigating anywhere - the popup never was a screen.
-          SPACING (owner 2026-10-20): 16 between the two buttons, 16 to the popup's left/right edges, and 24 above
-          its bottom edge = the title's 24 below the top edge (the card spans 10.19dvh-59.24dvh), so each button is (--cw - 48) / 2 wide. */}
-      <button onClick={back}
-        style={{
-          position: 'absolute', left: 'calc(var(--m) + 16 * var(--u))', top: 'calc(59.24dvh - 24 * var(--u) - var(--btn-h))', width: 'calc((var(--cw) - 48 * var(--u)) / 2)', height: 'var(--btn-h)',
-          background: 'var(--btn-grad-white)', color: 'var(--color-black)', border: 'none', borderRadius: 16,
-          boxShadow: 'var(--shadow-y2)',
-          fontFamily: 'inherit', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', cursor: 'pointer',
-        }}>
-        Back
-      </button>
-      <button onClick={handleSubmit} disabled={!valid || loading}
-        style={{
-          position: 'absolute', left: 'calc(var(--m) + 32 * var(--u) + (var(--cw) - 48 * var(--u)) / 2)', top: 'calc(59.24dvh - 24 * var(--u) - var(--btn-h))', width: 'calc((var(--cw) - 48 * var(--u)) / 2)', height: 'var(--btn-h)',
-          background: valid && !loading ? 'var(--btn-grad-brand)' : 'var(--color-line)', color: valid && !loading ? 'var(--color-white)' : 'var(--color-muted)', border: 'none', borderRadius: 16,
-          boxShadow: valid && !loading ? 'var(--shadow-y2)' : 'none',
-          fontFamily: 'inherit', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)',
-          cursor: valid && !loading ? 'pointer' : 'not-allowed',
-        }}>
-        {loading ? 'Processing...' : 'Continue'}
-      </button>
+        {error && (
+          <div style={{ marginBottom: 'calc(16 * var(--u))', fontSize: 'var(--fs-small)', color: 'var(--color-error)' }}>
+            {error}
+          </div>
+        )}
+
+        {/* Back / Continue - radius 16, shadow Y2, App/Button 22. Back closes the popup (or returns to the email
+            step) rather than navigating anywhere - the popup never was a screen. */}
+        <div style={{ display: 'flex', gap: 'calc(16 * var(--u))', flexShrink: 0 }}>
+          <button onClick={back}
+            style={{
+              flex: 1, height: 'var(--btn-h)',
+              background: 'var(--btn-grad-white)', color: 'var(--color-black)', border: 'none', borderRadius: 16,
+              boxShadow: 'var(--shadow-y2)',
+              fontFamily: 'inherit', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', cursor: 'pointer',
+            }}>
+            Back
+          </button>
+          <button onClick={handleSubmit} disabled={!valid || loading}
+            style={{
+              flex: 1, height: 'var(--btn-h)',
+              background: valid && !loading ? 'var(--btn-grad-brand)' : 'var(--color-line)', color: valid && !loading ? 'var(--color-white)' : 'var(--color-muted)', border: 'none', borderRadius: 16,
+              boxShadow: valid && !loading ? 'var(--shadow-y2)' : 'none',
+              fontFamily: 'inherit', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)',
+              cursor: valid && !loading ? 'pointer' : 'not-allowed',
+            }}>
+            {loading ? 'Processing...' : 'Continue'}
+          </button>
+        </div>
+      </div>
     </div>
   )
 }
