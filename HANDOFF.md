@@ -1,6 +1,6 @@
 # HANDOFF – ezwallet
 
-**Updated:** 2026-10-19 (redesign on the nguyen0xhieu design system - TEST ONLY; Deposit/Withdraw via exchanges; Borrow idempotencyKey fix; History 502 fix) · **Repo:** `KattyFury/project_arc_ezwallet` (public; renamed from
+**Updated:** 2026-10-20 (whole-app redesign pass on the design system, type scale, buttons - TEST ONLY) · earlier: 2026-10-19 (redesign on the nguyen0xhieu design system - TEST ONLY; Deposit/Withdraw via exchanges; Borrow idempotencyKey fix; History 502 fix) · **Repo:** `KattyFury/project_arc_ezwallet` (public; renamed from
 `KattyFury/ezwallet` 2026-10-03 - Pages track it by repo id) · **Local:** `D:\Files\Claude\project_arc_ezwallet`
 **Status:** ezwallet.cash serves **Arc MAINNET** (real money). Target: public launch within October 2026.
 
@@ -21,7 +21,35 @@
    test → main until the owner approves it; a fix that must reach ezwallet.cash meanwhile = commit on `test` AND
    cherry-pick onto `main` (see Session (5)).
 
-## ▶ WHERE WE STOPPED - 2026-10-19 (READ THIS FIRST)
+## ▶ WHERE WE STOPPED - 2026-10-20 (READ THIS FIRST)
+- **Branches:** `main` = `a1f2783` (ezwallet.cash, old look - untouched today) · `test` = `8d2c5b7`+ (test.ezwallet.cash) carries
+  the whole redesign. Still **do not merge test → main** until the owner approves; urgent live fixes = cherry-pick.
+- **Today (all TEST ONLY), the rules now in force - follow them for every new screen:**
+  - **Type scale (app):** only 14 · 16 · 18 · 22 · 28 · 34 · 48 with paired line heights 20 · 24 · 24 · 28 · 36 · 40 · 56
+    (`--fs-*` / `--lh-*` in `src/index.css`). Never set a size or a line height by hand - `test/fontScale.test.mjs` fails.
+    Auto-fit amounts (`useFitFontSize`) step 48 → 34 → 28 → 22 → 18 and return the paired line height.
+  - **Buttons:** plain text button 22 semibold (`--fs-content-1`, height `--btn-h`, radius 16) · icon-over-label tile 18
+    semibold + 24 icon (`--it`) · small pill (50%, Max, Open, chips, pickers) 18 semibold. Buttons side by side = **16
+    apart**; buttons in one row = **one size**, the primary differs only by colour (Home/Receive rows are 3 equal big
+    buttons). Standard buttons radius 16 (pills only for small chips).
+  - **Spacing:** every padding / margin / gap a multiple of 8 (test enforces; `PctSlider` internals and negative hit-area
+    margins excepted). Popups (`.popup-card` and the email-login popup): 24 top/bottom, 16 sides, 16 between blocks.
+  - **Colours:** tokens only. Mist `--color-card` is now **#ECF0F8** (one step darker). Yellow WORDS use
+    `--color-warning-text` #8A5F00. Hints / notification area = 16 (App/Note). The **gradient background stays** - it is
+    ezwallet's own look even though the design system defaults to solid (owner).
+  - Screens re-done today: AddToHome (one centred block, title 28 "Use ezwallet as an app", steps box grows), Login
+    (copy A, 8-grid stack, white arrow + white button with blue text), email-login popup (flex stack, @yahoo dropped),
+    Home (cirBTC hold-to-show uses `fmtTokenAmount`, no more 0.0000), QR storage (QR 118 → 141, tiles hug content).
+  - Screenshots: Desktop `ezwallet-redesign-all\` (all screens + popups), `ezwallet-chieu-cao-dong\` (type/line-height work).
+- **Design system kept in sync** (do the same when a rule changes): claude.ai artifact `Rvs7H37zwuUdb8uBGf5rtM` (v10: App type
+  scale, `app-button-small`, mist #ECF0F8, button rules in README) + Figma `IPyKVg7ylGw1mjMRyYVrL7` (file "hieu", now a
+  PUBLISHED team library in team nguyen0xhieu → Team folder; re-Publish after edits).
+- **Owner to do next:** keep walking the test site screen by screen and report; then the old list still stands - approve →
+  merge test → main + rebuild `public/icon.png` / `fav_icon.png` / `og.png`; Borrow 1 USDC test; a Binance Deposit/Withdraw
+  round trip. Not done yet: vertical positions still use dvh (exact on 393×852, a few px off the 8-grid on other heights);
+  PinGate / ForgotPin can't render in mock, not re-shot.
+
+## ▶ Where we stopped - 2026-10-19 (superseded by the section above)
 - **Branches:** `main` = `a1f2783` (ezwallet.cash, old look, all fixes of the day) · `test` = redesign on top (test.ezwallet.cash).
 - **Owner to do next:**
   1. Review the redesign on test.ezwallet.cash (screenshots on the Desktop `ezwallet-redesign-test\`). If approved:
