@@ -67,6 +67,8 @@ function TxRow({ tx, walletAddr, contacts, onClick, cur, rates, memo, isSwap, sw
   // their own wallet address (07-31, the same bug as swapHashes above).
   const isSelf = counter && walletAddr && counter.toLowerCase() === walletAddr.toLowerCase()
   const who = isSelf ? 'yourself' : name || shortenAddr(counter)
+  // NEUTRAL = the wallet's value does not change (a swap, or a send to yourself): no +/-, no red/green, neutral icon (owner 2026-10-20).
+  const neutral = isSwap || isSelf
   // Font sizes REDUCED so the full information fits a phone screen (user decision 07-20): icon 40→34, the money on the right
   // fs-num 24→fs-md-lg 21, the secondary token fs-label→fs-tiny, vertical padding 14→11, gap 12→10.
   return (
@@ -80,10 +82,10 @@ function TxRow({ tx, walletAddr, contacts, onClick, cur, rates, memo, isSwap, sw
       {/* Sent/received icon - anchored to rows 1-2 (top-aligned) */}
       <div style={{
         width: 'calc(34 * var(--u))', height: 'calc(34 * var(--u))', borderRadius: '50%', flexShrink: 0, marginTop: 'calc(8 * var(--u))',
-        background: isSend ? 'var(--color-info-soft)' : 'var(--color-primary-soft)',
+        background: neutral ? 'var(--color-card)' : isSend ? 'var(--color-info-soft)' : 'var(--color-primary-soft)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}>
-        <Icon name={isSend ? 'up' : 'down'} size="var(--is-caption)" color={isSend ? 'var(--color-info)' : 'var(--color-primary)'} />
+        <Icon name={isSwap ? 'trade' : isSend ? 'up' : 'down'} size="var(--is-caption)" color={neutral ? 'var(--color-content)' : isSend ? 'var(--color-info)' : 'var(--color-primary)'} />
       </div>
 
       {/* TEXT GRID (owner 2026-10-20: left and right were not on the same lines - the money block sat 8 lower and used a
@@ -96,14 +98,15 @@ function TxRow({ tx, walletAddr, contacts, onClick, cur, rates, memo, isSwap, sw
         </div>
         {/* Money - a swap only trades one token for another (the wallet's value does not change), so it has NO +/- and is
             drawn in the content colour, not red/green (owner 2026-10-20). */}
-        <div className="num" style={{ gridColumn: 2, gridRow: 1, alignSelf: 'baseline', textAlign: 'right', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: isSwap ? 'var(--color-content)' : isSend ? 'var(--color-error)' : 'var(--color-primary)', whiteSpace: 'nowrap' }}>
-          {isSwap ? '' : isSend ? '-' : '+'}{rates ? `${displaySymbol(cur)}${displayNum(usd, cur, rates)}` : '…'}
+        <div className="num" style={{ gridColumn: 2, gridRow: 1, alignSelf: 'baseline', textAlign: 'right', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: neutral ? 'var(--color-content)' : isSend ? 'var(--color-error)' : 'var(--color-primary)', whiteSpace: 'nowrap' }}>
+          {neutral ? '' : isSend ? '-' : '+'}{rates ? `${displaySymbol(cur)}${displayNum(usd, cur, rates)}` : '…'}
         </div>
         {/* row 2: status/time + the [Add contacts] button. Swap → "Swap completed · <time>" (user decision 07-20d;
             "At" dropped 2026-10-03 - with the bigger type it wrapped the time onto 2 lines) */}
         <div style={{ gridColumn: 1, gridRow: 2, alignSelf: 'center', display: 'flex', alignItems: 'center', gap: 'calc(8 * var(--u))' }}>
-          <span style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)', whiteSpace: 'nowrap' }}>
-            {isSwap ? 'Swap completed · ' : ''}<span className="num">{timeLabel(tx.timeStamp)}</span>
+          {/* May wrap (the 2-column grid would otherwise push "Swap completed · 09:15" into the token amount); the time itself stays whole. */}
+          <span style={{ minWidth: 0, fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)' }}>
+            {isSwap ? 'Swap completed · ' : ''}<span className="num" style={{ whiteSpace: 'nowrap' }}>{timeLabel(tx.timeStamp)}</span>
           </span>
           {!isSwap && !name && counter && !isSelf && (
             <span onClick={e => { e.stopPropagation(); onAdd(counter) }}
@@ -317,10 +320,12 @@ export default function TxHistory() {
               </span>
             </DetailRow>
             <DetailRow label={'Amount'}>
-              {/* A swap leg: no +/-, content colour - same rule as the row (owner 2026-10-20). */}
-              <span className="num" style={{ color: swapHashes.has(selected.hash) ? 'var(--color-content)' : d.isSend ? 'var(--color-error)' : 'var(--color-primary)' }}>
-                {swapHashes.has(selected.hash) ? '' : d.isSend ? '-' : '+'}{d.amount.toFixed(d.amount < 0.01 ? 6 : 2)} {d.symbol}
+              {/* A swap leg or a send to yourself: no +/-, content colour - same rule as the row (owner 2026-10-20). */}
+              {(() => { const neutral = swapHashes.has(selected.hash) || d.counter?.toLowerCase() === walletAddr?.toLowerCase(); return (
+              <span className="num" style={{ color: neutral ? 'var(--color-content)' : d.isSend ? 'var(--color-error)' : 'var(--color-primary)' }}>
+                {neutral ? '' : d.isSend ? '-' : '+'}{d.amount.toFixed(d.amount < 0.01 ? 6 : 2)} {d.symbol}
               </span>
+              ) })()}
             </DetailRow>
             <DetailRow label={'Converted'}><span className="num">{rates ? `${displaySymbol(cur)}${displayNum(d.usd, cur, rates)}` : '…'}</span></DetailRow>
             <DetailRow label={'Time'}>{new Date(selected.timeStamp * 1000).toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</DetailRow>
