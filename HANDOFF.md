@@ -35,8 +35,8 @@
     **A button standing alone = `--btn-lone` 240 wide, centred** (owner 2026-10-20, never full width): `.row10-single`
     applies it; About/Security/ErrorBoundary use the token directly. Scan QR and QR storage now have one Done only
     (QR storage's Add is gone - the "+" tile adds); Scan QR's "QR image" became a small "Choose from library" pill
-    (image icon left) under the caption. Not yet decided: the full-width action buttons of Swap / Lend / Borrow /
-    MemeToken (they carry long status text).
+    (image icon left) under the caption. **Exception - stays FULL width** (owner 2026-10-20): the action/status button
+    of Swap / Lend / Borrow / MemeToken (it carries long dynamic text: hints, "At most …", errors).
   - **Spacing:** every padding / margin / gap a multiple of 8 (test enforces; `PctSlider` internals and negative hit-area
     margins excepted). Popups (`.popup-card` and the email-login popup): 24 top/bottom, 16 sides, 16 between blocks.
   - **Colours:** tokens only. Mist `--color-card` is now **#ECF0F8** (one step darker). Yellow WORDS use
