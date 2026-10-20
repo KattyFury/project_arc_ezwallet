@@ -16,9 +16,8 @@ export default class ErrorBoundary extends Component {
         <div style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted)', maxWidth: 'calc(300 * var(--u))' }}>
           The app hit an unexpected error. Your wallet and funds are safe. Please reload.
         </div>
-        {/* A button standing alone → 3/4 of the screen like .row10-single (user decision 07-29). This
-            screen does NOT use .screen (no --screen-max via padding), so the formula is written out. */}
-        <button className="btn btn-primary" style={{ width: 'min(75vw, calc(var(--screen-max) * 0.75))' }} onClick={() => window.location.reload()}>Reload</button>
+        {/* A button standing alone = --btn-lone (240), like .row10-single (owner 2026-10-20). */}
+        <button className="btn btn-primary" style={{ width: 'var(--btn-lone)' }} onClick={() => window.location.reload()}>Reload</button>
       </div>
     )
   }

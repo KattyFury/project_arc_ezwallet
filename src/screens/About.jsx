@@ -47,9 +47,9 @@ export default function About() {
           </div>
       </ScrollBox>
 
-      {/* Owner 2026-10-19: Done = 2/3 of the card width, centred (same as History / Security). */}
+      {/* Owner 2026-10-20: a lone button = --btn-lone (240), centred (was 2/3 of the card width). */}
       <button className="btn btn-primary" onClick={() => navigate('MenuScreen')}
-        style={{ position: 'absolute', left: 'calc(var(--m) + var(--cw) / 6)', width: 'calc(var(--cw) * 2 / 3)', top: 'calc(85.665dvh - var(--btn-h) / 2)', height: 'var(--btn-h)', minHeight: 0 }}>
+        style={{ position: 'absolute', left: 'calc(var(--m) + (var(--cw) - var(--btn-lone)) / 2)', width: 'var(--btn-lone)', top: 'calc(85.665dvh - var(--btn-h) / 2)', height: 'var(--btn-h)', minHeight: 0 }}>
         Done
       </button>
 

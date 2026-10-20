@@ -92,12 +92,10 @@ export default function SavedQRList() {
       </div>
       </div>
 
-      {/* A WHITE Back (left) + BLUE Add (right) pair following the .row10-dual standard (user decision 07-29, replacing
-          the old .row10-single blue Back): Add opens the same add-QR popup as the "+" tile in the grid - adding a QR is
-          the main action of this screen, so it needs a button in row 9 rather than making people scroll to find "+". */}
-      <div className="row10-dual">
-        <button className="btn btn-secondary" onClick={() => navigate('HomeReceive')}>Back</button>
-        <button className="btn btn-primary" onClick={addQR}>Add</button>
+      {/* One BLUE Done, lone = --btn-lone 240 centred (owner 2026-10-20: the "+" tile already adds a QR, so the Add
+          button of the old Back/Add pair is gone). */}
+      <div className="row10-single">
+        <button className="btn btn-primary" onClick={() => navigate('HomeReceive')}>Done</button>
       </div>
 
       <ExitBar onClick={() => navigate('HomeReceive')} />

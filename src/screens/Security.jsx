@@ -110,9 +110,9 @@ export default function Security() {
         </button>
       </div>
 
-      {/* Done - node 58:334/58:337: brand-blue pill, 48px tall; owner 2026-10-19: 2/3 of the card width, centred. */}
+      {/* Owner 2026-10-20: a lone button = --btn-lone (240), centred (was 2/3 of the card width). */}
       <button className="btn btn-primary" onClick={() => navigate('MenuScreen')}
-        style={{ position: 'absolute', left: 'calc(var(--m) + var(--cw) / 6)', width: 'calc(var(--cw) * 2 / 3)', top: 'calc(85.665dvh - var(--btn-h) / 2)', height: 'var(--btn-h)', minHeight: 0 }}>
+        style={{ position: 'absolute', left: 'calc(var(--m) + (var(--cw) - var(--btn-lone)) / 2)', width: 'var(--btn-lone)', top: 'calc(85.665dvh - var(--btn-h) / 2)', height: 'var(--btn-h)', minHeight: 0 }}>
         Done
       </button>
 

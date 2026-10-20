@@ -20,6 +20,9 @@
   /* STANDARD BUTTON HEIGHT = 5/6 of the 70px grid row (owner 2026-10-03; was 48 ≈ 2/3). Every Back/Add/Paste/
      Contacts-style button uses this - change it here, not per screen. */
   --btn-h: calc(70 * 5 / 6 * var(--u));
+  /* A BUTTON STANDING ALONE (Done / Reload ...) = 240 wide, centred (owner 2026-10-20: "must be a set size, not full
+     width"). Was full width / 2/3 / 3/4 depending on the screen. */
+  --btn-lone: calc(240 * var(--u));
   /* GREY TEXT-INPUT BOXES = the same 5/6 of the 70px row (owner 2026-10-03; were 40-48). .address-input, .memo-row,
      the email-login field, FundsPopup's fields. */
   --input-h: var(--btn-h);
@@ -489,11 +492,9 @@ body {
   gap: calc(16 * var(--u));                    /* 16 since 2026-10-20 (owner: buttons side by side 16 apart, app-wide). Was 12px on .row10-dual only - 2026-09-10: every multi-button row in the
                                     current Figma file (2-button AND 3-button alike) uses 8px, not 12. */
 }
-/* A BUTTON STANDING ALONE = FULL 340px card width (2026-09-10 CORRECTION: was 3/4 of the screen, a
-   07-29 decision never re-verified against this Figma file - every single-button row measured today
-   (About/Currency/Security's "Back") draws the button at the SAME width the card above it uses, edge to
-   edge, not narrower). */
-.row10-single .btn { width: 100%; }
+/* A BUTTON STANDING ALONE = --btn-lone 240, centred by the flex row (owner 2026-10-20; history: 3/4 of the
+   screen 07-29 → full card width 09-10 → 2/3 on some screens 10-19). */
+.row10-single .btn { width: var(--btn-lone); }   /* 240 centred - see --btn-lone (owner 2026-10-20) */
 /* Two buttons: flex:1 each with the 8px gap above naturally lands on (340-8)/2 = 166px - was a flat 44%
    of the (now-corrected) container, which is a different number by construction and does not sum edge to
    edge with any gap value. */
