@@ -63,7 +63,8 @@
   knew it (cause not measured; Circle docs give no device lifetime). Option A: `refreshWithDeviceRetry` in circle.js asks the
   SDK for the current deviceId and tries once more; still failing → `expireToLogin()` + Login shows "Your session ended -
   please sign in again." session.js now passes Circle's `code` back. If it keeps happening, `wrangler tail` the refresh call.
-- **Email login popup** hugs its content (was a fixed 49dvh with empty lower half under the keyboard); chip row keeps 32.
+- **Email login popup** = FIXED 360 tall (was 49dvh ≈ 418, keyboard covered it): a 104 message zone (chips / code note)
+  and errors shown ON the Continue button (white, red 16, 2 lines) - never jumps; bottom ≈ 447 < keyboard ≈ 470.
   Email chips and every hint/note/error are 16; 14 only for truly secondary bits (labels, chips in boxes, badges).
 - **Design system kept in sync** (do the same when a rule changes): claude.ai artifact `Rvs7H37zwuUdb8uBGf5rtM` (v10: App type
   scale, `app-button-small`, mist #ECF0F8, button rules in README) + Figma `IPyKVg7ylGw1mjMRyYVrL7` (file "hieu", now a

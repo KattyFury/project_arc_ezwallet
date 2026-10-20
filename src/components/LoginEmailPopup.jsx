@@ -211,10 +211,14 @@ export default function LoginEmailPopup({ onClose }) {
 
       {/* THE CARD IS ONE VERTICAL STACK (owner 2026-10-20: "sửa luôn chỗ chưa chuẩn guideline"). Fixed size
           (the old node 51:5 frame: --cw wide, 49.05dvh tall, from 10.19dvh) so it never jumps while chips come and
-          go. Padding 24 top/bottom, 16 left/right. Title → 24 → field → 16 → chips (32 kept) / code note → (16 → error)
-          → 24 → the button row (16 apart). Every gap is on the 8-grid. 2026-10-20: the card hugs this stack. */}
+          go. Padding 24 top/bottom, 16 left/right. Title → 24 → field → 16 → the 104 message zone (chips / code note)
+          → 24 → the button row (16 apart; an error is shown on Continue). Every gap is on the 8-grid. */}
       <div style={{
-        position: 'absolute', left: 'var(--m)', top: '10.19dvh', width: 'var(--cw)',   // height HUGS the content (owner 2026-10-20: the fixed 49dvh left the lower half empty and the keyboard covered it)
+        position: 'absolute', left: 'var(--m)', top: '10.19dvh', width: 'var(--cw)',
+        // FIXED height (owner 2026-10-20): never jumps - not while typing, not on an error, not between the email and code
+        // steps. Sized to the tallest state: 24 + title 28 + 24 + field + 16 + the 104 message zone + 24 + buttons + 24
+        // = 360 on a 852 screen, bottom ≈ 447, above the iPhone keyboard (~470). Errors go ON the Continue button.
+        height: 'calc((24 + 28 + 24 + 16 + 104 + 24 + 24) * var(--u) + var(--input-h) + var(--btn-h))',
         background: 'var(--color-white)', borderRadius: 16, boxShadow: 'var(--shadow-y2)',
         padding: 'calc(24 * var(--u)) calc(16 * var(--u))', display: 'flex', flexDirection: 'column',
       }}>
@@ -245,8 +249,10 @@ export default function LoginEmailPopup({ onClose }) {
             padding: '0 calc(16 * var(--u))', fontSize: 'var(--fs-content-1)', color: 'var(--color-black)',
           }} />
 
+        {/* MESSAGE ZONE - always 104 tall: the email chips, or the code step's note + Resend (3 lines of a long email). */}
+        <div style={{ marginTop: 'calc(16 * var(--u))', height: 'calc(104 * var(--u))', flexShrink: 0, overflow: 'hidden' }}>
         {step === 'code' && (
-          <div style={{ marginTop: 'calc(16 * var(--u))', fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)' }}>
+          <div style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)' }}>
             We sent a 6-digit code to <span style={{ color: 'var(--color-black)', fontWeight: 'var(--fw-semibold)', overflowWrap: 'anywhere' }}>{email.trim()}</span>. It expires in 10 minutes.
             <div style={{ marginTop: 'calc(8 * var(--u))' }}>
               <span onClick={resend} style={{ color: 'var(--color-brand)', fontWeight: 'var(--fw-semibold)', cursor: loading ? 'default' : 'pointer' }}>Resend code</span>
@@ -255,40 +261,40 @@ export default function LoginEmailPopup({ onClose }) {
           </div>
         )}
 
-        {/* The chip row keeps its 32 even while empty (email step) so the hugging card does not jump as you type. */}
-        {(step === 'email' || chips.length > 0) && (
-          <div style={{ marginTop: 'calc(16 * var(--u))', minHeight: 'calc(32 * var(--u))', display: 'flex', flexWrap: 'wrap', gap: 'calc(8 * var(--u))' }}>
+        {chips.length > 0 && (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'calc(8 * var(--u))' }}>
             {chips.map(c => <Chip key={c.label} label={c.label} onClick={c.onClick} />)}
           </div>
         )}
+        </div>
 
-        {error && (
-          <div style={{ marginTop: 'calc(16 * var(--u))', fontSize: 'var(--fs-caption)', color: 'var(--color-error)' }}>
-            {error}
-          </div>
-        )}
 
         {/* Back / Continue - radius 16, shadow Y2, App/Button 22. Back closes the popup (or returns to the email
             step) rather than navigating anywhere - the popup never was a screen. */}
         <div style={{ display: 'flex', gap: 'calc(16 * var(--u))', flexShrink: 0, marginTop: 'calc(24 * var(--u))' }}>
           <button onClick={back}
             style={{
-              flex: 1, height: 'var(--btn-h)',
+              flex: 1, minWidth: 0, height: 'var(--btn-h)', padding: '0 calc(8 * var(--u))',   // same padding as Continue → equal widths even when Continue carries an error
               background: 'var(--btn-grad-white)', color: 'var(--color-black)', border: 'none', borderRadius: 16,
               boxShadow: 'var(--shadow-y2)',
               fontFamily: 'inherit', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', cursor: 'pointer',
             }}>
             Back
           </button>
-          <button onClick={handleSubmit} disabled={!valid || loading}
+          {/* An ERROR shows ON this button (Swap/Borrow pattern, owner 2026-10-20): white, red text, up to 2 lines at 16;
+              tapping it clears the error so the next tap continues. */}
+          <button onClick={error ? () => setError('') : handleSubmit} disabled={!error && (!valid || loading)}
             style={{
-              flex: 1, height: 'var(--btn-h)',
-              background: valid && !loading ? 'var(--btn-grad-brand)' : 'var(--color-line)', color: valid && !loading ? 'var(--color-white)' : 'var(--color-muted)', border: 'none', borderRadius: 16,
-              boxShadow: valid && !loading ? 'var(--shadow-y2)' : 'none',
+              flex: 1, minWidth: 0, height: 'var(--btn-h)', padding: '0 calc(8 * var(--u))',
+              background: error ? 'var(--btn-grad-white)' : valid && !loading ? 'var(--btn-grad-brand)' : 'var(--color-line)',
+              color: error ? 'var(--color-error)' : valid && !loading ? 'var(--color-white)' : 'var(--color-muted)', border: 'none', borderRadius: 16,
+              boxShadow: error || (valid && !loading) ? 'var(--shadow-y2)' : 'none',
               fontFamily: 'inherit', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)',
-              cursor: valid && !loading ? 'pointer' : 'not-allowed',
+              cursor: error || (valid && !loading) ? 'pointer' : 'not-allowed',
             }}>
-            {loading ? 'Processing...' : 'Continue'}
+            {error
+              ? <span style={{ fontSize: 'var(--fs-caption)', display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2, overflow: 'hidden' }}>{error}</span>
+              : loading ? 'Processing...' : 'Continue'}
           </button>
         </div>
       </div>
