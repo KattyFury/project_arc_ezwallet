@@ -43,8 +43,8 @@ function TokenRow({ sym, onClick }) {
     <button onClick={onClick}
       style={{ display: 'flex', alignItems: 'center', gap: 'calc(8 * var(--u))', border: 'none', borderRadius: 999, height: 'calc(42 * var(--u))', background: 'var(--btn-grad-white)', cursor: 'pointer', fontFamily: 'inherit', padding: '0 calc(12 * var(--u)) 0 calc(8 * var(--u))', boxShadow: 'var(--shadow-y2)', flexShrink: 0 }}>
       <img src={`/tokens/${sym.toLowerCase()}.png`} alt={sym} style={{ width: 'calc(24 * var(--u))', height: 'calc(24 * var(--u))', borderRadius: '50%' }} />
-      <span className="num" style={{ fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-content)' }}>{sym}</span>
-      <Icon name="down2" size="calc(15 * var(--u))" color="var(--color-brand)" />
+      <span className="num" style={{ fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-content)' }}>{sym}</span>
+      <Icon name="down2" size="var(--is-content-2)" color="var(--color-brand)" />
     </button>
   )
 }
@@ -587,7 +587,7 @@ export default function Swap() {
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 'calc(6 * var(--u))', maxWidth: '100%', minWidth: 0, ...(needAmount ? { fontSize: 'var(--fs-content-2)' } : null) }}>
             {success && <Icon name="check" size="var(--ib-content-1)" color="var(--color-white)" />}
             {(() => { const text = error || status || (needAmount ? 'Slide or tap here to enter' : 'Swap')
-              return <TwoLineFit key={text} sizes={needAmount ? ['content-2', 'caption', 'small'] : ['content-1', 'content-2', 'caption', 'small']}>{text}</TwoLineFit> })()}
+              return <TwoLineFit key={text} sizes={['content-1', 'content-2', 'caption', 'small']}>{text}</TwoLineFit> })()}
           </span>
         </button>
           )

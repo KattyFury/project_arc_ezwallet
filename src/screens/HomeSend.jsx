@@ -89,7 +89,10 @@ export const HALF_OVAL_STYLE = {
 // Gaps: 16 design px, never below 8px on a very short screen (user rule 2026-09-27).
 const GAP = 'max(8px, calc(16 * var(--u)))'
 const BIG_BTN = { top: `calc(79.62dvh + ${GAP})`, height: `calc(12.09dvh - 2 * ${GAP})` }
-const SIDE_BTN = { top: 'calc(85.665dvh - var(--btn-h) / 2)', height: 'var(--btn-h)' }
+// Owner 2026-10-20: the three action buttons are ONE size (the big one's), equal widths 8 apart; colours stay
+// white / blue / white so the centre one still leads.
+const SIDE_BTN = BIG_BTN
+const W3 = '((var(--cw) - 16 * var(--u)) / 3)'
 
 export default function HomeSend() {
   const { navigate } = useNav()
@@ -283,38 +286,38 @@ export default function HomeSend() {
           taller (124x70 at y=688) than its siblings (100x48 at y=699) and they share no baseline, so a
           flex row with align-items would only approximate what the node draws. Radius 16 on all three. */}
       <button onClick={() => navigate('PasteAddress')} style={{
-        position: 'absolute', left: 'var(--m)', top: SIDE_BTN.top, width: 'calc((var(--cw) - 16 * var(--u)) * 100 / 324)', height: SIDE_BTN.height,
+        position: 'absolute', left: 'var(--m)', top: SIDE_BTN.top, width: `calc(${W3})`, height: SIDE_BTN.height,
         background: 'var(--btn-grad-white)', border: 'none', borderRadius: 16,
         boxShadow: 'var(--shadow-y2)',
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(2 * var(--u))',
-        fontFamily: 'inherit', fontSize: 'var(--fs-caption)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)',
+        fontFamily: 'inherit', fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)',
         cursor: 'pointer', WebkitTapHighlightColor: 'transparent',
       }}>
-        <Icon name="copy" size="var(--ib-caption)" />
+        <Icon name="copy" size="var(--it)" />
         <span>Paste</span>
       </button>
 
       <button onClick={() => navigate('QRScanner')} style={{
-        position: 'absolute', left: 'calc(var(--m) + (var(--cw) - 16 * var(--u)) * 100 / 324 + 8 * var(--u))', top: BIG_BTN.top, width: 'calc((var(--cw) - 16 * var(--u)) * 124 / 324)', height: BIG_BTN.height,
+        position: 'absolute', left: `calc(var(--m) + ${W3} + 8 * var(--u))`, top: BIG_BTN.top, width: `calc(${W3})`, height: BIG_BTN.height,
         background: 'var(--btn-grad-brand)', border: 'none', borderRadius: 16,
         boxShadow: 'var(--shadow-y2)',
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(2 * var(--u))',
-        fontFamily: 'inherit', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-white)',
+        fontFamily: 'inherit', fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-white)',
         cursor: 'pointer', WebkitTapHighlightColor: 'transparent',
       }}>
-        <Icon name="scan" size="var(--ib-content-1)" color="var(--color-white)" />
+        <Icon name="scan" size="var(--it)" color="var(--color-white)" />
         <span>Scan QR</span>
       </button>
 
       <button onClick={() => navigate('Contacts')} style={{
-        position: 'absolute', left: 'calc(var(--m) + (var(--cw) - 16 * var(--u)) * 100 / 324 + (var(--cw) - 16 * var(--u)) * 124 / 324 + 16 * var(--u))', top: SIDE_BTN.top, width: 'calc((var(--cw) - 16 * var(--u)) * 100 / 324)', height: SIDE_BTN.height,
+        position: 'absolute', left: `calc(var(--m) + 2 * ${W3} + 16 * var(--u))`, top: SIDE_BTN.top, width: `calc(${W3})`, height: SIDE_BTN.height,
         background: 'var(--btn-grad-white)', border: 'none', borderRadius: 16,
         boxShadow: 'var(--shadow-y2)',
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'calc(2 * var(--u))',
-        fontFamily: 'inherit', fontSize: 'var(--fs-caption)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)',
+        fontFamily: 'inherit', fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)',
         cursor: 'pointer', WebkitTapHighlightColor: 'transparent',
       }}>
-        <Icon name="human" size="var(--ib-caption)" />
+        <Icon name="human" size="var(--it)" />
         <span>Contacts</span>
       </button>
 

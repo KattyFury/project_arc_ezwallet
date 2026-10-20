@@ -151,6 +151,9 @@
   --ib-content-1: calc(var(--fs-content-1) * 1.2);   /* 24 */
   --ib-content-2: calc(var(--fs-content-2) * 1.2);   /* 21.6 */
   --ib-caption:   calc(var(--fs-caption) * 1.2);     /* 19.2 */
+  /* BUTTON TYPES (owner 2026-10-20): plain text button = --fs-content-1 22 · icon-over-label tile = --fs-content-2 18
+     semibold with a 24 icon (--it, a design-system icon size) · small pill (50%, Max, Open, chips, pickers) = --fs-content-2 18. */
+  --it:           calc(24 * var(--u));
 
   /* ── SCREEN WIDTH ──
      .screen = min(100vw, --screen-max). To size something as a % OF THE SCREEN (not a % of a parent
