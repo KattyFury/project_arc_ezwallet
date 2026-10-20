@@ -86,16 +86,22 @@ function TxRow({ tx, walletAddr, contacts, onClick, cur, rates, memo, isSwap, sw
         <Icon name={isSend ? 'up' : 'down'} size="var(--is-caption)" color={isSend ? 'var(--color-info)' : 'var(--color-primary)'} />
       </div>
 
-      <div style={{ flex: 1, minWidth: 0 }}>
-        {/* row 1: who - item size, bold. WRAPS like a notification (owner 2026-10-03: it was cut with "…" and lost
-            words); break-word keeps a short address whole on the next line, only breaking one that cannot fit. */}
-        <div style={{ fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-medium)', color: 'var(--color-content)', overflowWrap: 'break-word' }}>
+      {/* TEXT GRID (owner 2026-10-20: left and right were not on the same lines - the money block sat 8 lower and used a
+          bigger size). Column 1 = who / time / note, column 2 = money / token. Row 1 shares a BASELINE, row 2 is centred,
+          so each right-hand line sits exactly on its left-hand line. */}
+      <div style={{ flex: 1, minWidth: 0, display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) auto', columnGap: 'calc(8 * var(--u))', rowGap: 'calc(8 * var(--u))' }}>
+        <div style={{ gridColumn: 1, gridRow: 1, alignSelf: 'baseline', fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-medium)', color: 'var(--color-content)', overflowWrap: 'break-word' }}>
           {/* A shortened address stays in ONE piece (browsers may break right after its "…"); a contact name wraps freely. */}
           {isSwap ? swapTitle : <>{isSend ? 'Sent to' : 'Received from'} <span style={!name && !isSelf ? { whiteSpace: 'nowrap' } : undefined}>{who}</span></>}
         </div>
+        {/* Money - a swap only trades one token for another (the wallet's value does not change), so it has NO +/- and is
+            drawn in the content colour, not red/green (owner 2026-10-20). */}
+        <div className="num" style={{ gridColumn: 2, gridRow: 1, alignSelf: 'baseline', textAlign: 'right', fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: isSwap ? 'var(--color-content)' : isSend ? 'var(--color-error)' : 'var(--color-primary)', whiteSpace: 'nowrap' }}>
+          {isSwap ? '' : isSend ? '-' : '+'}{rates ? `${displaySymbol(cur)}${displayNum(usd, cur, rates)}` : '…'}
+        </div>
         {/* row 2: status/time + the [Add contacts] button. Swap → "Swap completed · <time>" (user decision 07-20d;
             "At" dropped 2026-10-03 - with the bigger type it wrapped the time onto 2 lines) */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'calc(8 * var(--u))', marginTop: 'calc(8 * var(--u))' }}>
+        <div style={{ gridColumn: 1, gridRow: 2, alignSelf: 'center', display: 'flex', alignItems: 'center', gap: 'calc(8 * var(--u))' }}>
           <span style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)', whiteSpace: 'nowrap' }}>
             {isSwap ? 'Swap completed · ' : ''}<span className="num">{timeLabel(tx.timeStamp)}</span>
           </span>
@@ -106,22 +112,15 @@ function TxRow({ tx, walletAddr, contacts, onClick, cur, rates, memo, isSwap, sw
             </span>
           )}
         </div>
+        <div className="num" style={{ gridColumn: 2, gridRow: 2, alignSelf: 'center', textAlign: 'right', fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)', whiteSpace: 'nowrap' }}>
+          {amount.toFixed(amount < 0.01 ? 6 : 2)} {symbol}
+        </div>
         {/* rows 3-4: Note (if any) - free to wrap when long */}
         {memo && (
-          <div style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)', marginTop: 'calc(8 * var(--u))', wordBreak: 'break-word' }}>
+          <div style={{ gridColumn: '1 / -1', gridRow: 3, fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)', wordBreak: 'break-word' }}>
             Note: {memo}
           </div>
         )}
-      </div>
-
-      {/* The money block - anchored to rows 1-2 (top-aligned). Primary: display money ($). Secondary: the real token, grey */}
-      <div style={{ textAlign: 'right', flexShrink: 0, marginTop: 'calc(8 * var(--u))' }}>
-        <div className="num" style={{ fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: isSend ? 'var(--color-error)' : 'var(--color-primary)', whiteSpace: 'nowrap' }}>
-          {isSend ? '-' : '+'}{rates ? `${displaySymbol(cur)}${displayNum(usd, cur, rates)}` : '…'}
-        </div>
-        <div className="num" style={{ fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)', marginTop: 'calc(8 * var(--u))', whiteSpace: 'nowrap' }}>
-          {amount.toFixed(amount < 0.01 ? 6 : 2)} {symbol}
-        </div>
       </div>
     </button>
   )
@@ -318,8 +317,9 @@ export default function TxHistory() {
               </span>
             </DetailRow>
             <DetailRow label={'Amount'}>
-              <span className="num" style={{ color: d.isSend ? 'var(--color-error)' : 'var(--color-primary)' }}>
-                {d.isSend ? '-' : '+'}{d.amount.toFixed(d.amount < 0.01 ? 6 : 2)} {d.symbol}
+              {/* A swap leg: no +/-, content colour - same rule as the row (owner 2026-10-20). */}
+              <span className="num" style={{ color: swapHashes.has(selected.hash) ? 'var(--color-content)' : d.isSend ? 'var(--color-error)' : 'var(--color-primary)' }}>
+                {swapHashes.has(selected.hash) ? '' : d.isSend ? '-' : '+'}{d.amount.toFixed(d.amount < 0.01 ? 6 : 2)} {d.symbol}
               </span>
             </DetailRow>
             <DetailRow label={'Converted'}><span className="num">{rates ? `${displaySymbol(cur)}${displayNum(d.usd, cur, rates)}` : '…'}</span></DetailRow>
