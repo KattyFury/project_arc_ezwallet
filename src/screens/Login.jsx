@@ -200,7 +200,7 @@ export default function Login() {
           margin: 'calc(16 * var(--u)) 0 0',
           fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-normal)', color: 'var(--color-black)',
         }}>
-          <span style={{ fontWeight: 'var(--fw-semibold)' }}>Send and receive dollars</span> with just your email and a PIN.
+          <span style={{ fontWeight: 'var(--fw-semibold)' }}>Send and receive digital dollars</span> with just your email and a PIN.
         </p>
 
         {/* THE SIX PIN CELLS - decorative, a picture of a PIN rather than an input: Mist boxes 8 apart, a
