@@ -1,4 +1,3 @@
-import arrowDown from '../../design/arrow-down.svg'
 import { GRADIENT } from '../brandBg'
 import { useNav } from '../nav'
 import { NET } from '../clientNet'
@@ -179,81 +178,56 @@ export default function Login() {
         pointerEvents: emailOpen ? 'none' : 'auto',
       }}>
 
-      {/* HEADLINE - node 48:452: bold 40px, line-height 44, tracking -1.6px,
-          340 wide at x=25, centred on y=164. The second line is --color-muted-2 (#4B5568), which is
-          what makes the claim read as one sentence with its own echo rather than two shouts.
-          ⚠️ NO DISPLAY FACE - AND THE NODE NAMING ONE IS NOT A REASON TO ADD IT BACK. The Figma layer
-          declares Bricolage Grotesque; it was wired up on 2026-09-23 and removed the same day:
-          "Figma làm fully Inter, vào máy thì sẽ theo hệ thống, bỏ font display cũ đi ko dùng nữa."
-          So this inherits the system stack like every other string in the app, and Inter in the Figma
-          file stays what it has always been - a stand-in for measuring, never the real render.
-          The metrics below ARE the node's own and do stay: 40px / 700 / line-height 44 / tracking -1.6. */}
-      <h1 style={{
-        position: 'absolute', left: 'var(--m)', top: '19.43dvh', transform: 'translateY(-50%)',
-        width: 'var(--cw)', margin: 0,
-        fontSize: 'var(--fs-hero)', fontWeight: 700,
-        letterSpacing: '-1.6px',
-        color: 'var(--color-black)',
+      {/* LANDING CONTENT, redesigned 2026-10-20 (owner: option A copy + option Y layout). One top-anchored
+          stack on the 8-grid: headline (App/Large Title 34/40, tracking -2.2%) → 16 → lede (App/Body 22/28,
+          two lines) → 32 → the six PIN cells. Starts at 120 (below the 59 status-bar safe area). The headline's
+          second line is --color-muted-2 so the claim reads as one sentence with its echo. */}
+      <div style={{
+        position: 'absolute', left: 'var(--m)', top: 'calc(120 * var(--u))', width: 'var(--cw)',
+        display: 'flex', flexDirection: 'column',
       }}>
-        Six digits.<br />
-        <span style={{ color: 'var(--color-muted-2)' }}>That&apos;s the whole wallet.</span>
-      </h1>
-
-      {/* THE SIX PIN CELLS - nodes 49:453..49:462 (the 50x70 #ECF0F8 boxes, radius 8, at x = 25, 83,
-          141, 199, 257, 315 - an even 58px step, i.e. 50 wide with an 8px gap) and 50:490..50:497 (the
-          10px black dots). The dot is drawn INSIDE its cell rather than at its own absolute coordinate:
-          Figma puts each dot exactly at the cell's centre, so nesting them is the same geometry with
-          six fewer magic numbers. Decorative - this is a picture of a PIN, not an input. */}
-      {[0, 1, 2, 3, 4, 5].map((i) => (
-        <div key={i} aria-hidden="true" style={{
-          position: 'absolute', left: `calc(var(--m) + ${i} * ((var(--cw) - 40 * var(--u)) / 6 + 8 * var(--u)))`, top: '30.57dvh',
-          width: 'calc((var(--cw) - 40 * var(--u)) / 6)', height: '8.29dvh',
-          background: '#ECF0F8', borderRadius: 16,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        <h1 style={{
+          margin: 0,
+          fontSize: 'var(--fs-hero)', fontWeight: 700, letterSpacing: '-0.022em',
+          color: 'var(--color-black)',
         }}>
-          <span style={{ width: 'calc(10 * var(--u))', height: 'calc(10 * var(--u))', borderRadius: '50%', background: 'var(--color-black)' }} />
+          Six digits.<br />
+          <span style={{ color: 'var(--color-muted-2)' }}>That&apos;s the whole wallet.</span>
+        </h1>
+
+        <p style={{
+          margin: 'calc(16 * var(--u)) 0 0',
+          fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-normal)', color: 'var(--color-black)',
+        }}>
+          <span style={{ fontWeight: 'var(--fw-semibold)' }}>Send and receive dollars</span> with just your email and a PIN.
+        </p>
+
+        {/* THE SIX PIN CELLS - decorative, a picture of a PIN rather than an input: Mist boxes 8 apart, a
+            10px black dot in each. */}
+        <div aria-hidden="true" style={{ display: 'flex', gap: 'calc(8 * var(--u))', marginTop: 'calc(32 * var(--u))' }}>
+          {[0, 1, 2, 3, 4, 5].map((i) => (
+            <div key={i} style={{
+              flex: 1, height: 'calc(70 * var(--u))',
+              background: 'var(--color-card)', borderRadius: 16,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <span style={{ width: 'calc(10 * var(--u))', height: 'calc(10 * var(--u))', borderRadius: '50%', background: 'var(--color-black)' }} />
+            </div>
+          ))}
         </div>
-      ))}
-
-      {/* THE LEDE - node 50:471: 20px, line-height 30, 340 wide at x=25, TOP edge at y=364.5 (this one
-          is top-anchored in Figma, not centre-anchored like the headline). The opening clause is
-          semibold and the rest regular, which is how the node splits its own runs. */}
-      <p style={{
-        position: 'absolute', left: 'var(--m)', top: '43.19dvh',
-        width: 'var(--cw)', margin: 0,
-        fontSize: 'var(--fs-content-1)', color: 'var(--color-black)',
-        fontWeight: 'var(--fw-normal)',
-      }}>
-        <span style={{ fontWeight: 'var(--fw-semibold)' }}>Send and receive digital dollars </span>
-        with anyone, using an email and a six-digit PIN. No seed phrase to write down, and no wallet
-        address to copy.
-      </p>
-
-      {/* The arrow pointing at the button - node 54:2: the same 40x45.94 white arrow the Add screen
-          uses, turned -90deg so it points right. Its box is 45.938x40 at (29,703). */}
-      <div aria-hidden="true" style={{
-        position: 'absolute', left: 'calc(var(--m) + 4 * var(--u))', top: '83.29dvh',
-        width: 'calc(45.938 * var(--u))', height: 'calc(40 * var(--u))',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-      }}>
-        <img src={arrowDown} alt="" style={{ width: 'calc(40 * var(--u))', height: 'calc(45.938 * var(--u))', transform: 'rotate(-90deg)' }} />
       </div>
 
-      {/* THE ONLY CONTROL - nodes 50:472 (the white pill: 274x70 at x=91, radius 16, and a GLOW rather
-          than a drop shadow - Figma's filter is feOffset 0,0 + stdDeviation 5 at 50% black, i.e.
-          `var(--shadow-y2)`) and 50:479 (the 24px semibold label centred inside it).
-          y 688-758 is row 9 of the guideline grid, where every screen puts its action row.
-          ⚠️ This still NAVIGATES to the EnterEmail screen. The user's flow of 2026-09-23 says node
-          1:193 "Log in with email" should open as a POPUP over this screen rather than replace it -
-          that conversion is its own step and has not been done yet. */}
+      {/* THE ONLY CONTROL - full content width at the bottom, 48 above the screen edge (clears the 34
+          home-indicator safe area). On the gradient's blue end it is the white button with blue text
+          (design system: secondary = ground + blue), App/Button 22, the standard --btn-h, shadow Y2. */}
       <button
         onClick={() => setEmailOpen(true)}
         style={{
-          position: 'absolute', left: 'calc(var(--m) + 66 * var(--u))', top: '81.52dvh',
-          width: 'calc(var(--cw) - 66 * var(--u))', height: '8.29dvh',
-          background: 'var(--btn-grad-white)', border: 'none', borderRadius: 16,
+          position: 'absolute', left: 'var(--m)', bottom: 'calc(48 * var(--u))',
+          width: 'var(--cw)', height: 'var(--btn-h)',
+          background: 'var(--color-white)', border: 'none', borderRadius: 16,
           boxShadow: 'var(--shadow-y2)',
-          fontSize: 'var(--fs-title)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)', cursor: 'pointer',
+          fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-brand)', cursor: 'pointer',
           WebkitTapHighlightColor: 'transparent',
         }}>
         {restoring ? 'Processing...' : 'Log in with email'}
