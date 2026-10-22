@@ -391,7 +391,10 @@ export default function Swap() {
           <div ref={fitRef} onClick={onAmount} style={{
             flex: 1, minWidth: 0, overflow: 'hidden', display: 'flex', justifyContent: 'flex-end', alignItems: 'center',
             cursor: onAmount ? 'pointer' : 'default',
-            ...(onAmount ? { padding: 'calc(8 * var(--u)) calc(16 * var(--u))', minHeight: 'calc(56 * var(--u))' } : null),
+            // SAME box on both cards (2026-10-22, user: "You pay and You receive spacing don't match"): the old
+            // You-pay-only padding 8/16 + minHeight 56 made that row 72px (content spilled past the card's 16px
+            // padding, the reverse button covered "Available") and pushed its number 16px in from the right edge.
+            height: 'calc(56 * var(--u))',
           }}>
             <span className="num" style={{ fontSize: fitSize, lineHeight: fitLine, fontWeight: 'var(--fw-light)', color: amtColor, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               {showZero ? null : amtStr}
