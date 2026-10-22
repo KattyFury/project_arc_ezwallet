@@ -37,6 +37,11 @@ export const MOCK_TX = [
   // Swap 20 USDC → ~18.5 EURC (2 days ago, same hash)
   { hash: '0xmockswp1', from: MOCK_ADDR, to: ADAPTER, value: '20000000', tokenSymbol: 'USDC', tokenDecimal: '6', contractAddress: '0x3600000000000000000000000000000000000000', timeStamp: String(_now - 180000) },
   { hash: '0xmockswp1', from: ADAPTER, to: MOCK_ADDR, value: '18500000', tokenSymbol: 'EURC', tokenDecimal: '6', contractAddress: '0x89B50855Aa3bE2F677cD6303Cec089B5F319D72a', timeStamp: String(_now - 180000) },
+  // Lending deposit + a loan (chain.js tags their receipts with `op`) - must read "Put into Lending" / "Borrowed" +
+  // "Locked as loan collateral", never "Sent to 0x…" / "Swapped".
+  { hash: '0xmocklend1', from: MOCK_ADDR, to: ADAPTER, value: '12000000', tokenSymbol: 'USDC', tokenDecimal: '6', contractAddress: '0x3600000000000000000000000000000000000000', timeStamp: String(_now - 10800), op: 'lending' },
+  { hash: '0xmockloan1', from: MOCK_ADDR, to: ADAPTER, value: '2412', tokenSymbol: 'cirBTC', tokenDecimal: '8', contractAddress: '0xf0c4a4cfd4d4e6d0b7c2e1a8f0e0d0c0b0a09080', timeStamp: String(_now - 14400), op: 'loan' },
+  { hash: '0xmockloan1', from: ADAPTER, to: MOCK_ADDR, value: '997255', tokenSymbol: 'USDC', tokenDecimal: '6', contractAddress: '0x3600000000000000000000000000000000000000', timeStamp: String(_now - 14400), op: 'loan' },
 ]
 
 // Seed a fake session → App.jsx sees a session + an unlocked PIN → straight into HomeSend.

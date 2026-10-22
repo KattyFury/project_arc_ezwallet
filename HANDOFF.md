@@ -22,6 +22,17 @@
    cherry-pick onto `main` (see Session (5)).
 
 ## ▶ WHERE WE STOPPED - 2026-10-22 (READ THIS FIRST)
+- **Owner borrowed ~1 USDC on test - checked read-only:** loan `82b716bb…` active, 0.997255 USDC against 0.00002412
+  cirBTC, LTV 50.1% (BTC moved since opening), HF 1.72 SAFE, liquidation ≈ $48,076, alerts registered (KV `loan:`),
+  no Morpho permission left open. Next: "Repay all & close" when the owner wants.
+- **Withdraw popup (option B):** address + amount right under the exchange tabs, the exchange steps BELOW Continue -
+  inputs now end at y 426 on 393×852 (keyboard from ≈ 470; before: 525-658, covered). Step 2 says "Paste it above".
+- **History names Lending / loan legs (option A):** `chain.js receiptOp` tags a receipt `op: 'loan'` (Morpho Blue
+  Borrow/Repay/SupplyCollateral/WithdrawCollateral event) or `op: 'lending'` (ERC-4626 Deposit/Withdraw from a vault whose
+  share moved to/from the wallet). Rows: "Put into Lending" / "Taken out of Lending" / "Locked as loan collateral" /
+  "Loan collateral returned" (neutral) · "Borrowed" (+) / "Repaid loan" (−); never "Swapped" or "Sent to 0x…". Cache
+  `ez_tx_transfers_v3` (v2 multi-transfer entries are read again). Checked in mock only - the free RPCs refused the
+  log scan to find the owner's real hashes → owner to confirm on the phone.
 - **Borrow 409 fixed (owner option B), NOT yet tried with real money.** Typing an amount no longer asks anything; the
   first tap ("Borrow"/"Repay"…) calls `fee` (creates the ONE signed intent, kept in KV `bintent:<wallet>:<kind>:<loan|market>`
   until its deadline), the button becomes **Confirm**, and `execute` reuses that intent. A kept intent that fails the

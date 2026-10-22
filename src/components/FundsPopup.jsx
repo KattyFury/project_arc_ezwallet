@@ -155,14 +155,6 @@ function Withdraw() {
     <>
       <p style={sectionTitle}>Sell for your local money on an exchange</p>
       <ExchangeTabs cex={cex} setCex={setCex} />
-      {cex && (
-        <Steps items={[
-          <>On {cex.name}: Assets → Deposit → USDC, network <b>{cex.network}</b>. Copy the deposit address.</>,
-          <>Paste it below - ezwallet remembers it as your {cex.name} address.</>,
-          <>Send <b>USDC only</b>. Check {cex.name}'s minimum deposit first.</>,
-          <>When it arrives, sell USDC for your currency on {cex.name} (P2P).</>,
-        ]} />
-      )}
 
       <div style={field}>
         <input value={address} onChange={e => setAddress(e.target.value)} placeholder={cex ? `${cex.name} deposit address (0x…)` : 'Wallet address (0x…)'}
@@ -220,6 +212,15 @@ function Withdraw() {
         }}>
         Continue
       </button>
+      {/* Steps BELOW the button (owner 2026-10-22, option B): above the inputs they pushed them under the keyboard. */}
+      {cex && (
+        <Steps items={[
+          <>On {cex.name}: Assets → Deposit → USDC, network <b>{cex.network}</b>. Copy the deposit address.</>,
+          <>Paste it above - ezwallet remembers it as your {cex.name} address.</>,
+          <>Send <b>USDC only</b>. Check {cex.name}'s minimum deposit first.</>,
+          <>When it arrives, sell USDC for your currency on {cex.name} (P2P).</>,
+        ]} />
+      )}
     </>
   )
 }

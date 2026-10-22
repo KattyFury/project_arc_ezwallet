@@ -1,4 +1,4 @@
-import { createPublicClient, http, decodeEventLog, parseAbiItem, parseAbi, encodeFunctionData } from 'viem'
+import { createPublicClient, http, decodeEventLog, parseAbiItem, parseAbi, encodeFunctionData, toEventSelector } from 'viem'
 import { defineChain } from 'viem'
 import { MOCK, MOCK_AMOUNTS, MOCK_RATES, MOCK_CHANGE_24H, MOCK_TX, MOCK_UNVERIFIED } from './mock'
 import { fetchHistory, fetchHistoryPage, fetchAllBalances } from './circle'
@@ -296,7 +296,10 @@ const SYSTEM_EMITTER = '0xfffffffffffffffffffffffffffffffffffffffe'
 const TRANSFER_TOPIC = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'
 // v2 (2026-10-03): rows now include UNVERIFIED tokens. v1 stored a tx that only moved an unknown token as [] - those
 // empty entries are dropped on migration (so they are read again); every non-empty entry is carried over.
-const TRANSFERS_KEY = 'ez_tx_transfers_v2'
+// v3 (2026-10-22): rows carry `op` (Lending / loan). v2 entries with 2+ transfers (where an op can hide) are read again;
+// single-transfer entries (plain sends) are carried over.
+const TRANSFERS_KEY = 'ez_tx_transfers_v3'
+const TRANSFERS_KEY_V2 = 'ez_tx_transfers_v2'
 const TRANSFERS_KEY_V1 = 'ez_tx_transfers'
 const TRANSFERS_MAX = 1500
 let _transfers = null
@@ -304,10 +307,10 @@ function transferStore() {
   if (!_transfers) {
     try { _transfers = JSON.parse(localStorage.getItem(TRANSFERS_KEY) || 'null') } catch { _transfers = null }
     if (!_transfers) {
-      let v1 = {}
-      try { v1 = JSON.parse(localStorage.getItem(TRANSFERS_KEY_V1) || '{}') } catch {}
-      _transfers = Object.fromEntries(Object.entries(v1).filter(([, rows]) => Array.isArray(rows) && rows.length))
-      try { localStorage.setItem(TRANSFERS_KEY, JSON.stringify(_transfers)); localStorage.removeItem(TRANSFERS_KEY_V1) } catch {}
+      let old = {}
+      try { old = JSON.parse(localStorage.getItem(TRANSFERS_KEY_V2) || localStorage.getItem(TRANSFERS_KEY_V1) || '{}') } catch {}
+      _transfers = Object.fromEntries(Object.entries(old).filter(([, rows]) => Array.isArray(rows) && rows.length === 1))
+      try { localStorage.setItem(TRANSFERS_KEY, JSON.stringify(_transfers)); localStorage.removeItem(TRANSFERS_KEY_V2); localStorage.removeItem(TRANSFERS_KEY_V1) } catch {}
     }
   }
   return _transfers
@@ -318,6 +321,23 @@ function rememberTransfers(hash, rows) {
   try { localStorage.setItem(TRANSFERS_KEY, JSON.stringify(_transfers)) } catch {}
 }
 const topicAddr = t => '0x' + t.slice(26)
+
+// LENDING / LOAN receipts (owner 2026-10-22: History said "Sent to 0x…" for Lending and "Swapped" for a loan).
+//   loan    = a Morpho Blue Borrow / Repay / SupplyCollateral / WithdrawCollateral event (Lending vaults only ever use
+//             Morpho's Supply / Withdraw, so they never match). Morpho address = functions/api/_borrowCore.js MORPHO.
+//   lending = an ERC-4626 Deposit / Withdraw event from a contract whose token (the vault share) moved to / from this
+//             wallet in this tx (a swap routed through some vault never hands its shares to the wallet).
+const MORPHO = '0x34cd04070dd72b14e241112f6d83812df5af7fcd'
+const LOAN_TOPICS = ['Borrow(bytes32,address,address,address,uint256,uint256)', 'Repay(bytes32,address,address,uint256,uint256)',
+  'SupplyCollateral(bytes32,address,address,uint256)', 'WithdrawCollateral(bytes32,address,address,address,uint256)'].map(toEventSelector)
+const VAULT_TOPICS = ['Deposit(address,address,uint256,uint256)', 'Withdraw(address,address,address,uint256,uint256)'].map(toEventSelector)
+function receiptOp(logs, rows) {
+  if (logs.some(l => l.address.toLowerCase() === MORPHO && LOAN_TOPICS.includes(l.topics[0]))) return 'loan'
+  const me = (localStorage.getItem('ez_wallet_addr') || '').toLowerCase()
+  const moved = new Set(rows.filter(r => r.from === me || r.to === me).map(r => r.contractAddress))
+  if (logs.some(l => VAULT_TOPICS.includes(l.topics[0]) && moved.has(l.address.toLowerCase()))) return 'lending'
+  return null
+}
 
 // symbol + decimals of an UNVERIFIED token, read from its contract once and remembered. Untrusted text: cut to 16 chars.
 const META_KEY = 'ez_token_meta'
@@ -372,6 +392,8 @@ async function readTransfersOnChain(hash) {
       }
     }
   }
+  const op = r.status === 'success' ? receiptOp(r.logs, rows) : null
+  if (op) rows.forEach(x => { x.op = op })
   if (!(hash in memoStore())) {
     let memo = null
     for (const log of r.logs) {

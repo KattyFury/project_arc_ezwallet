@@ -58,6 +58,13 @@ function txInfo(tx, walletAddr, contacts, rates) {
 //   (r1-2)  row 2: At 14:32   [+ Add]  ← the Add button moved here | 5.00 USDC  (the real token, grey - r1-2)
 //           rows 3-4: Note: <memo> (if any, wrapping when long)
 // The icon (left) and the money block (right) are anchored to ROWS 1-2 (top-aligned). The DATE boundary lives in DateHeader.
+// LENDING / LOAN legs (owner 2026-10-22) - chain.js tags their receipts (`op`), so a leg says what it did instead of
+// "Sent to 0x…" or "Swapped". Neutral (still yours): money put into / taken out of Lending, cirBTC locked / returned.
+const opTitle = (tx, isSend) => tx.op === 'lending' ? (isSend ? 'Put into Lending' : 'Taken out of Lending')
+  : tx.op === 'loan' ? (tx.tokenSymbol === 'cirBTC' ? (isSend ? 'Locked as loan collateral' : 'Loan collateral returned') : (isSend ? 'Repaid loan' : 'Borrowed'))
+  : null
+const opNeutral = tx => tx.op === 'lending' || (tx.op === 'loan' && tx.tokenSymbol === 'cirBTC')
+
 function TxRow({ tx, walletAddr, contacts, onClick, cur, rates, memo, isSwap, swapInfo, onAdd }) {
   const { isSend, amount, symbol, usd, counter, name } = txInfo(tx, walletAddr, contacts, rates)
   // Swap: the title states the DIRECTION explicitly, "Swapped <amount> <token out> to <token in>" (user decision 07-20d - it
@@ -68,7 +75,8 @@ function TxRow({ tx, walletAddr, contacts, onClick, cur, rates, memo, isSwap, sw
   const isSelf = counter && walletAddr && counter.toLowerCase() === walletAddr.toLowerCase()
   const who = isSelf ? 'yourself' : name || shortenAddr(counter)
   // NEUTRAL = the wallet's value does not change (a swap, or a send to yourself): no +/-, no red/green, neutral icon (owner 2026-10-20).
-  const neutral = isSwap || isSelf
+  const op = opTitle(tx, isSend)
+  const neutral = isSwap || isSelf || opNeutral(tx)
   // Font sizes REDUCED so the full information fits a phone screen (user decision 07-20): icon 40→34, the money on the right
   // fs-num 24→fs-md-lg 21, the secondary token fs-label→fs-tiny, vertical padding 14→11, gap 12→10.
   return (
@@ -95,7 +103,7 @@ function TxRow({ tx, walletAddr, contacts, onClick, cur, rates, memo, isSwap, sw
         {/* Owner 2026-10-20: every line 16 - who/amount semibold black (or the money colour), time/token muted. */}
         <div style={{ gridColumn: 1, gridRow: 1, alignSelf: 'baseline', fontSize: 'var(--fs-caption)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)', overflowWrap: 'break-word' }}>
           {/* A shortened address stays in ONE piece (browsers may break right after its "…"); a contact name wraps freely. */}
-          {isSwap ? swapTitle : <>{isSend ? 'Sent to' : 'Received from'} <span style={!name && !isSelf ? { whiteSpace: 'nowrap' } : undefined}>{who}</span></>}
+          {isSwap ? swapTitle : op || <>{isSend ? 'Sent to' : 'Received from'} <span style={!name && !isSelf ? { whiteSpace: 'nowrap' } : undefined}>{who}</span></>}
         </div>
         {/* Money - a swap only trades one token for another (the wallet's value does not change), so it has NO +/- and is
             drawn in the content colour, not red/green (owner 2026-10-20). */}
@@ -109,7 +117,7 @@ function TxRow({ tx, walletAddr, contacts, onClick, cur, rates, memo, isSwap, sw
           <span style={{ minWidth: 0, flexShrink: isSwap ? 1 : 0, fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)' }}>
             {isSwap ? 'Swap completed · ' : ''}<span className="num" style={{ whiteSpace: 'nowrap' }}>{timeLabel(tx.timeStamp)}</span>
           </span>
-          {!isSwap && !name && counter && !isSelf && (
+          {!isSwap && !op && !name && counter && !isSelf && (
             <span onClick={e => { e.stopPropagation(); onAdd(counter) }}
               style={{ flexShrink: 0, fontSize: 'var(--fs-small)', fontWeight: 'var(--fw-medium)', color: 'var(--color-brand)', border: '1px solid var(--color-brand)', borderRadius: 16, padding: '0 calc(8 * var(--u))', whiteSpace: 'nowrap', background: 'var(--btn-grad-white)' }}>
               Add contacts
@@ -193,6 +201,7 @@ export default function TxHistory() {
       // "Sent" found nothing → it looked like the transaction had VANISHED from history. A REAL swap always has 2 SEPARATE ROWS
       // (one out leg + one in leg); a self-send row is skipped here and takes the normal "Sent to" branch.
       if (out && inc) return
+      if (tx.op) return   // a Lending / loan leg is named by opTitle, never "Swapped"
       if (out) dir[h].out = true
       if (inc) dir[h].in = true
     })
@@ -312,9 +321,9 @@ export default function TxHistory() {
             <div className="popup-title" style={{ marginBottom: 'calc(8 * var(--u))' }}>Transaction details</div>
             {/* A swap leg (owner 2026-10-20): Type names both tokens; no "Wallet address" (the counterparty is the swap
                 contract, not a person); Amount says which side this leg is. */}
-            <DetailRow label={'Type'}>{swapPairs[selected.hash] ? `Swapped ${swapPairs[selected.hash].outSym} → ${swapPairs[selected.hash].inSym}` : `${d.isSend ? 'Sent' : 'Received'} ${d.symbol}`}</DetailRow>
-            {d.name && !swapPairs[selected.hash] && <DetailRow label={d.isSend ? 'Recipient' : 'Sender'}>{d.name}</DetailRow>}
-            {!swapPairs[selected.hash] && <DetailRow label={'Wallet address'}>
+            <DetailRow label={'Type'}>{swapPairs[selected.hash] ? `Swapped ${swapPairs[selected.hash].outSym} → ${swapPairs[selected.hash].inSym}` : opTitle(selected, d.isSend) || `${d.isSend ? 'Sent' : 'Received'} ${d.symbol}`}</DetailRow>
+            {d.name && !swapPairs[selected.hash] && !selected.op && <DetailRow label={d.isSend ? 'Recipient' : 'Sender'}>{d.name}</DetailRow>}
+            {!swapPairs[selected.hash] && !selected.op && <DetailRow label={'Wallet address'}>
               <span style={{ display: 'inline-flex', alignItems: 'center', gap: 'calc(8 * var(--u))' }}>
                 {shortenAddr(d.counter)}
                 <button onClick={() => copyCounter(d.counter)} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', padding: 0 }}>
@@ -324,7 +333,7 @@ export default function TxHistory() {
             </DetailRow>}
             <DetailRow label={swapPairs[selected.hash] ? (d.isSend ? 'You paid' : 'You got') : 'Amount'}>
               {/* A swap leg or a send to yourself: no +/-, content colour - same rule as the row (owner 2026-10-20). */}
-              {(() => { const neutral = swapHashes.has(selected.hash) || d.counter?.toLowerCase() === walletAddr?.toLowerCase(); return (
+              {(() => { const neutral = swapHashes.has(selected.hash) || opNeutral(selected) || d.counter?.toLowerCase() === walletAddr?.toLowerCase(); return (
               <span className="num" style={{ color: neutral ? 'var(--color-content)' : d.isSend ? 'var(--color-error)' : 'var(--color-primary)' }}>
                 {neutral ? '' : d.isSend ? '-' : '+'}{d.amount.toFixed(d.amount < 0.01 ? 6 : 2)} {d.symbol}
               </span>
