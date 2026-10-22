@@ -55,16 +55,17 @@ export default function ServiceHub() {
           <button key={id} disabled={soon} onClick={soon ? undefined : () => navigate(screen)}
             style={{
               width: '100%',
-              border: 'none', borderRadius: 16, background: 'var(--btn-grad-white)', boxShadow: 'var(--shadow-y2)',
+              // Disabled ("Coming soon") = design system: line fill, muted text/icon, no shadow - never opacity.
+              border: 'none', borderRadius: 16, background: soon ? 'var(--color-line)' : 'var(--btn-grad-white)', boxShadow: soon ? 'none' : 'var(--shadow-y2)',
               display: 'flex', alignItems: 'center', padding: 'calc(16 * var(--u)) calc(16 * var(--u)) calc(16 * var(--u)) 0', minWidth: 0,
-              fontFamily: 'inherit', textAlign: 'left', opacity: soon ? 0.4 : 1, cursor: soon ? 'not-allowed' : 'pointer',
+              fontFamily: 'inherit', textAlign: 'left', cursor: soon ? 'default' : 'pointer',
             }}>
             <span style={{ width: '25%', flexShrink: 0, display: 'flex', justifyContent: 'center' }}>
-              <Icon name={icon} size="calc(56 * var(--u))" color="var(--color-brand)" />
+              <Icon name={icon} size="calc(56 * var(--u))" color={soon ? 'var(--color-muted)' : 'var(--color-brand)'} />
             </span>
             <span className="col" style={{ width: '75%', minWidth: 0, gap: 'calc(8 * var(--u))' }}>
-              <span style={{ fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-black)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{label}:</span>
-              <span style={{ fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-normal)', color: 'var(--color-black)', display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 3, overflow: 'hidden' }}>{desc}</span>
+              <span style={{ fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: soon ? 'var(--color-muted)' : 'var(--color-black)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{label}:</span>
+              <span style={{ fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-normal)', color: soon ? 'var(--color-muted)' : 'var(--color-black)', display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 3, overflow: 'hidden' }}>{desc}</span>
             </span>
           </button>
         )

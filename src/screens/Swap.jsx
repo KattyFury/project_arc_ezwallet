@@ -573,7 +573,8 @@ export default function Swap() {
             width: '100%', height: 'var(--btn-h)', minHeight: 0, borderRadius: 16, overflow: 'hidden',
             boxShadow: error || success ? undefined : '0 2px 20px rgba(0, 0, 0, 0.32)',
             ...(error ? { color: 'var(--color-error)', borderColor: 'var(--color-error)' } : null),
-            ...(success ? { opacity: confirmed ? 1 : 0.6 } : null),
+            // Sent but not yet confirmed = the pale green (design system: a lighter colour, never opacity); confirmed = solid green.
+            ...(success && !confirmed ? { background: 'var(--color-primary-soft)', color: 'var(--color-primary)', boxShadow: 'none' } : null),
           }}
           disabled={needAmount ? (!hasBal || loading) : (!canSwap && !error)}
           onClick={needAmount ? openPad : handleSwap}>
