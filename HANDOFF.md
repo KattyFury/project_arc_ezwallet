@@ -22,9 +22,16 @@
    cherry-pick onto `main` (see Session (5)).
 
 ## ▶ WHERE WE STOPPED - 2026-10-22 (READ THIS FIRST)
-- **Branches:** `main` = `test` = `eac8c9b`+, both live (ezwallet.cash + test.ezwallet.cash). Rule unchanged: commit on
+- **Branches:** `main` = `test` = `86ea4d6`+, both live (ezwallet.cash + test.ezwallet.cash). Rule unchanged: commit on
   `test` → `merge --ff-only` into `main` → push both.
+- **Later on 2026-10-22: Exchange card spacing fixed (`86ea4d6`, both branches).** Owner: "You pay / You receive
+  spacing don't match". Cause: the You-pay amount row had its own padding 8/16 + minHeight 56 → 72px row (content spilled
+  past the card padding, the reverse button covered "Available …") and its number sat 16px in from the right edge; the
+  You-receive row was 42-56px. Now both rows are a fixed 56px box (`SideCard` in `src/screens/Swap.jsx`). Measured in
+  mock at 393×852: both cards label +17 / chip row +53 / footer +117, numbers share the right edge. Before/after shots
+  on the Desktop `ezwallet-exchange-spacing\`. Owner has not yet checked it on the phone.
 - **▶ NEXT SESSION, in order:**
+  0. Owner checks the Exchange screen on the phone (spacing fix above).
   1. Owner checks History on the phone: today's loan must read **"Borrowed"** + **"Locked as loan collateral"**, a Lending
      deposit **"Put into Lending"** (never "Swapped" / "Sent to 0x…"). Only checked in mock so far (see below).
   2. Owner tries the new Withdraw popup with the keyboard up (inputs must stay visible).
