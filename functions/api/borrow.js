@@ -1,6 +1,6 @@
 // Borrow (Service hub → Lending / Borrow, Borrow tab) - USDC loans against cirBTC on Morpho via Circle Borrow Kit.
 // Core + rules: ./_borrowCore.js. LABS feature (src/labs.js): answers only on the labs hosts.
-// Actions: markets · loans · quote · fee · execute (one PIN) · alertStart (the 2nd PIN: sign the webhook registration)
+// Actions: markets · loans · quote · fee ("Borrow" tap) · execute ("Confirm" tap, one PIN; reuses fee's intent) · alertStart (the 2nd PIN: sign the webhook registration)
 // · alertFinish (register the webhook with Circle + remember the owner's email for the alert).
 import {
   BORROW_MAX_USD, BORROW_MAX_LTV, listMarkets, listLoans, fetchExecution, validateBorrowIntent, buildBorrowBatch,
@@ -103,8 +103,24 @@ export async function onRequestPost(ctx) {
       if (await hasStandingAuthorization(net, wallet)) return err('Your wallet has an old Morpho permission still open - contact support.', null, 409)
     }
 
-    const intent = await fetchExecution(net, apiKey, kind, { wallet, marketId: mId, loanId: target?.loanId, amount: String(amount) })
-    if (!intent.ok) return err(intent.data?.message || `Borrow Kit ${intent.status}`, intent.data, intent.status === 400 ? 400 : 502)
+    // ONE intent per tap (owner 2026-10-22, fix for 409 / 380608): the Borrow Service refuses a 2nd signed intent for a
+    // loan while the 1st lives (~5 min). fee (the "Borrow" tap) creates it and keeps it in KV until its deadline;
+    // execute (the "Confirm" tap) and any retry with the same amount reuse it.
+    const kv = ctx.env.EZ_SYNC
+    const cacheKey = `bintent:${wallet.toLowerCase()}:${kind}:${target?.loanId || mId}`
+    const cached = kv ? await kv.get(cacheKey, 'json') : null
+    const live = cached && Number(cached.data?.executionParams?.deadline) - 30 > Date.now() / 1000 ? cached : null
+    let intent = live && live.amount === String(amount) ? { ok: true, data: live.data, cached: true } : null
+    if (!intent) {
+      intent = await fetchExecution(net, apiKey, kind, { wallet, marketId: mId, loanId: target?.loanId, amount: String(amount) })
+      if (intent.status === 409) {
+        const wait = live ? Math.max(1, Math.ceil((Number(live.data.executionParams.deadline) - Date.now() / 1000) / 60)) : 5
+        return err(`An earlier request for ${live ? `${live.amount} ${kind === 'addCollateral' || kind === 'withdrawCollateral' ? 'cirBTC' : 'USDC'}` : 'this loan'} is still open - use that amount, or try again in about ${wait} min.`, intent.data, 409)
+      }
+      if (!intent.ok) return err(intent.data?.message || `Borrow Kit ${intent.status}`, intent.data, intent.status === 400 ? 400 : 502)
+      const ttl = Math.floor(Number(intent.data?.executionParams?.deadline) - Date.now() / 1000)
+      if (kv && ttl >= 60) await kv.put(cacheKey, JSON.stringify({ amount: String(amount), data: intent.data }), { expirationTtl: ttl })
+    }
     const bad = validateBorrowIntent(net, intent.data, { kind, wallet, amountBase })
     if (bad) return err('This request could not be verified - nothing was sent.', { bad, intent: intent.data }, 502)
 
@@ -153,7 +169,11 @@ export async function onRequestPost(ctx) {
       : kind === 'addCollateral' && -sim.btcDelta > amountBase ? 'takes more cirBTC than asked'
       : kind === 'withdrawCollateral' && sim.btcDelta <= 0n ? 'returns no cirBTC'
       : null
-    if (why) return err('This would not do what was shown - nothing was sent.', { why, sim }, 502)
+    if (why) {
+      // A kept intent that no longer runs (already used, or the price moved) is dropped so the next tap gets a fresh one.
+      if (intent.cached && kv) await kv.delete(cacheKey)
+      return err('This would not do what was shown - nothing was sent.', { why, sim }, 502)
+    }
     const txRes = await fetch(`${W3S_API}/user/transactions/contractExecution`, {
       method: 'POST', headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json', 'X-User-Token': userToken },
       body: JSON.stringify({ idempotencyKey: crypto.randomUUID(), walletId, contractAddress: net.contracts.multicall3From, callData: batch, feeLevel: 'MEDIUM', refId }),

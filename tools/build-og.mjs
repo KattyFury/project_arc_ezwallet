@@ -5,7 +5,8 @@
 //
 // Then bump `og.png?v=N` in index.html (og:image + twitter:image) - X/Telegram cache by URL.
 // Background = the app's own brand gradient (src/brandBg.js, the Login/Splash one), owner request 2026-10-03
-// (the solid #0B53BF card looked flat). Text sits on the white half, so it is black/brand like the Login screen.
+// (the solid card looked flat). Text sits on the white half, so it is black/brand like the Login screen.
+// Colours / sizes / spacing follow the nguyen0xhieu design system (0x Blue #1E6DF7, even sizes, 8-grid, shadow Y2).
 // ⚠️ The phone frame MUST keep the screenshot's exact ratio (390x844) with NO border, or white bands appear.
 import { chromium } from 'playwright'
 import { readFileSync } from 'node:fs'
@@ -29,19 +30,19 @@ const W = 270, H = W * 844 / 390   // phone frame = the screenshot's own ratio
 const html = `<!doctype html><html><head><meta charset="utf-8"><style>
   * { box-sizing: border-box; margin: 0; }
   body { width: 1200px; height: 630px; overflow: hidden; position: relative;
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     background: ${GRADIENT}; color: #000; }
-  .logo { position: absolute; left: 76px; top: 56px; height: 52px; }
-  h1 { position: absolute; left: 76px; top: 160px; width: 680px; font-size: 46px; line-height: 56px;
-    font-weight: 700; letter-spacing: -1.4px; }
-  h1 span { color: #0B53BF; }
-  p { position: absolute; left: 76px; top: 296px; width: 660px; font-size: 21px; line-height: 32px; color: #667085; }
-  .pills { position: absolute; left: 76px; top: 384px; display: flex; gap: 12px; }
-  .pill { padding: 9px 18px; border-radius: 999px; border: 1.5px solid #0B53BF; color: #0B53BF;
-    background: #fff; font-size: 17px; font-weight: 600; }
-  .url { position: absolute; left: 76px; bottom: 56px; font-size: 24px; font-weight: 700; color: #fff; }
+  .logo { position: absolute; left: 80px; top: 56px; height: 48px; }
+  h1 { position: absolute; left: 80px; top: 160px; width: 680px; font-size: 48px; line-height: 56px;
+    font-weight: 700; letter-spacing: -1px; }
+  h1 span { color: #1E6DF7; }
+  p { position: absolute; left: 80px; top: 296px; width: 640px; font-size: 22px; line-height: 32px; color: #4B5568; }
+  .pills { position: absolute; left: 80px; top: 384px; display: flex; gap: 16px; }
+  .pill { padding: 8px 16px; border-radius: 999px; border: 1.5px solid #1E6DF7; color: #1E6DF7;
+    background: #fff; font-size: 18px; line-height: 24px; font-weight: 600; }
+  .url { position: absolute; left: 80px; bottom: 56px; font-size: 28px; line-height: 36px; font-weight: 700; color: #fff; }
   .phone { position: absolute; right: 80px; top: ${(630 - H) / 2}px; width: ${W}px; height: ${H}px;
-    border-radius: 30px; overflow: hidden; box-shadow: 0 12px 40px rgba(0,0,0,.28); }
+    border-radius: 32px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.32); }
   .phone img { width: 100%; height: 100%; display: block; }
 </style></head><body>
   <img class="logo" src="${logo}" alt="">

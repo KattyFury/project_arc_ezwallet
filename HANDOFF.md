@@ -21,12 +21,25 @@
    test → main until the owner approves it; a fix that must reach ezwallet.cash meanwhile = commit on `test` AND
    cherry-pick onto `main` (see Session (5)).
 
-## ▶ WHERE WE STOPPED - 2026-10-20 (READ THIS FIRST)
+## ▶ WHERE WE STOPPED - 2026-10-22 (READ THIS FIRST)
+- **Borrow 409 fixed (owner option B), NOT yet tried with real money.** Typing an amount no longer asks anything; the
+  first tap ("Borrow"/"Repay"…) calls `fee` (creates the ONE signed intent, kept in KV `bintent:<wallet>:<kind>:<loan|market>`
+  until its deadline), the button becomes **Confirm**, and `execute` reuses that intent. A kept intent that fails the
+  simulation is dropped. Still a 409 if the owner changes the amount AFTER the first tap → plain message "use that amount,
+  or try again in about N min". Mock run: Desktop `ezwallet-borrow-2026-10-22\`.
+  → Next: owner borrows ~0.98 USDC on test.ezwallet.cash (Max), alerts on, then "Repay all & close".
+- **PNGs rebuilt in 0x Blue:** `icon.png`, `fav_icon.png`, `icon-test.png` rasterised from `design/logo-pfp*.svg`;
+  `og.png` re-made by `tools/build-og.mjs` (now design-system sizes/colours). Cache versions: icons `?v=7`, og `?v=8`,
+  icon-test `?v=2`.
+- **README rewritten short** with new screenshots (`docs/app-send|receive|exchange|history.png`, mock, 390×844 @2x);
+  GitHub repo description updated.
+
+## ▶ 2026-10-20 (superseded by the section above)
 - **🟢 2026-10-20 (later): REDESIGN APPROVED - `test` fast-forwarded into `main`** (owner: "push test lên main"). ezwallet.cash
   now has the redesign; test = main again → back to the normal rule (commit on `test`, ff to `main`, push both).
   Same day: the **Memes card is hidden** in the Service hub (screens kept, see ServiceHub.jsx). Still TODO: rebuild
   `public/icon.png`, `fav_icon.png`, `og.png` in the new blue (`tools/build-og.mjs`).
-- **🔴 OPEN - Borrow 409 / 380608** ("An earlier signed request to open this loan is still live"): the FEE step
+- **✅ FIXED 2026-10-22 (see above) - Borrow 409 / 380608** ("An earlier signed request to open this loan is still live"): the FEE step
   (`action: 'fee'`) calls `fetchExecution` = Borrow Kit creates a signed intent, then EXECUTE calls it again → the 2nd
   is refused while the 1st lives (~5 min). Every amount change in the fee preview does it too. Needs one intent
   reused fee → execute (e.g. cached per wallet+kind+amount in KV until its deadline) - not built yet. Borrow is LABS

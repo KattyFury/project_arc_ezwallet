@@ -9,9 +9,9 @@ const testIcon = {
   name: 'test-apple-touch-icon',
   transformIndexHtml(html) {
     if (process.env.CF_PAGES_BRANCH !== 'test') return html
-    const from = '<link rel="apple-touch-icon" href="/icon.png?v=6" />'
+    const from = '<link rel="apple-touch-icon" href="/icon.png?v=7" />'
     if (!html.includes(from)) throw new Error('test-apple-touch-icon: index.html apple-touch-icon line changed - update vite.config.js')
-    return html.replace(from, '<link rel="apple-touch-icon" href="/icon-test.png?v=1" />')
+    return html.replace(from, '<link rel="apple-touch-icon" href="/icon-test.png?v=2" />')
   },
 }
 

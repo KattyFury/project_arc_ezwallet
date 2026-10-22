@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { useNav } from '../nav'
 import Numpad from '../components/Numpad'
 import ScreenSheet from '../components/ScreenSheet'
@@ -49,7 +49,6 @@ export default function BorrowAction() {
   const [error, setError] = useState('')
   const [done, setDone] = useState(false)
   const [alertStep, setAlertStep] = useState(null)         // loanId waiting for the alert PIN
-  const debounce = useRef(null)
 
   useEffect(() => {
     if (walletAddress) getTokenBalances(walletAddress).then(ts => setBal(Object.fromEntries(ts.map(t => [t.symbol, t.amount])))).catch(() => {})
@@ -81,19 +80,22 @@ export default function BorrowAction() {
   const ready = kind === 'close' ? !!loan : amount > 0 && !over
   const can = ready && info?.feeMax && !loading && !done && !alertStep
 
-  useEffect(() => {
-    clearTimeout(debounce.current); setInfo(null)
-    if (!ready) return
-    debounce.current = setTimeout(() => {
-      borrowApi('fee', { kind, marketId: market?.marketId, loanId: loan?.loanId, amount: kind === 'close' ? '0' : typed, walletAddress, walletId })
-        .then(f => { setInfo(f); setError('') }).catch(e => setError(/revert/i.test(e.message || '')
-          // Circle's "Estimate fee execution reverted." = the batch would fail on chain; for a borrow that is almost always
-          // too little cirBTC at the current price (owner 2026-10-20) - say that, not the raw RPC words.
-          ? (kind === 'borrow' ? 'Not enough cirBTC for this amount right now - try a smaller amount.' : 'This would fail on the network right now - try a smaller amount.')
-          : e.message))
-    }, 600)
-    return () => clearTimeout(debounce.current)
-  }, [typed, kind])
+  // The fee is asked only on the first tap (owner 2026-10-22, option B): asking it creates the Borrow Service's signed
+  // intent, which blocks any other for ~5 min (409) - so typing creates none; the 2nd tap ("Confirm") reuses it.
+  useEffect(() => { setInfo(null) }, [typed, kind])
+  async function review() {
+    setLoading(true); setError(''); setStatus('Checking the fee…')
+    try {
+      setInfo(await borrowApi('fee', { kind, marketId: market?.marketId, loanId: loan?.loanId, amount: kind === 'close' ? '0' : typed, walletAddress, walletId }))
+    } catch (e) {
+      setError(/revert/i.test(e.message || '')
+        // Circle's "Estimate fee execution reverted." = the batch would fail on chain; for a borrow that is almost always
+        // too little cirBTC at the current price (owner 2026-10-20) - say that, not the raw RPC words.
+        ? (kind === 'borrow' ? 'Not enough cirBTC for this amount right now - try a smaller amount.' : 'This would fail on the network right now - try a smaller amount.')
+        : e.message)
+    }
+    setLoading(false); setStatus('')
+  }
 
   function switchTab(t) { if (loading || done || alertStep || t === tab) return; setTab(t); setTyped(''); setClose(false); setError(''); setStatus('') }
   function onPadKey(k) {
@@ -187,7 +189,7 @@ export default function BorrowAction() {
     ? (info ? `Locks ≈ ${fmtBtc(info.cirbtcNeeded)} cirBTC · liquidation if BTC < $${Math.round(info.liquidationPrice || 0).toLocaleString('en-US')}` : '')
     : kind === 'close' ? 'Repays everything and returns all your cirBTC.' : ''
   const label = alertStep ? 'Turn on liquidation alerts (PIN)' : error || status
-    || (kind === 'close' ? 'Repay all & close' : over ? `${kind === 'borrow' && byCollateral !== null && max >= floorTo(byCollateral, dec) - 1e-9 ? 'Not enough cirBTC - at most' : 'At most'} ${shown(String(max), showDec)} ${unit}` : amount > 0
+    || (ready && info ? 'Confirm' : kind === 'close' ? 'Repay all & close' : over ? `${kind === 'borrow' && byCollateral !== null && max >= floorTo(byCollateral, dec) - 1e-9 ? 'Not enough cirBTC - at most' : 'At most'} ${shown(String(max), showDec)} ${unit}` : amount > 0
       ? { borrow: 'Borrow', repay: 'Repay', addCollateral: 'Add collateral', withdrawCollateral: 'Withdraw collateral' }[kind] : 'Tap the amount to enter')
 
   return (
@@ -232,7 +234,7 @@ export default function BorrowAction() {
       {/* Row 6: what happens, the fee, the note. */}
       <div style={{ ...at('50.95dvh', 'auto'), display: 'flex', flexDirection: 'column', gap: 'calc(8 * var(--u))', padding: '0 calc(8 * var(--u))', fontSize: 'var(--fs-caption)', color: 'var(--color-muted-2)' }}>
         {what && <span style={{ color: 'var(--color-black)' }}>{what}</span>}
-        <span>Fee: <span className="num" style={{ color: 'var(--color-black)', fontWeight: 'var(--fw-semibold)' }}>{ready ? (info?.feeMax ? (Number(info.feeMax) < 0.01 ? '<$0.01' : `up to $${Number(info.feeMax).toFixed(3)}`) : '…') : '-'}</span>{kind === 'borrow' ? ` · max $${MAX_USD} per loan` : ''}</span>
+        <span>Fee: <span className="num" style={{ color: 'var(--color-black)', fontWeight: 'var(--fw-semibold)' }}>{ready && info?.feeMax ? (Number(info.feeMax) < 0.01 ? '<$0.01' : `up to $${Number(info.feeMax).toFixed(3)}`) : ready ? 'after you tap the button' : '-'}</span>{kind === 'borrow' ? ` · max $${MAX_USD} per loan` : ''}</span>
         <span style={{ fontSize: 'var(--fs-caption)'}}>
           {kind === 'borrow' ? 'Your cirBTC is locked in Morpho until you repay. If BTC falls to the liquidation price, part of it is sold to repay the loan. No app fee.'
             : kind === 'withdrawCollateral' ? 'You can only take out cirBTC while the loan stays at 50% of the collateral or less.'
@@ -244,8 +246,8 @@ export default function BorrowAction() {
       <div style={{ ...at('81.52dvh', '8.29dvh'), display: 'flex', alignItems: 'center' }}>
         <button className={`btn ${error ? 'btn-secondary' : done ? 'btn-success' : 'btn-primary'}`}
           style={{ width: '100%', height: 'var(--btn-h)', minHeight: 0, borderRadius: 16, ...(error ? { color: 'var(--color-error)' } : null) }}
-          disabled={alertStep ? loading : ready ? (!can && !error) : (loading || done)}
-          onClick={() => error ? setError('') : alertStep ? turnOnAlerts(alertStep) : ready ? run() : setPad(true)}>
+          disabled={alertStep ? loading : ready ? (loading || done) && !error : (loading || done)}
+          onClick={() => error ? setError('') : alertStep ? turnOnAlerts(alertStep) : ready ? (can ? run() : review()) : setPad(true)}>
           <span style={{ fontSize: 'var(--fs-content-1)', textAlign: 'center', display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2, overflow: 'hidden' }}>{label}</span>
         </button>
       </div>
