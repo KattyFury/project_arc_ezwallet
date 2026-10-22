@@ -564,17 +564,12 @@ export default function Swap() {
       <div style={{ position: 'absolute', left: 'var(--m)', right: 'var(--m)', top: '81.52dvh', height: '8.29dvh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         {(() => {
           const needAmount = !error && !status && !(amountNum > 0)   // no amount chosen → the button becomes the hint that opens the numpad
-          // 'Swap submitted' (sent, awaiting confirmation) = PALE green · 'Swap successful' (the received token balance has
-          // risen) = SOLID green → telling the 2 steps apart avoids confusion (user decision 07-28, they used to share a colour).
-          const confirmed = status === 'Swap successful'
           return (
         <button className={`btn ${error ? 'btn-secondary' : success ? 'btn-success' : 'btn-primary'}`}
           style={{
             width: '100%', height: 'var(--btn-h)', minHeight: 0, borderRadius: 16, overflow: 'hidden',
             boxShadow: error || success ? undefined : '0 2px 20px rgba(0, 0, 0, 0.32)',
             ...(error ? { color: 'var(--color-error)', borderColor: 'var(--color-error)' } : null),
-            // Sent but not yet confirmed = the pale green (design system: a lighter colour, never opacity); confirmed = solid green.
-            ...(success && !confirmed ? { background: 'var(--color-primary-soft)', color: 'var(--color-primary)', boxShadow: 'none' } : null),
           }}
           disabled={needAmount ? (!hasBal || loading) : (!canSwap && !error)}
           onClick={needAmount ? openPad : handleSwap}>

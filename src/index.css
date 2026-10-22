@@ -434,6 +434,9 @@ body {
 
 /* Disabled = Line fill + Muted text (Line stays visible on white and on Mist panels), no shadow, NEVER lower opacity (nguyen0xhieu system, 2026-10-19). !important beats the inline background/opacity many buttons carry. */
 .btn:disabled { opacity: 1 !important; background: var(--color-line) !important; color: var(--color-muted) !important; box-shadow: none !important; cursor: default; }
+/* A SUCCESS button ("Swap successful", "Done" after Lend / Borrow / Meme) is disabled only so it cannot be tapped twice -
+   it is a state, not "off": it keeps its solid green (2026-10-22: the rule above turned it grey). */
+.btn-success:disabled { background: var(--btn-grad-success) !important; color: var(--color-white) !important; box-shadow: var(--shadow-y2) !important; }
 
 /* A CENTRED GLOW, no offset - 2026-09-10 CORRECTION: this was still the pre-redesign 07-22d straight-down
    drop shadow (`0 4px 6px`) at the SHARED class level, even though BRAND-GUIDELINE.md's Shadow rule
