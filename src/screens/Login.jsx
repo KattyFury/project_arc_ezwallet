@@ -229,7 +229,7 @@ export default function Login() {
           Wallet button sits 12 below with a transparent/bordered style so it reads as secondary. */}
       <div style={{
         position: 'absolute', left: 'var(--m)', bottom: 'calc(48 * var(--u))', width: 'var(--cw)',
-        display: 'flex', flexDirection: 'column', gap: 'calc(12 * var(--u))',
+        display: 'flex', flexDirection: 'column', gap: 'calc(16 * var(--u))',
       }}>
         {/* Row 1: arrow + email button */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 'calc(16 * var(--u))' }}>

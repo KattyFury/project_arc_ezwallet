@@ -120,7 +120,7 @@ export default function LoginWalletPopup({ onClose }) {
 
         <p style={{
           margin: 0, fontSize: 'var(--fs-caption)',
-          color: 'var(--color-muted)', textAlign: 'center', lineHeight: 1.5,
+          color: 'var(--color-muted)', textAlign: 'center',
         }}>
           Connect your browser wallet (MetaMask, Rainbow, etc.) to Arc mainnet.
         </p>
@@ -128,7 +128,7 @@ export default function LoginWalletPopup({ onClose }) {
         {/* Error */}
         {error && (
           <p style={{
-            margin: 0, padding: 'calc(12 * var(--u)) calc(14 * var(--u))',
+            margin: 0, padding: 'calc(16 * var(--u))',
             background: 'var(--color-error-soft)', borderRadius: 12,
             fontSize: 'var(--fs-caption)', color: 'var(--color-error)',
           }}>
@@ -156,7 +156,7 @@ export default function LoginWalletPopup({ onClose }) {
           </button>
         ) : (
           // No injected provider: show download links
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'calc(10 * var(--u))' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'calc(8 * var(--u))' }}>
             <p style={{
               margin: 0, fontSize: 'var(--fs-caption)',
               color: 'var(--color-muted-2)', textAlign: 'center',
@@ -170,14 +170,14 @@ export default function LoginWalletPopup({ onClose }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{
-                  display: 'flex', alignItems: 'center', gap: 'calc(12 * var(--u))',
+                  display: 'flex', alignItems: 'center', gap: 'calc(16 * var(--u))',
                   height: 'var(--btn-h)', padding: '0 calc(16 * var(--u))',
                   background: 'var(--color-card)', borderRadius: 16, textDecoration: 'none',
                   fontSize: 'var(--fs-content-2)', fontWeight: 'var(--fw-semibold)',
                   color: 'var(--color-black)',
                 }}
               >
-                <span style={{ fontSize: 'calc(24 * var(--u))' }}>{w.icon}</span>
+                <span style={{ fontSize: 'var(--fs-content-1)' }}>{w.icon}</span>
                 {w.name}
                 <span style={{ marginLeft: 'auto', color: 'var(--color-brand)', fontSize: 'var(--fs-caption)' }}>Install →</span>
               </a>
