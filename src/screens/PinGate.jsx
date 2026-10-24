@@ -10,6 +10,15 @@ import { GRADIENT } from '../brandBg'
 export default function PinGate() {
   const { navigate, params } = useNav()
   const next = params?.next || 'HomeSend'
+
+  // Web3 wallet login has no PIN (PIN is a Circle UCW feature). If we somehow land here,
+  // skip straight to the target screen so the user is never stuck on an unlock screen they cannot use.
+  useEffect(() => {
+    if (localStorage.getItem('ez_login_method') === 'web3wallet') {
+      sessionStorage.setItem('ez_pin_ok', '1')
+      navigate(next)
+    }
+  }, [])   // eslint-disable-line react-hooks/exhaustive-deps
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(true)   // busy by default = opening the Circle PIN → no project UI yet
   const tried = useRef(false)
