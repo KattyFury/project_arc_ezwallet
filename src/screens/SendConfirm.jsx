@@ -7,9 +7,48 @@ import { getSDK, executeChallenge, refreshSession, circleErrorMessage, estimateS
 import ScreenSheet from '../components/ScreenSheet'
 import ExitBar from '../components/ExitBar'
 import { GRADIENT } from '../brandBg'
-import { assertNetworkReady } from '../clientNet'
+import { assertNetworkReady, NET } from '../clientNet'
 import { newAttempt, getPending, clearPending, lookup, classify, waitFinal } from '../txTracker'
 import { fmtAmountShort } from '../money'
+
+// ── WEB3 WALLET SEND (no PIN, no Circle UCW) ──
+// Build an ERC-20 transfer(address,uint256) calldata and submit it via window.ethereum.
+// The wallet (MetaMask etc.) shows its own confirmation popup - the user approves there, not with a PIN.
+// Returns the tx hash on success, throws on rejection/error.
+async function sendViaWeb3Wallet({ toAddress, tokenAddress, amountDecimal, decimals }) {
+  if (!window.ethereum) throw new Error('No browser wallet found.')
+
+  // Encode ERC-20 transfer(address,uint256) manually (no ethers/viem dep here - kept minimal).
+  // Selector: keccak256("transfer(address,uint256)") = 0xa9059cbb
+  const sel = '0xa9059cbb'
+  // Pad address to 32 bytes
+  const paddedTo = toAddress.toLowerCase().replace('0x', '').padStart(64, '0')
+  // Convert decimal amount string to BigInt in token units
+  const units = BigInt(Math.round(parseFloat(amountDecimal) * (10 ** decimals)))
+  const paddedAmt = units.toString(16).padStart(64, '0')
+  const data = sel + paddedTo + paddedAmt
+
+  const accounts = await window.ethereum.request({ method: 'eth_accounts' })
+  const from = accounts[0]
+  if (!from) throw new Error('Wallet not connected. Please reconnect.')
+
+  const txHash = await window.ethereum.request({
+    method: 'eth_sendTransaction',
+    params: [{ from, to: tokenAddress, data, value: '0x0' }],
+  })
+  return txHash
+}
+
+// Look up a token's contract address and decimals from the network config.
+function getTokenInfo(tokenSymbol) {
+  // 'u:<address>' unverified tokens: use the address directly with a best-effort decimals=6
+  if (typeof tokenSymbol === 'string' && tokenSymbol.startsWith('u:')) {
+    return { address: tokenSymbol.slice(2), decimals: 6 }
+  }
+  const t = NET.tokens[tokenSymbol]
+  if (!t) throw new Error(`Unknown token: ${tokenSymbol}`)
+  return { address: t.address, decimals: t.decimals }
+}
 // A token amount for display: 6 significant digits, "≈" when cut (owner 2026-10-06). The exact string is what gets sent.
 const shortAmt = (str) => (({ text, cut }) => (cut ? '≈ ' : '') + text)(fmtAmountShort(str))
 
@@ -20,6 +59,9 @@ function Cur({ children }) {
 
 export default function SendConfirm() {
   const { navigate, params } = useNav()
+  // Web3 wallet login bypasses Circle UCW: no PIN, signs directly via window.ethereum.
+  const isWeb3Wallet = localStorage.getItem('ez_login_method') === 'web3wallet'
+
   // currency = 'USD' (the friendly label, USDC is sent) or a real token (USDC/EURC/cirBTC) - comes from SendAmount.
   const { address, name, amount, amountStr, memo, currency = 'USD' } = params
   const [feeUsd, setFeeUsd] = useState(null)      // Circle's MAXIMUM fee for this send (USD, null = still asking)
@@ -111,6 +153,35 @@ export default function SendConfirm() {
     if (loading || done) return   // block repeat taps / duplicate sends
     setLoading(true); setError('')
     try {
+      // ── WEB3 WALLET BRANCH ──
+      // No Circle UCW, no PIN iframe. The user's browser wallet signs & broadcasts directly.
+      if (isWeb3Wallet) {
+        setStatus('Waiting for wallet confirmation…')
+        try {
+          const { address: tokenAddress, decimals } = getTokenInfo(token)
+          const txHash = await sendViaWeb3Wallet({
+            toAddress: address,
+            tokenAddress,
+            amountDecimal: sendAmountStr,
+            decimals,
+          })
+          setDone(true)
+          navigate('SendReceipt', {
+            address, name, amount, amountStr: sendAmountStr, memo, currency, tokenLabel,
+            tokenAmount: sendUnits, txHash, timestamp: Date.now(),
+          })
+        } catch (e) {
+          // code 4001 = user rejected the wallet popup
+          if (e.code === 4001) {
+            setLoading(false); setStatus('')
+            return   // silently cancelled - same as closing the PIN screen
+          }
+          fail(`Send failed: ${e.message || 'Wallet error'}`)
+        }
+        return
+      }
+
+      // ── CIRCLE UCW BRANCH (email / UCW login) ──
       // Refuse before any challenge exists if the server's network/contracts do not check out (MAINNET-AUDIT C2).
       await assertNetworkReady()
 
@@ -286,7 +357,7 @@ export default function SendConfirm() {
         <button className="btn btn-secondary" style={{ flex: 1, boxShadow: 'var(--shadow-y2)' }} disabled={loading || done} onClick={() => navigate('SendAmount', params)}>Back</button>
         <button className="btn btn-primary" style={{ flex: 1, boxShadow: 'var(--shadow-y2)' }}
           disabled={loading || done || !convertReady} onClick={() => (needsQrCheck && !attemptRef.current ? setQrCheck(true) : handleConfirm())}>
-          {loading ? 'Processing...' : (attemptRef.current ? 'Check again' : 'Confirm PIN')}
+          {loading ? 'Processing...' : (attemptRef.current ? 'Check again' : isWeb3Wallet ? 'Confirm & Send' : 'Confirm PIN')}
         </button>
       </div>
 

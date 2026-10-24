@@ -96,16 +96,6 @@ const W3 = '((var(--cw) - 32 * var(--u)) / 3)'   // three buttons 16 apart
 
 export default function HomeSend() {
   const { navigate } = useNav()
-  // Web3 wallet login: read-only view (balances + history). Sending requires Circle UCW + PIN,
-  // which is not available for external wallet logins.
-  const isWeb3Wallet = localStorage.getItem('ez_login_method') === 'web3wallet'
-  const [web3Notice, setWeb3Notice] = useState(false)   // brief "not available" notice
-
-  function guardedSend(action) {
-    if (isWeb3Wallet) { setWeb3Notice(true); setTimeout(() => setWeb3Notice(false), 3000); return }
-    action()
-  }
-
   // Seeded from the module-level cache → switching screens shows the number IMMEDIATELY (no "..." flash), with a background fetch updating it.
   const seedTokens = cachedBalances(localStorage.getItem('ez_wallet_addr'))
   const [tokens, setTokens] = useState(seedTokens || [])
@@ -292,25 +282,10 @@ export default function HomeSend() {
         />
       </div>
 
-      {/* WEB3 WALLET NOTICE - shown for 3s when a web3-wallet user taps a send action */}
-      {web3Notice && (
-        <div style={{
-          position: 'absolute', left: 'var(--m)', width: 'var(--cw)',
-          top: `calc(79.62dvh - 52 * var(--u))`,
-          padding: 'calc(12 * var(--u)) calc(16 * var(--u))',
-          background: 'var(--color-warning-soft)', borderRadius: 12,
-          fontSize: 'var(--fs-caption)', color: 'var(--color-warning-text)',
-          fontWeight: 'var(--fw-semibold)', textAlign: 'center', zIndex: 20,
-          boxShadow: 'var(--shadow-y2)',
-        }}>
-          Sending is not available for wallet login. Use email login (Circle UCW) to send.
-        </div>
-      )}
-
       {/* ACTION ROW - nodes 1:338-1:340. Three separate absolute boxes, NOT a grid: the centre pill is
           taller (124x70 at y=688) than its siblings (100x48 at y=699) and they share no baseline, so a
           flex row with align-items would only approximate what the node draws. Radius 16 on all three. */}
-      <button onClick={() => guardedSend(() => navigate('PasteAddress'))} style={{
+      <button onClick={() => navigate('PasteAddress')} style={{
         position: 'absolute', left: 'var(--m)', top: SIDE_BTN.top, width: `calc(${W3})`, height: SIDE_BTN.height,
         background: 'var(--btn-grad-white)', border: 'none', borderRadius: 16,
         boxShadow: 'var(--shadow-y2)',
@@ -322,7 +297,7 @@ export default function HomeSend() {
         <span>Paste</span>
       </button>
 
-      <button onClick={() => guardedSend(() => navigate('QRScanner'))} style={{
+      <button onClick={() => navigate('QRScanner')} style={{
         position: 'absolute', left: `calc(var(--m) + ${W3} + 16 * var(--u))`, top: BIG_BTN.top, width: `calc(${W3})`, height: BIG_BTN.height,
         background: 'var(--btn-grad-brand)', border: 'none', borderRadius: 16,
         boxShadow: 'var(--shadow-y2)',
@@ -334,7 +309,7 @@ export default function HomeSend() {
         <span>Scan QR</span>
       </button>
 
-      <button onClick={() => guardedSend(() => navigate('Contacts'))} style={{
+      <button onClick={() => navigate('Contacts')} style={{
         position: 'absolute', left: `calc(var(--m) + 2 * ${W3} + 32 * var(--u))`, top: SIDE_BTN.top, width: `calc(${W3})`, height: SIDE_BTN.height,
         background: 'var(--btn-grad-white)', border: 'none', borderRadius: 16,
         boxShadow: 'var(--shadow-y2)',
