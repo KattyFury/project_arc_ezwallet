@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNav } from '../nav'
+import { NET } from '../clientNet'
 
-// Chain ID of Arc mainnet (decimal). The wallet must be on this chain to log in.
-const ARC_CHAIN_ID = 5042
-const ARC_CHAIN_HEX = '0x13B2'   // 5042 in hex
+// L1 (audit 2026-10-24): derive chain constants from NET instead of duplicating literals.
+const ARC_CHAIN_ID = NET.chainId
+const ARC_CHAIN_HEX = '0x' + NET.chainId.toString(16)
 
 // A subset of well-known wallet deeplink / download URLs shown when window.ethereum is absent.
 const WALLET_OPTIONS = [
@@ -46,6 +47,25 @@ export default function LoginWalletPopup({ onClose }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const hasProvider = typeof window !== 'undefined' && !!window.ethereum
+
+  // H1 (audit 2026-10-24): subscribe to chainChanged AFTER login so the app detects a chain switch.
+  // If the user switches away from Arc while in the app, sign them out immediately — any subsequent
+  // eth_sendTransaction would go to the wrong chain.
+  useEffect(() => {
+    if (!window.ethereum) return
+    function onChainChanged(chainHex) {
+      if (localStorage.getItem('ez_login_method') !== 'web3wallet') return
+      if (parseInt(chainHex, 16) !== ARC_CHAIN_ID) {
+        // Clear the web3 session and force back to Login with a clear message
+        ;['ez_wallet_addr', 'ez_login_method'].forEach(k => localStorage.removeItem(k))
+        sessionStorage.removeItem('ez_pin_ok')
+        sessionStorage.setItem('ez_login_note', `Network changed. Please reconnect on Arc mainnet (chain ${ARC_CHAIN_ID}).`)
+        navigate('Login')
+      }
+    }
+    window.ethereum.on('chainChanged', onChainChanged)
+    return () => { window.ethereum.removeListener?.('chainChanged', onChainChanged) }
+  }, [navigate])   // eslint-disable-line react-hooks/exhaustive-deps
 
   async function handleConnect() {
     if (!window.ethereum) return

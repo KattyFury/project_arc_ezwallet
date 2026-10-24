@@ -75,7 +75,9 @@ export async function verifyEmailCode(email, code) {
 }
 
 // Every session key a sign-out removes. One list, shared by every sign-out path.
-export const SESSION_KEYS = ['ez_user_token', 'ez_user_token_at', 'ez_wallet_addr', 'ez_wallet_id', 'ez_encryption_key', 'ez_email', 'ez_auth_token', 'ez_refresh_token', 'ez_google_email', 'ez_login_method']
+// M1 (audit 2026-10-24): added 'ez_google_deviceId' — was missing, causing stale device ID to survive
+// sign-out and potentially trigger 155113 "device not found" on the next Google login.
+export const SESSION_KEYS = ['ez_user_token', 'ez_user_token_at', 'ez_wallet_addr', 'ez_wallet_id', 'ez_encryption_key', 'ez_email', 'ez_auth_token', 'ez_refresh_token', 'ez_google_email', 'ez_login_method', 'ez_google_deviceId']
 
 // The auth token is missing/expired (30 days, or a session from before the email code existed) → back to Login.
 function expireToLogin() {
@@ -130,7 +132,9 @@ export async function ensureWalletAddress() {
   try {
     const info = await getWalletAddress(userToken)
     if (info?.address) {
-      localStorage.setItem('ez_wallet_addr', info.address)
+      // H2 (audit 2026-10-24): normalize to lowercase so UCW and web3 addresses are consistent
+      // (Circle may return EIP-55 checksummed; the sync server recovers to lowercase from signatures).
+      localStorage.setItem('ez_wallet_addr', info.address.toLowerCase())
       if (info.walletId) localStorage.setItem('ez_wallet_id', info.walletId)
       return info.address
     }

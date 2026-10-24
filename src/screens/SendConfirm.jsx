@@ -14,17 +14,30 @@ import { fmtAmountShort } from '../money'
 // ── WEB3 WALLET SEND (no PIN, no Circle UCW) ──
 // Build an ERC-20 transfer(address,uint256) calldata and submit it via window.ethereum.
 // The wallet (MetaMask etc.) shows its own confirmation popup - the user approves there, not with a PIN.
-// Returns the tx hash on success, throws on rejection/error.
+// Returns the tx hash AND waits for on-chain confirmation before resolving.
+// Security fixes (2026-10-24 audit):
+//   C1 — verifies chain ID == Arc mainnet immediately before sending (not just at login time)
+//   M3 — waits for eth_getTransactionReceipt to confirm the tx before returning
 async function sendViaWeb3Wallet({ toAddress, tokenAddress, amountDecimal, decimals }) {
   if (!window.ethereum) throw new Error('No browser wallet found.')
+
+  // C1: verify we are still on Arc mainnet at send time (user may have switched chains after login)
+  const currentChainHex = await window.ethereum.request({ method: 'eth_chainId' })
+  if (parseInt(currentChainHex, 16) !== NET.chainId) {
+    throw Object.assign(
+      new Error(`Wrong network. Please switch your wallet to Arc mainnet (chain ${NET.chainId}) before sending.`),
+      { code: 'WRONG_CHAIN' }
+    )
+  }
 
   // Encode ERC-20 transfer(address,uint256) manually (no ethers/viem dep here - kept minimal).
   // Selector: keccak256("transfer(address,uint256)") = 0xa9059cbb
   const sel = '0xa9059cbb'
-  // Pad address to 32 bytes
   const paddedTo = toAddress.toLowerCase().replace('0x', '').padStart(64, '0')
-  // Convert decimal amount string to BigInt in token units
-  const units = BigInt(Math.round(parseFloat(amountDecimal) * (10 ** decimals)))
+  // Convert decimal amount string to BigInt in token units — use string-based parsing to avoid float drift
+  const [intPart = '0', fracPart = ''] = amountDecimal.split('.')
+  const frac = fracPart.slice(0, decimals).padEnd(decimals, '0')
+  const units = BigInt(intPart) * BigInt(10 ** decimals) + BigInt(frac || '0')
   const paddedAmt = units.toString(16).padStart(64, '0')
   const data = sel + paddedTo + paddedAmt
 
@@ -36,7 +49,23 @@ async function sendViaWeb3Wallet({ toAddress, tokenAddress, amountDecimal, decim
     method: 'eth_sendTransaction',
     params: [{ from, to: tokenAddress, data, value: '0x0' }],
   })
-  return txHash
+
+  // M3: wait for on-chain confirmation before reporting success (eth_sendTransaction returns on submission,
+  // not on confirmation — the tx can still revert after that). Poll every 2s, timeout 90s.
+  const deadline = Date.now() + 90_000
+  while (Date.now() < deadline) {
+    await new Promise(r => setTimeout(r, 2000))
+    const receipt = await window.ethereum.request({
+      method: 'eth_getTransactionReceipt',
+      params: [txHash],
+    }).catch(() => null)
+    if (receipt) {
+      if (receipt.status === '0x0') throw new Error('Transaction was reverted by the network. No funds were moved.')
+      return txHash   // status 0x1 = success
+    }
+  }
+  // Timeout — tx submitted but not yet confirmed; surface the hash so the user can check later
+  throw Object.assign(new Error('Transaction submitted but not yet confirmed. Check Transaction history in a moment.'), { code: 'UNCONFIRMED', txHash })
 }
 
 // Look up a token's contract address and decimals from the network config.
@@ -99,6 +128,9 @@ export default function SendConfirm() {
     // getDisplayRates (not the per-token getUsdRate) - it includes VND, and VND is not a token
     // so getUsdRate looking through TOKENS would not find it.
     getDisplayRates().then(setFeeRates).catch(() => {})
+    // H3 (audit 2026-10-24): web3 wallet has no Circle walletId — skip the Circle fee estimate entirely.
+    // The fee for a web3 send is estimated by the wallet itself and shown in the wallet's own popup.
+    if (isWeb3Wallet) { setFeeFailed(false); setFeeUsd(null); return }
     // The fee of THIS send from Circle (estimateFee on the exact call /api/send will make). A failure says so - it used
     // to become a fee of 0 ("< $0.001"), a number nobody measured.
     setFeeFailed(false); setFeeUsd(null); setConvertLegs(null)
@@ -106,7 +138,7 @@ export default function SendConfirm() {
       .then(f => { const v = Number(f.feeMax); if (v > 0) setFeeUsd(v); else setFeeFailed(true); setConvertLegs(f.convert || null) })
       // A convert send cannot go ahead without its plan - say why (not enough money / no USDC for the fee).
       .catch(e => { setFeeFailed(true); if (allowConvert) setError(e.message) })
-  }, [memo, token, address, sendAmountStr, allowConvert, recheck])
+  }, [memo, token, address, sendAmountStr, allowConvert, recheck, isWeb3Wallet])
   // The plan arrives with the fee. A fee without a plan = the server found enough USDC after all (a plain send).
   const convertReady = !allowConvert || feeUsd !== null
 
@@ -125,6 +157,8 @@ export default function SendConfirm() {
   // Network fee in the DEFAULT CURRENCY from Settings (USDC/EURC/VND)
   const displayCur = getDisplayCurrency()
   function feeEl() {
+    // H3: web3 wallet fee is shown in the wallet's own popup, not fetched from Circle
+    if (isWeb3Wallet) return 'Estimated by your wallet'
     if (feeUsd === null) return feeFailed ? 'Unavailable' : 'Calculating...'
     // Circle's figure is the MAXIMUM (networkFee) - the real charge is lower and the receipt shows it.
     return `up to ${fmtFee(feeUsd, feeRates, displayCur)}`   // ≤ 3 decimals - see fmtFee in src/data.js
@@ -165,16 +199,25 @@ export default function SendConfirm() {
             amountDecimal: sendAmountStr,
             decimals,
           })
+          // sendViaWeb3Wallet already waited for receipt confirmation (M3) before returning.
           setDone(true)
           navigate('SendReceipt', {
             address, name, amount, amountStr: sendAmountStr, memo, currency, tokenLabel,
             tokenAmount: sendUnits, txHash, timestamp: Date.now(),
           })
         } catch (e) {
-          // code 4001 = user rejected the wallet popup
-          if (e.code === 4001) {
-            setLoading(false); setStatus('')
-            return   // silently cancelled - same as closing the PIN screen
+          // 4001 = user rejected the wallet popup — silent cancel, same as closing PIN screen
+          if (e.code === 4001) { setLoading(false); setStatus(''); return }
+          // WRONG_CHAIN = chain was switched after login (C1 guard)
+          if (e.code === 'WRONG_CHAIN') { fail(e.message); return }
+          // UNCONFIRMED = tx submitted but not confirmed within 90s — show the hash so they can track it
+          if (e.code === 'UNCONFIRMED') {
+            setDone(true)   // lock to prevent retry
+            navigate('SendReceipt', {
+              address, name, amount, amountStr: sendAmountStr, memo, currency, tokenLabel,
+              tokenAmount: sendUnits, txHash: e.txHash || null, timestamp: Date.now(),
+            })
+            return
           }
           fail(`Send failed: ${e.message || 'Wallet error'}`)
         }

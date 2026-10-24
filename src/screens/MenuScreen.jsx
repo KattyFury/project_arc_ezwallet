@@ -164,7 +164,12 @@ export default function MenuScreen() {
       {/* Sign out - node 58:226/58:227/58:236: same row shape, both markers AND the label in the danger
           red. No divider - it is the last row. */}
       <button style={{ ...ROW_STYLE, top: rowC(ITEMS.length), border: 'none', background: 'none', cursor: 'pointer' }} onClick={() => {
-        ;['ez_user_token','ez_wallet_addr','ez_wallet_id','ez_encryption_key','ez_email','ez_auth_token','ez_notifs','ez_last_recv_ts','ez_refresh_token','ez_google_email','ez_login_method'].forEach(k => localStorage.removeItem(k))
+        // M2 (audit 2026-10-24): revoke the injected wallet's site permission on sign-out so the next
+        // visit requires a fresh connect prompt (prevents silent re-login on a shared browser).
+        if (localStorage.getItem('ez_login_method') === 'web3wallet' && window.ethereum) {
+          window.ethereum.request({ method: 'wallet_revokePermissions', params: [{ eth_accounts: {} }] }).catch(() => {})
+        }
+        ;['ez_user_token','ez_wallet_addr','ez_wallet_id','ez_encryption_key','ez_email','ez_auth_token','ez_notifs','ez_last_recv_ts','ez_refresh_token','ez_google_email','ez_login_method','ez_google_deviceId'].forEach(k => localStorage.removeItem(k))
         sessionStorage.removeItem('ez_pin_ok')
         sessionStorage.removeItem('ez_sync_token')
         window.location.reload()
