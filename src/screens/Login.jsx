@@ -4,6 +4,7 @@ import { useNav } from '../nav'
 import { NET } from '../clientNet'
 import { useState, useEffect, useRef } from 'react'
 import LoginEmailPopup from '../components/LoginEmailPopup'
+import LoginWalletPopup from '../components/LoginWalletPopup'
 import { getCookie, setCookie, deleteCookie } from 'cookies-next'
 import { createSocialToken, initializeWallet, executeChallenge, getWalletAddress, GOOGLE_CLIENT_ID, circleErrorMessage } from '../circle'
 
@@ -34,6 +35,7 @@ export default function Login() {
   useEffect(() => { sessionStorage.removeItem('ez_login_note') }, [])   // read in the initializer, dropped after mount (StrictMode calls initializers twice)
   // The email popup (node 1:193). It is NOT a screen - it opens over this one, which blurs behind it.
   const [emailOpen, setEmailOpen] = useState(false)
+  const [walletOpen, setWalletOpen] = useState(false)
 
   // deviceId MUST come from sdk.getDeviceId() (Circle fingerprints it through its own iframe) - do NOT
   // invent one (e.g. crypto.randomUUID()), because Circle's backend knows nothing about a homemade ID → the error
@@ -178,8 +180,8 @@ export default function Login() {
           taps, and a blurred button that still responds is a trap. */}
       <div style={{
         position: 'absolute', inset: 0,
-        filter: emailOpen ? 'blur(6px)' : 'none',
-        pointerEvents: emailOpen ? 'none' : 'auto',
+        filter: (emailOpen || walletOpen) ? 'blur(6px)' : 'none',
+        pointerEvents: (emailOpen || walletOpen) ? 'none' : 'auto',
       }}>
 
       {/* LANDING CONTENT, redesigned 2026-10-20 (owner: option A copy + option Y layout). One top-anchored
@@ -222,27 +224,48 @@ export default function Login() {
         {note && <p style={{ margin: 'calc(32 * var(--u)) 0 0', fontSize: 'var(--fs-caption)', color: 'var(--color-error)' }}>{note}</p>}
       </div>
 
-      {/* THE ONLY CONTROL - one row at the bottom, 48 above the screen edge (clears the 34 home-indicator safe
-          area): the white arrow pointing right (owner 2026-10-20: keep it, it is part of the look) in a 48-wide
-          slot, 16 gap, then the white button with blue text (App/Button 22, the standard --btn-h, shadow Y2). */}
+      {/* BOTTOM CONTROLS - two login buttons stacked, 48 above the screen edge (clears the 34 home-indicator
+          safe area). Arrow sits centred to the left of the email button only (design rule 2026-10-20).
+          Wallet button sits 12 below with a transparent/bordered style so it reads as secondary. */}
       <div style={{
         position: 'absolute', left: 'var(--m)', bottom: 'calc(48 * var(--u))', width: 'var(--cw)',
-        display: 'flex', alignItems: 'center', gap: 'calc(16 * var(--u))',
+        display: 'flex', flexDirection: 'column', gap: 'calc(12 * var(--u))',
       }}>
-        <div aria-hidden="true" style={{ width: 'calc(48 * var(--u))', flexShrink: 0, display: 'flex', justifyContent: 'center' }}>
-          <img src={arrowDown} alt="" style={{ width: 'calc(40 * var(--u))', height: 'calc(45.938 * var(--u))', transform: 'rotate(-90deg)' }} />
+        {/* Row 1: arrow + email button */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'calc(16 * var(--u))' }}>
+          <div aria-hidden="true" style={{ width: 'calc(48 * var(--u))', flexShrink: 0, display: 'flex', justifyContent: 'center' }}>
+            <img src={arrowDown} alt="" style={{ width: 'calc(40 * var(--u))', height: 'calc(45.938 * var(--u))', transform: 'rotate(-90deg)' }} />
+          </div>
+          <button
+            onClick={() => setEmailOpen(true)}
+            style={{
+              flex: 1, height: 'var(--btn-h)',
+              background: 'var(--color-white)', border: 'none', borderRadius: 16,
+              boxShadow: 'var(--shadow-y2)',
+              fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-brand)', cursor: 'pointer',
+              WebkitTapHighlightColor: 'transparent',
+            }}>
+            {restoring ? 'Processing...' : 'Log in with Email'}
+          </button>
         </div>
-        <button
-          onClick={() => setEmailOpen(true)}
-          style={{
-            flex: 1, height: 'var(--btn-h)',
-            background: 'var(--color-white)', border: 'none', borderRadius: 16,
-            boxShadow: 'var(--shadow-y2)',
-            fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-brand)', cursor: 'pointer',
-            WebkitTapHighlightColor: 'transparent',
-          }}>
-          {restoring ? 'Processing...' : 'Log in with email'}
-        </button>
+
+        {/* Row 2: wallet button (full width, no arrow, outlined style = secondary action) */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'calc(16 * var(--u))' }}>
+          {/* Spacer matching the arrow slot so the button aligns with the email button above */}
+          <div aria-hidden="true" style={{ width: 'calc(48 * var(--u))', flexShrink: 0 }} />
+          <button
+            onClick={() => setWalletOpen(true)}
+            style={{
+              flex: 1, height: 'var(--btn-h)',
+              background: 'transparent',
+              border: '1.5px solid var(--color-white)',
+              borderRadius: 16,
+              fontSize: 'var(--fs-content-1)', fontWeight: 'var(--fw-semibold)', color: 'var(--color-white)', cursor: 'pointer',
+              WebkitTapHighlightColor: 'transparent',
+            }}>
+            Log in with Wallet
+          </button>
+        </div>
       </div>
 
       </div>
@@ -252,6 +275,7 @@ export default function Login() {
           the wallet, or a brand-new wallet and then into it, or it fails and the user is left here on
           Login. Back just closes it - nothing to navigate away from, because this was never a screen. */}
       {emailOpen && <LoginEmailPopup onClose={() => setEmailOpen(false)} />}
+      {walletOpen && <LoginWalletPopup onClose={() => setWalletOpen(false)} />}
 
     </div>
   )
