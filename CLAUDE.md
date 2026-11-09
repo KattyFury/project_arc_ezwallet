@@ -62,6 +62,6 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 
 ---
 
-Lời dặn cuối: Luôn đọc file này khi tôi yêu cầu login vào dự án, sau đó pull từ git về, khi làm việc xong nhớ push lên git lại. Luôn hỏi kỹ trước khi code, thậm chí cần thiết thì xuất spec ra desktop để tôi đem đi plan với Claude Chat, khi làm việc nãy nêu ra nhiều option cho tôi chọn thay vì cứ tự ý chọn tech vì cho rằng nó ổn.
+Final note: always read this file when I ask to log in to the project, then pull from git, and push when done. Always ask carefully before coding; if needed, export a spec to the Desktop so I can plan it with Claude Chat. Present several options for me to choose rather than picking a technology on your own because it seems fine.
 
 **These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
