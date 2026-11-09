@@ -6,6 +6,15 @@
 // unlocked (ez_pin_ok - set after verifying the PIN, or right after CREATING the PIN on first login).
 // No session → Login.
 export function bootTarget() {
+  // Web3 wallet login: no Circle userToken, only an address. Skip PinGate entirely -
+  // PIN is a Circle UCW feature and does not apply to external wallets.
+  const isWeb3Wallet = localStorage.getItem('ez_login_method') === 'web3wallet'
+  const walletAddr = localStorage.getItem('ez_wallet_addr')
+  if (isWeb3Wallet && walletAddr) {
+    sessionStorage.setItem('ez_pin_ok', '1')   // mark session unlocked so guards downstream pass
+    return { screen: 'HomeSend', params: {} }
+  }
+
   const hasSession = localStorage.getItem('ez_user_token')
   if (!hasSession) return { screen: 'Login', params: {} }
   const unlocked = sessionStorage.getItem('ez_pin_ok')
